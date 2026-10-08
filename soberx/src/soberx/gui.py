@@ -20,7 +20,7 @@ def run_gui() -> int:
     from .apk import inspect_apk
     from .auth import AuthManager
     from .install import Installer
-    from .settings import Settings, xdg_config_home
+    from .settings import Settings, xdg_config_home, xdg_data_home
 
     st = Settings.load()
     auth = AuthManager(xdg_config_home() / "soberx")
@@ -130,6 +130,49 @@ def run_gui() -> int:
 
         def do_apk_official(*_):
             worker(lambda: Installer(st, on_progress).install_apk(None) and refresh_apks())
+
+        # --- секция управления (APK-режим: WASD вместо тача) ---
+        box.append(Gtk.Separator())
+        box.append(Gtk.Label(label="Управление в APK-режиме", xalign=0))
+        chk_kb = Gtk.CheckButton(label="Клавиатура/мышь вместо тач-управления (WASD)")
+        chk_kb.set_active(getattr(st, "input_mode", "") == "apk-mapping")
+
+        def toggle_kb(b):
+            st.input_mode = "apk-mapping" if b.get_active() else ""
+            st.save(); notify("включён маппинг клавиш->тапы" if b.get_active() else "маппинг выключен")
+        chk_kb.connect("toggled", toggle_kb)
+        box.append(chk_kb)
+
+        kb_row = Gtk.Box(spacing=8)
+        btn_kb_import = Gtk.Button(label="Импорт конфига GameLoop (.xml)")
+        btn_kb_export = Gtk.Button(label="Экспорт профиля (.json)")
+        kb_row.append(btn_kb_import); kb_row.append(btn_kb_export)
+        box.append(kb_row)
+
+        def do_kb_import(*_):
+            dlg = Gtk.FileChooserDialog(title="Конфиг управления GameLoop", transient_for=win,
+                                        action=Gtk.FileChooserAction.OPEN)
+            flt = Gtk.FileFilter(); flt.set_name("GameLoop XML"); flt.add_pattern("*.xml")
+            dlg.add_filter(flt)
+            dlg.add_button("Отмена", Gtk.ResponseType.CANCEL)
+            dlg.add_button("Импортировать", Gtk.ResponseType.OK)
+            def resp(d, r):
+                if r == Gtk.ResponseType.OK:
+                    from .inputmap import ControlProfile
+                    prof = ControlProfile.from_gameloop_xml(Path(d.get_filename()))
+                    prof.save(xdg_config_home() / "soberx" / "controls.json")
+                    notify(f"импортировано биндов: {len(prof.mappings)}")
+                dlg.destroy()
+            dlg.connect("response", resp); dlg.present()
+
+        def do_kb_export(*_):
+            from .inputmap import load_profile
+            p = xdg_data_home() / "soberx" / "controls.json"
+            load_profile(None, xdg_config_home() / "soberx").save(p)
+            notify(f"профиль сохранён: {p}")
+
+        btn_kb_import.connect("clicked", do_kb_import)
+        btn_kb_export.connect("clicked", do_kb_export)
 
         btn_login.connect("clicked", do_login)
         btn_update.connect("clicked", do_update)

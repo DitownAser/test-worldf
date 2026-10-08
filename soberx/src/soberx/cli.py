@@ -38,6 +38,20 @@ def main(argv=None) -> int:
 
     sl = sub.add_parser("launch", help="запустить клиент")
     sl.add_argument("--place", help="placeId сервера")
+    sl.add_argument("--apk-mode", action="store_true",
+                    help="режим Android APK (управление клавиатурой через маппер)")
+
+    si = sub.add_parser("input", help="управление в APK-режиме (тапы/свайпы вместо тача)")
+    ig = si.add_subparsers(dest="icmd", required=True)
+    ip = ig.add_parser("profile", help="профиль управления")
+    ip.add_argument("--export", type=Path, help="сохранить профиль JSON")
+    ip.add_argument("--import-gameloop", type=Path, help="импорт XML-конфига GameLoop")
+    ip.add_argument("--set-file", type=Path, help="использовать файл профиля при запуске")
+    il = ig.add_parser("list", help="показать текущий профиль")
+    ifeed = ig.add_parser("feed", help="выполнить триггеры: soberx input feed w a space")
+    ifeed.add_argument("triggers", nargs="+")
+    ifeed.add_argument("--serial", help="adb-серийник устройства")
+    ifeed.add_argument("--dev", default="/dev/input/event2", help="evdev-устройство в контейнере")
 
     args = p.parse_args(argv)
 
@@ -70,8 +84,49 @@ def main(argv=None) -> int:
             i = inspect_apk(args.file)
             print(f"pkg={i.package} ver={i.version_name} code={i.version_code} abi={i.abi} valid={i.valid} err={i.error}")
     elif args.cmd == "launch":
+        if args.apk_mode:
+            st.input_mode = "apk-mapping"
         proc = inst.launch(args.place)
         print("запущено, pid", proc.pid)
+        if getattr(st, "input_mode", "") == "apk-mapping":
+            from .inputmap import load_profile
+            prof = load_profile(None, xdg_config_home() / "soberx")
+            print(f"APK-режим: управление клавиатурой через профиль «{prof.name}» "
+                  f"({len(prof.mappings)} биндов). Правый клик/камера — через scrcpy.")
+    elif args.cmd == "input":
+        from .inputmap import (AdbTouchBackend, ControlProfile, InputMapper,
+                               load_profile)
+        cfgdir = xdg_config_home() / "soberx"
+        if args.icmd == "profile":
+            if args.import_gameloop:
+                prof = ControlProfile.from_gameloop_xml(args.import_gameloop)
+                prof.save(cfgdir / "controls.json")
+                print(f"импортировано {len(prof.mappings)} биндов из GameLoop XML -> controls.json")
+            elif args.set_file:
+                import shutil
+                shutil.copyfile(args.set_file, cfgdir / "controls.json")
+                print("профиль применён:", args.set_file)
+            elif args.export:
+                load_profile(None, cfgdir).save(args.export)
+                print("экспортирован в", args.export)
+            else:
+                print("указан профиль:", (cfgdir / "controls.json").exists())
+        elif args.icmd == "list":
+            prof = load_profile(None, cfgdir)
+            print(f"профиль: {prof.name}  экран {prof.screen_w}x{prof.screen_h}")
+            for m in prof.mappings:
+                arrow = f"->{m.swipe_to}" if m.swipe_to else ""
+                print(f"  {m.trigger:<16} {m.action:<6} ({m.target_x:.2f},{m.target_y:.2f}){arrow}  {m.label}")
+        elif args.icmd == "feed":
+            import shutil as _sh
+            if not _sh.which("adb"):
+                print("ошибка: не найден adb (установите android-tools / platform-tools)", file=sys.stderr)
+                return 2
+            prof = load_profile(None, cfgdir)
+            mapper = InputMapper(prof, AdbTouchBackend(serial=args.serial, dev=args.dev))
+            for t in args.triggers:
+                ok = mapper.apply_trigger(t)
+                print(f"{t}: {'выполнено' if ok else 'нет бинда'}")
     return 0
 
 

@@ -32,6 +32,9 @@ class Settings:
     # кастомные APK
     apk_source: str = "official"  # official | custom
     custom_apk_path: str = ""     # путь к загруженному .apk
+    # управление в APK-режиме
+    input_mode: str = ""          # "" (wine) | "apk-mapping" (клавиатура->тапы)
+    control_profile: str = ""     # путь к controls.json, пусто = профиль по умолчанию
     # прочее
     last_version: str = ""
 
@@ -60,7 +63,8 @@ class Settings:
     def save(self) -> None:
         self._dir.mkdir(parents=True, exist_ok=True)
         tmp = self._file.with_suffix(".tmp")
-        tmp.write_text(json.dumps(asdict(self), indent=2, ensure_ascii=False))
+        data = {k: v for k, v in asdict(self).items() if not k.startswith("_")}
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False))
         tmp.replace(self._file)
 
     # --- производные пути (как у sober: ~/.sober/<user>/...) ---

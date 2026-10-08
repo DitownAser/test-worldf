@@ -100,7 +100,14 @@ class Installer:
                 cmd = ["waydroid", "app", "start", "com.roblox.client"]
                 if place:
                     cmd += ["--placeId", place]
-                return subprocess.Popen(cmd)
+                proc = subprocess.Popen(cmd)
+                # при включённом маппинге запускаем scrcpy рядом: он даёт
+                # управление мышью/клавами поверх окна эмулятора без тач-гизмов
+                if getattr(self.st, "input_mode", "") == "apk-mapping" and have("scrcpy"):
+                    # scrcpy транслирует окно и превращает мышь ПК в касания:
+                    # это убирает «телефонные» свайпы по экрану
+                    subprocess.Popen(["scrcpy", "--no-audio", "--max-size", "1080"])
+                return proc
             raise RuntimeError("не найден waydroid/adb — установите waydroid для APK-режима")
         v = self.st.last_version
         exe = self.st.versions_dir / v / "RobloxPlayerBeta.exe"

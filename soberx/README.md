@@ -66,3 +66,15 @@ python3 tests/test_apk.py     # 9/9 pass
 ## Юридическая заметка
 Проект не аффилирован с Roblox Corporation. Использование кастомных APK
 может нарушать ToS игры; клиентские файлы скачиваются с официальных CDN Roblox.
+
+## Управление (убираем «бесячий тач»)
+
+APK Roblox не поддерживает клавиатуру — в sober это решается запуском **x86-64**
+сборки Windows-клиента (.exe, нативные WASD+мышь) через Wine. SoberX делает то же:
+
+* **Wine-режим (`soberx update` + `soberx launch`)** — x86-64 .exe клиент, управление ПК-нативное, без тача вообще (рекомендуется);
+* **APK-режим (`soberx launch --apk-mode`)** — если нужен именно APK (кастомная версия):
+  * включите в GUI галку «Клавиатура/мышь вместо тач-управления» — при запуске поднимается scrcpy-окно (мышь→тач без свайп-гизмов);
+  * профиль биндов WASD→виртуальный-стик: `soberx input list`, экспорт `soberx input profile --export controls.json`;
+  * импорт готовых конфигов GameLoop/LDPlayer: `soberx input profile --import-gameloop game.xml`;
+  * ручная эмуляция тапов в контейнер: `soberx input feed w space` (через adb sendevent).
