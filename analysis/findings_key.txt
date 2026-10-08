@@ -1,0 +1,99 @@
+======================================================================
+sober
+IMPORTED funcs: 0
+  interesting: 
+EXPORTED funcs: 0; sample: 
+KEY STRINGS (up to 30):
+    EVP_PKEY_CTX_new_id
+    EVP_PKEY_keygen_init
+    EVP_PKEY_CTX_set_ec_paramgen_curve_nid
+    EVP_PKEY_keygen
+    EVP_PKEY_CTX_free
+    EVP_PKEY_free
+    X509_set_pubkey
+    pthread_key_create
+    pthread_key_delete
+  RW seg off=0x721660 size=106512 entropy=2.941
+  RW seg off=0x73b680 size=14120 entropy=3.313
+  RW seg off=0x73f000 size=18712 entropy=2.051
+  RW seg off=0x744000 size=13331 entropy=4.888
+======================================================================
+sober_services
+IMPORTED funcs: 0
+  interesting: 
+EXPORTED funcs: 0; sample: 
+KEY STRINGS (up to 30):
+    /org/vinegarhq/Sober/onboarding.ui
+    org.vinegarhq.Sober
+    global destructors keyed to 
+    global constructors keyed to 
+    object key
+    cannot use key() for non-object iterators
+    (uuay)vinegarhq/
+  RW seg off=0x10c800 size=32000 entropy=2.740
+  RW seg off=0x114500 size=424 entropy=2.031
+======================================================================
+libloader.so
+IMPORTED funcs: 0
+  interesting: 
+EXPORTED funcs: 0; sample: 
+KEY STRINGS (up to 30):
+    corrupt deflate stream/app/bin/sober_services
+    goblin::elf::dynamicgoblin::optionsgoblin::optionsFailed to parse section headersFailed to parse dynamic sectionFailed t
+    pthread_key_create
+    pthread_key_delete
+  RW seg off=0x190000 size=9664 entropy=0.229
+  RW seg off=0x1925c0 size=2355556 entropy=7.965
+  RW seg off=0x3d2000 size=3928 entropy=1.088
+  RW seg off=0x3d3000 size=2736 entropy=4.709
+======================================================================
+libbadcpu.so
+IMPORTED funcs: 0
+  interesting: 
+EXPORTED funcs: 0; sample: 
+KEY STRINGS (up to 30):
+    pthread_key_create
+    pthread_key_delete
+    badcpu: CPU does not support SSE 4.2 - will attempt to emulate SSE 4.2 instructions.
+    fatal runtime error: assertion failed: key as usize != KEY_SENTVAL, aborting
+    fatal runtime error: out of TLS keys, aborting
+  RW seg off=0x5d510 size=5448 entropy=0.415
+  RW seg off=0x5ea58 size=2432 entropy=0.037
+======================================================================
+libmimalloc.so
+IMPORTED funcs: 0
+  interesting: 
+EXPORTED funcs: 0; sample: 
+KEY STRINGS (up to 30):
+    mi_heap_malloc_small
+    mi_heap_malloc
+    mi_heap_zalloc_small
+    mi_heap_zalloc
+    mi_heap_calloc
+    mi_heap_mallocn
+    mi_heap_realloc
+    mi_heap_reallocn
+    mi_heap_reallocf
+    mi_heap_rezalloc
+    mi_heap_recalloc
+    mi_heap_strdup
+    mi_heap_strndup
+    mi_heap_realpath
+    mi_heap_alloc_new
+    mi_heap_alloc_new_n
+    mi_heap_main
+    mi_heap_malloc_aligned_at
+    mi_heap_malloc_aligned
+    mi_heap_zalloc_aligned_at
+    mi_heap_zalloc_aligned
+    mi_heap_calloc_aligned_at
+    mi_heap_calloc_aligned
+    mi_heap_realloc_aligned_at
+    mi_heap_realloc_aligned
+    mi_heap_rezalloc_aligned_at
+    mi_heap_rezalloc_aligned
+    mi_heap_recalloc_aligned_at
+    mi_heap_recalloc_aligned
+    mi_heap_visit_blocks
+  RW seg off=0x30220 size=16832 entropy=0.211
+  RW seg off=0x34400 size=10376 entropy=0.383
