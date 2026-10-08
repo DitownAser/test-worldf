@@ -207,3 +207,40 @@ Unicorn Engine: смодировать исполнение DT_INIT-чанка �
 - `analysis/frida_dump.js` — Frida: хуки memcpy/memmove (дамп буферов >1 МБ через send()), mprotect EXEC
   + Memory.scan на \x7fELF внутри свежеисполняемого сегмента. Запуск: `frida -l analysis/frida_dump.js -f ./sober`
 После дампа: `binwalk anon_*.bin`, `r2 -A anon.bin` или Ghidra headless → псевдо-C (раздел 7.5).
+
+## 8. Для чего libloader.so и sober, что внутри (дополнительная верификация, readelf -d)
+
+### sober (главный исполняемый модуль, ET_DYN PIE)
+Зависимости (DT_NEEDED): libloader.so, libmimalloc.so, libcrypto.so.3, libcurl.so.4,
+libfreetype/libfontconfig, libz, libsecret-1, gobject/glib, libxml2, GLESv2/EGL,
+gstreamer/gstapp/gstvideo, libdbus-1, libc.
+Вывод: это GUI/сетевой клиент — curl+OpenSSL (HTTP/TLS, генерация EC-ключей EVP_PKEY_keygen —
+авторизация), GStreamer+GLES/EGL+freetype+webkit-стек (рендеринг окна игры), libsecret (хранение токенов),
+dbus (интеграция с desktop). Это пересобранный Sober из vinegarhq (эмулятор/клиент Roblox на Linux):
+логин через Epic-style OAuth-подобную схему, запуск игрового клиента. Собственные строки URL вырезаны
+(код обфусцирован/вырезан), но структура импортов однозначно соответствует upstream sober.
+
+### libloader.so (защитный лоадер, Rust + goblin)
+NEEDED только: libbadcpu.so, libgcc_s, libc, ld-linux. Никаких GUI-библиотек.
+Содержимое: ~2.36 МБ RW-сегмент с энтропией 7.965 = зашифрованный+сжатый payload;
+строки «corrupt deflate stream» + путь «/app/bin/sober_services» => внутри zlib-поток с полезной
+нагрузкой (собственно защищённый код sober/sober_services, который после расшифровки распаковывается
+и запускается); импорт ptrace/prctl/chroot/setuid/pidfd_spawnp => анти-отладка + запуск дочернего
+процесса в изоляции (chroot/sandbox). SONAME отсутствует — грузится как DT_NEEDED у sober.
+Назначение: runtime-распаковка и защита от анализа/подмены (asset protection Vinegar/Sober).
+
+### sober_services
+NEEDED: libwebkitgtk-6.0, libgtk-4, libadwaita, libsoup-3, javascriptcore — полноценное GTK4/webkit GUI.
+Строки: org.vinegarhq.Sober, onboarding.ui, executeRoblox / RobloxWKHybrid IPC через webkit
+script-message. Это служебное GUI-приложение Sober (онбординг/оверлей/сервисы), НЕ обфусцировано.
+
+### libbadcpu.so
+Эмулятор отсутствующих инструкций SSE4.1/SSE4.2 (CPU feature detection, strings про SSE3/SSE4.1/SSE4.2,
+«will attempt to emulate»). Нужен чтобы запустить бинарь с SSE4.2-требованием на старых CPU. Не обфусцирован.
+
+### libmimalloc.so
+Стандартный mimalloc (Microsoft allocator), полный набор mi_* символов. Не обфусцирован.
+
+Итого цепочка запуска: sober -> (init) libloader.so расшифровывает/распаковывает payload ->
+спавнит /app/bin/sober_services в песочнице (chroot/setuid/pidfd_spawn), libbadcpu подменяет
+недостающие инструкции, libmimalloc ускоряет аллокации.
