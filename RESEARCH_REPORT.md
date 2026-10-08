@@ -193,3 +193,17 @@ Unicorn Engine: смодировать исполнение DT_INIT-чанка �
 - [ ] Если процесс не живёт долго / крашится — Уровень 2 (Frida)
 - [ ] Дамп → binwalk/поиск ELF → Ghidra headless → псевдо-C
 - [ ] Сличить с upstream vinegarhq/sober, описать остаточную обвязку
+
+## 7.8 Уточнение по точкам перехвата (проверено по findings_syms.txt)
+Импорты libloader.so реально включают: `inflate, inflateEnd, inflateInit2_, inflateReset2`,
+`mprotect, mmap64, ptrace, prctl, fork, vfork, posix_spawn*, pidfd_spawnp, setuid, chroot, dlopen, dlsym`.
+→_bp на **inflateEnd** и **mprotect(PROT_EXEC)** валидны (это реальные GOT-импорты libc/zlib).
+`ptrace` тоже импортируется — анти-отладка подтверждена статически; при срабатывании bp на ptrace
+смещаем исполнение (пропуск syscall через возвращаемое значение) либо уходим во Frida/Unicorn.
+
+Готовые рабочие скрипты (в репо, закоммичены):
+- `analysis/dump_payload.py` — gdb: брейкпоинты inflateEnd/mprotect/ptrace + автослив всех анонимных
+  областей ≥1 МБ из /proc/PID/maps в runtime_dumps/. Запуск: `gdb -q -x analysis/dump_payload.py --args ./sober`
+- `analysis/frida_dump.js` — Frida: хуки memcpy/memmove (дамп буферов >1 МБ через send()), mprotect EXEC
+  + Memory.scan на \x7fELF внутри свежеисполняемого сегмента. Запуск: `frida -l analysis/frida_dump.js -f ./sober`
+После дампа: `binwalk anon_*.bin`, `r2 -A anon.bin` или Ghidra headless → псевдо-C (раздел 7.5).
