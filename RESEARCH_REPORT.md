@@ -113,3 +113,83 @@ generate-core-file      # или commands: dump binary memory payload.bin ADDR_E
 - `strings_loader.txt` — релевантные строки libloader.so.
 - `payload_scan*.txt`, `deflate_candidate.bin` — результаты поиска zlib/ELF внутри шифрованного сегмента.
 - `init_funcs.txt` — DT_INIT/INIT_ARRAY + дизассемблерия инициализационных thunk.
+
+---
+
+# 6. Динамическая деофускация (рантайм) — можно ли и как именно
+
+## Ответ коротко
+**Да, это единственный рабочий путь.** Статика упёрлась в потолок (см. разделы 3–5): payload зашифрован, ключ и логика расшифровки живут только в памяти после DT_INIT. В рантайме всё это ложится в RAM в открытом виде — нужно просто его там перехватить. Ниже — полный инструментарий от простого к сложному.
+
+## 7.1 Уровень 0: «ленивый» дамп через /proc (без отладчика вообще)
+Если есть возможность запустить бинарник (свой Linux-бокс/ВМ, НЕ боевая система):
+```bash
+./sober &                      # или с нужным окружением
+PID=$!
+sleep 2                        # дать DT_INIT отработать (decrypt+inflate уже выполнены)
+cat /proc/$PID/maps > maps.txt # все области: ищем исполняемые anonymous-rwx/r-x без имени файла
+gdb -p $PID -batch \
+  -ex "dump binary memory dec.bin <start> <end>"   # границы берём из maps.txt
+kill $PID
+```
+Признак цели в maps.txt: строка вида `7f...-7f... rwxp 00000000 00:00 0 [anon:]` размером ~несколько МБ — это и есть распакованный сегмент 0x1935c0+0x23f16c из libloader.so. Дальше dump → Ghidra/radare2.
+
+## 7.2 Уровень 1: gdb + python-скрипт (автоматический перехват)
+Точки перехвата (все подтверждены статикой):
+- **после decrypt**: breakpoint на `memcpy`/`mmap`+проверка размера (~0x23f16c);
+- **после inflate**: breakpoint на `inflateEnd` (libz импортируется — слот в GOT известен) — в этот момент deflate-поток уже распакован;
+- **перед передачей управления payload**: breakpoint на `mprotect(..., PROT_EXEC)` — последняя операция шейпера перед прыжком в декодированный код.
+
+Скрипт (`dump_payload.py`, запуск: `gdb -x dump_payload.py ./sober`):
+```python
+import gdb
+def stop(e):
+    inf = e.inferior()
+    for m in open('/proc/%d/maps' % inf.pid).read().splitlines():
+        if 'rwx' in m.split()[1] and '[' not in m:  # анонимная исполняемая область
+            a, b = [int(x,16) for x in m.split('-')[0].split(' ')] , None
+            s, e = m.split()[0].split('-'); s, e = int(s,16), int(e,16)
+            gdb.execute(f'dump binary mem anon_{s:x}.bin {s} {e}')
+gdb.Breakpoint("inflateEnd", stop=stop)
+gdb.execute("run")
+```
+
+## 7.3 Уровень 2: Frida (лучший вариант против анти-отладки)
+Frida работает через свой ptrace-агент и часто переживает проверки, которые ломают gdb.
+```bash
+frida -l dump.js -f ./sober --no-pause
+```
+```javascript
+// dump.js
+const SIZE = 0x23f16c;
+Interceptor.attach(Module.findExportByName("libc.so.6","memcpy"), {
+  onEnter(a){ this.n=a[2].toInt32(); },
+  onLeave(r){ if(this.n>0x200000) send({size:this.n}, Memory.readByteArray(r,this.n)); }
+});
+// аналогично Interceptor на mmap/memset/inflateEnd — пишем буферы в файлы
+```
+Сохраненный blob проверяется: `file`, `binwalk`, поиск `\x7fELF` (внутренний образ может быть вторым ELF — тогда его тоже дампим по адресам маппинга).
+
+## 7.4 Уровень 3: эмуляция вместо запуска (если анти-отладка блокирует всё)
+Unicorn Engine: смодировать исполнение DT_INIT-чанка по адресу 0x17000 из libloader.so, подставив заглушки для mmap/memcpy/inflate. Плюс: не нужен реальный CPU/ОС, обходятся проверки окружения. Минус: надо руками прокинуть ~710 RELATIVE-релаций (уже разобраны — лежат в analysis/init_funcs.txt).
+
+## 7.5 Уровень 4: пост-обработка дампа (то, что реально даст «деофускацию»)
+Получив открытый код из RAM:
+1. `radare2 -A dump.bin` → `aa` (анализ CFG) → `pdd` (伪C через r2ghidra) или Ghidra Headless (`analyzeHeadless ... -postScript decompile.py`) — получаем псевдо-C по всем функциям.
+2. Восстановить границы функций: точки входа из INIT_ARRAY + кросс-ссылки; имена подтянуть из строк Rust (panic-сообщения содержат модули/функции — это готовые подсказки).
+3. Devirtualization: если обнаружится VM-диспетчер (большой switch/cycle-interpreter) — написать YARA/KeePaX-подобный паттерн-матчер или использовать `Miasm` для symbolic execution каждого блока.
+4. Сличение с upstream github.com/vinegarhq/sober — вероятно, payload это +есть тот же sober, упакованный лоадером; тогда «деофускация» сводится к удалению обвязки и работе с обычным Go/C-кодом.
+
+## 7.6 Риски и ограничения (обязательно прочитать)
+- **Запускать ТОЛЬКО в изолированной ВМ** (snapshot, без сети): лоадер делает chroot/setuid/fork+exec — на хосте это опасно.
+- Анти-детект: проверены признаки ptrace-anti-debug; если gdb/frida убивают процесс — frida-gadget/inline-патч syscall-проверок, либо уровень 3 (Unicorn).
+- Если между decrypt и exec стоит integrity-check кода (самохеш) — дампить строго ПОСЛЕ mprotect(PROT_EXEC), не модифицируя байты до перехода.
+- Юридически: разбор чужого защищённого софта допустим для интероперабельности/безопасности в вашей юрисдикции; для Sober есть открытый upstream — сверяться с ним законно.
+
+## 7.7 Порядок действий (чеклист)
+- [ ] Поднять изолированную ВМ (Ubuntu 22.04+, x86-64, снапшот)
+- [ ] Скопировать туда sober, libloader.so, libbadcpu.so, libmimalloc.so
+- [ ] Запустить Уровень 0 (/proc/maps) — самый быстрый результат
+- [ ] Если процесс не живёт долго / крашится — Уровень 2 (Frida)
+- [ ] Дамп → binwalk/поиск ELF → Ghidra headless → псевдо-C
+- [ ] Сличить с upstream vinegarhq/sober, описать остаточную обвязку
