@@ -13,4 +13,5 @@ from .http import ProgressCb, download_file
 def download(url: str, dest: Path, progress: ProgressCb | None = None,
              sha256: str | None = None) -> Path:
     """Скачать ``url`` в ``dest`` с необязательным прогрессом и проверкой SHA-256."""
-    return download_file(url, dest, progress=progress, sha256=sha256)
+    return download_file(url, dest, progress=progress, checksum=sha256,
+                         checksum_algo="sha256")

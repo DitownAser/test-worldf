@@ -1,3 +1,0 @@
-Traceback (most recent call last):
-  File "<stdin>", line 8, in <module>
-zlib.error: Error -3 while decompressing data: incorrect data check

@@ -1,0 +1,16 @@
+{
+  "threshold": 10,
+  "minBlocks": 10,
+  "reporters": ["html", "consoleFull"],
+  "ignore": [
+    "**/out/**",
+    "**/__pycache__/**",
+    "**/.git/**",
+    "**/target/**",
+    "**/node_modules/**",
+    "**/megalinter-reports/**",
+    "**/*.lock",
+    "**/Cargo.lock"
+  ],
+  "absolute": true
+}

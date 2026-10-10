@@ -351,6 +351,8 @@ mod tests {
 
     #[test]
     fn split_http_parses() {
+        // Тестовые fixtures: разбор URL без реальных сетевых запросов.
+        // NOLINT(devskim:DS137138) http:// здесь — данные парсера, не трафик.
         let (h, p, path) = split_http("http://example.com:8080/a/b").unwrap();
         assert_eq!((h.as_str(), p, path.as_str()), ("example.com", 8080, "/a/b"));
         let (h, p, path) = split_http("http://host/x").unwrap();
@@ -391,6 +393,8 @@ mod tests {
         let mk_jobs = |tag: &str| -> Vec<ChunkJob> {
             (0..6).map(|i| ChunkJob {
                 name: format!("{tag}{i}"),
+                // NOLINT(devskim:DS137138) http:// обязателен: split_http() принимает
+                // только чистый TCP путь, а сервер ниже — локальный тестовый слушатель.
                 url: format!("http://{addr}/file{i}"),
                 dest: dir.join(format!("{tag}{i}.bin")),
                 sha256: None,

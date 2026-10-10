@@ -175,25 +175,32 @@ impl<'a> WineClient<'a> {
     /// Вход как у sober: браузерный flow с redirect на localhost:59251.
     /// Если клиент уже логинился внутри Wine (authinfo.json), токен берётся оттуда.
     pub fn login(&mut self) -> Result<String> {
-        if let Some(tok) = self.token_from_authinfo() {
-            self.log("токен найден в authinfo.json Wine-префикса");
-            if let Some(name) = crate::auth::username_from_token(&tok) {
-                self.st.username = name;
+        // Оба пути входа (токен из Wine-префикса и браузерный flow) отличаются
+        // только источником токена — сохранение профиля вынесено в apply_token.
+        let tok = match self.token_from_authinfo() {
+            Some(tok) => {
+                self.log("токен найден в authinfo.json Wine-префикса");
+                tok
             }
-            self.st.token = tok.clone();
-            self.st.save()?;
-            crate::auth::store_cookie(&Settings::settings_dir(), &tok)?;
-            return Ok(tok);
-        }
-        let tok = crate::auth::login_interactive(&self.st.browser, &|s| self.log(s))?;
-        if let Some(name) = crate::auth::username_from_token(&tok) {
+            None => {
+                let tok = crate::auth::login_interactive(&self.st.browser, &|s| self.log(s))?;
+                self.log("вход выполнен");
+                tok
+            }
+        };
+        self.apply_token(&tok)?;
+        Ok(tok)
+    }
+
+    /// Записать полученный токен в настройки и cookie-хранилище.
+    fn apply_token(&mut self, tok: &str) -> Result<()> {
+        if let Some(name) = crate::auth::username_from_token(tok) {
             self.st.username = name;
         }
-        self.st.token = tok.clone();
+        self.st.token = tok.to_owned();
         self.st.save()?;
-        crate::auth::store_cookie(&Settings::settings_dir(), &tok)?;
-        self.log("вход выполнен");
-        Ok(tok)
+        crate::auth::store_cookie(&Settings::settings_dir(), tok)?;
+        Ok(())
     }
 
     // ---------- запуск игры ----------

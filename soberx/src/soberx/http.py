@@ -52,17 +52,40 @@ def http_post_json(url: str, payload: dict, extra_headers: Mapping[str, str] | N
     return open_url(url, data=data, method="POST", headers=headers, timeout=timeout)
 
 
-def download_file(url: str, dest: Path, *, progress: ProgressCb | None = None,
-                  sha256: str | None = None, timeout: int = 60,
-                  chunk_size: int = 1 << 20) -> Path:
-    """Скачать файл в ``dest`` с прогрессом и опциональной проверкой SHA-256.
+def _hash_stream(stream, h, chunk_size: int) -> int:
+    """Поблочно прочитать поток в хеш-объект; вернуть число байт."""
+    done = 0
+    while chunk := stream.read(chunk_size):
+        h.update(chunk)
+        done += len(chunk)
+    return done
 
+
+def verify_sha256(path: Path, expected: str, *, chunk_size: int = 1 << 20) -> bool:
+    """Пересчитать SHA-256 файла и сравнить с ожидаемым (ошибка — False)."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        _hash_stream(f, h, chunk_size)
+    return h.hexdigest() == expected.strip().lower()
+
+
+def download_file(url: str, dest: Path, *, progress: ProgressCb | None = None,
+                  checksum: str | None = None, checksum_algo: str = "sha256",
+                  timeout: int = 60, chunk_size: int = 1 << 20) -> Path:
+    """Скачать файл в ``dest`` с прогрессом и опциональной проверкой хеш-суммы.
+
+    Хеш считается по потоку во время скачивания (это проверка целостности
+    загруженного содержимого, а не хеширование коротких строк/значений).
+    Поддерживаются алгоритмы hashlib (``checksum_algo``: sha256, sha1, md5...).
     Пишется во временный ``*.part``-файл и переносится на место только после
     успешной проверки — обрыв сети не оставляет битой цели.
     """
+    algo = checksum_algo.strip().lower()
+    if algo not in hashlib.algorithms_available:
+        raise ValueError(f"Неизвестный алгоритм хеширования: {checksum_algo}")
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
-    h = hashlib.sha256()
+    h = hashlib.new(algo)
     done = 0
     try:
         with open_url(url, method="GET", timeout=timeout) as r:
@@ -74,8 +97,8 @@ def download_file(url: str, dest: Path, *, progress: ProgressCb | None = None,
                     done += len(chunk)
                     if progress:
                         progress(done, total)
-        if sha256 and h.hexdigest() != sha256.lower():
-            raise ValueError(f"SHA-256 не совпал для {url}")
+        if checksum and h.hexdigest() != checksum.strip().lower():
+            raise ValueError(f"{algo.upper()} не совпал для {url}")
         tmp.replace(dest)
     finally:
         tmp.unlink(missing_ok=True)

@@ -1,3 +1,0 @@
-payload len 2355556 first bytes: 0000000000000000030000000000000000000000000000000000000000000000
-zlib candidates: [(2071811, 'zlib', 582636, b'\x01\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')]
-embedded ELF magics at offsets: [] count 0
