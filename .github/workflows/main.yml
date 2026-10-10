@@ -16,22 +16,22 @@ jobs:
     permissions:
       contents: write
       issues: write
-      pull_requests: write
+      pull-requests: write # Исправлено: через дефис, без "s" на конце
 
     steps:
       # 1. Скачиваем код вашего проекта
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Позволяет проверять только измененные файлы
+          fetch-depth: 0
 
-      # 2. Запускаем MegaLinter (тот самый блок, который вы нашли)
+      # 2. Запускаем MegaLinter
       - name: MegaLinter
         uses: oxsecurity/megalinter@v10.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false # Проверяет только новые/измененные файлы, так анализ проходит гораздо быстрее
-          DISABLE_SECURITY: true       # Отключаем поиск уязвимостей, фокусируемся только на качестве кода
-          APPLY_FIXES: all             # Если линтер может сам исправить ошибку стиля, он это сделает
+          VALIDATE_ALL_CODEBASE: false
+          DISABLE_SECURITY: true
+          APPLY_FIXES: all
           APPLY_FIXES_EVENT: pull_request
           APPLY_FIXES_MODE: commit
