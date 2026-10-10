@@ -6,17 +6,23 @@
 """
 from __future__ import annotations
 
-import json
 import re
 import shutil
-import struct
 import subprocess
-import urllib.request
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from .http import download_file, http_get_json
+
 PUBNUB_CHANNEL = "https://pubnub.robxn.com/android"  # канал релизов Android-клиента
+
+_ABI_RE = re.compile(r"lib/([a-zA-Z0-9_\-]+)/")
+_CLIENT_LIB_RES = (
+    re.compile(r"lib/[a-z0-9_\-]+/libroblox\.so$"),
+    re.compile(r"lib/[a-z0-9_\-]+/librogbox\.so$"),
+    re.compile(r"assets/[^/]+\.bundle$"),
+)
 
 
 @dataclass
@@ -29,6 +35,11 @@ class ApkInfo:
     size: int
     valid: bool
     error: str = ""
+
+
+def _abis_in(zf: zipfile.ZipFile) -> list[str]:
+    """Список ABI-каталогов с нативными библиотеками в APK."""
+    return sorted({m.group(1) for n in zf.namelist() if (m := _ABI_RE.match(n))})
 
 
 def _strings_from_axml(raw: bytes) -> list[str]:
@@ -66,6 +77,12 @@ def _read_android_manifest(zf: zipfile.ZipFile) -> tuple[str, str, int]:
     return pkg, ver, code
 
 
+def _has_client_artifacts(names: list[str]) -> bool:
+    """Есть ли в архиве характерные для Roblox-клиента файлы."""
+    return any(n.startswith("assets/ClientContent.xml") or n == "assets/ClientVersion.xml"
+               or any(rx.match(n) for rx in _CLIENT_LIB_RES) for n in names)
+
+
 def inspect_apk(path: Path) -> ApkInfo:
     """Полная инспекция APK без внешних инструментов."""
     p = Path(path)
@@ -76,14 +93,8 @@ def inspect_apk(path: Path) -> ApkInfo:
         return ApkInfo(p, "", "", 0, [], size, False, "не является zip/APK")
     try:
         with zipfile.ZipFile(p) as zf:
-            names = zf.namelist()
-            abis = sorted({m.group(1) for n in names
-                           for m in [re.match(r"lib/([a-zA-Z0-9_\-]+)/", n)] if m})
-            has_client = any(n.startswith("assets/ClientContent.xml") or
-                             n == "assets/ClientVersion.xml" or
-                             re.match(r"lib/[a-z0-9_\-]+/libroblox.so$", n) or
-                             re.match(r"lib/[a-z0-9_\-]+/librogbox.so$", n) or
-                             re.match(r"assets/[^/]+\.bundle$", n) for n in names)
+            abis = _abis_in(zf)
+            has_client = _has_client_artifacts(zf.namelist())
             pkg, ver, code = _read_android_manifest(zf)
     except (zipfile.BadZipFile, OSError) as e:
         return ApkInfo(p, "", "", 0, [], size, False, f"битый архив: {e}")
@@ -96,13 +107,9 @@ def inspect_apk(path: Path) -> ApkInfo:
 def download_official(dest_dir: Path) -> Path:
     """Скачать официальный Android-APK по последнему номеру версии с канала."""
     dest_dir.mkdir(parents=True, exist_ok=True)
-    j = json.loads(urllib.request.urlopen(PUBNUB_CHANNEL, timeout=30).read())
+    j = http_get_json(PUBNUB_CHANNEL)
     url = j["url"] if isinstance(j, dict) else j[0]["url"]
-    out = dest_dir / f"official-{Path(url).name}"
-    req = urllib.request.Request(url, headers={"User-Agent": "SoberX/1.0"})
-    with urllib.request.urlopen(req, timeout=120) as r, open(out, "wb") as f:
-        shutil.copyfileobj(r, f, 1 << 20)
-    return out
+    return download_file(url, dest_dir / f"official-{Path(url).name}", timeout=120)
 
 
 def install_apk(apk: Path, store_dir: Path) -> Path:
@@ -122,12 +129,11 @@ def extract_native_libs(apk: Path, dest: Path, abi: str | None = None) -> list[P
     dest.mkdir(parents=True, exist_ok=True)
     out: list[Path] = []
     with zipfile.ZipFile(apk) as zf:
-        abis = [abi] if abi else sorted({m.group(1)
-                for n in zf.namelist()
-                for m in [re.match(r"lib/([a-zA-Z0-9_\-]+)/", n)] if m})
+        abis = [abi] if abi else _abis_in(zf)
         for a in abis:
+            prefix = f"lib/{a}/"
             for n in zf.namelist():
-                if n.startswith(f"lib/{a}/") and n.endswith(".so"):
+                if n.startswith(prefix) and n.endswith(".so"):
                     tgt = dest / a / Path(n).name
                     tgt.parent.mkdir(parents=True, exist_ok=True)
                     with zf.open(n) as src, open(tgt, "wb") as f:
@@ -137,10 +143,8 @@ def extract_native_libs(apk: Path, dest: Path, abi: str | None = None) -> list[P
 
 
 def installed_list(store_dir: Path) -> list[ApkInfo]:
-    res = []
-    for p in sorted(store_dir.glob("*.apk")):
-        res.append(inspect_apk(p))
-    return res
+    """Инспекция всех APK в хранилище SoberX."""
+    return [inspect_apk(p) for p in sorted(store_dir.glob("*.apk"))]
 
 
 def run_on_emulator(apk: Path, serial: str | None = None) -> subprocess.CompletedProcess:

@@ -101,7 +101,7 @@ pub fn get_bytes(url: &str) -> Result<Vec<u8>> {
         static AGENT: OnceLock<ureq::Agent> = OnceLock::new();
         let agent = AGENT.get_or_init(|| {
             ureq::AgentBuilder::new()
-                .user_agent("SoberX/1.0")
+                .user_agent(crate::http::USER_AGENT)
                 .timeout_connect(CONNECT_TIMEOUT)
                 .timeout(IO_TIMEOUT)
                 .build()

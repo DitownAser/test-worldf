@@ -65,13 +65,8 @@ pub fn download(
 }
 
 /// Скачать в память (для APK/JSON эндпоинтов).
-pub fn get_bytes(url: &str) -> Result<Vec<u8>> {
-    let resp = ureq::get(url)
-        .set("User-Agent", "SoberX/1.0")
-        .timeout(std::time::Duration::from_secs(120))
-        .call()
-        .with_context(|| format!("GET {url}"))?;
-    let mut buf = Vec::new();
-    resp.into_reader().read_to_end(&mut buf)?;
-    Ok(buf)
+/// Делегирует единому HTTP-фасаду — убран дублирующий ureq-запрос.
+#[inline]
+pub(crate) fn get_bytes(url: &str) -> Result<Vec<u8>> {
+    crate::http::get_bytes(url)
 }

@@ -265,19 +265,16 @@ pub fn extract_native_libs(apk: &Path, dest: &Path, abi: Option<&str>) -> Result
 
 /// Список установленных APK в хранилище.
 pub fn installed_list(store_dir: &Path) -> Vec<ApkInfo> {
-    let mut res = Vec::new();
-    if let Ok(rd) = fs::read_dir(store_dir) {
-        let mut files: Vec<_> = rd
-            .filter_map(|e| e.ok())
-            .map(|e| e.path())
-            .filter(|p| p.extension().map(|x| x == "apk").unwrap_or(false))
-            .collect();
-        files.sort();
-        for p in files {
-            res.push(inspect_apk(&p));
-        }
-    }
-    res
+    let mut files: Vec<_> = fs::read_dir(store_dir)
+        .map(|rd| {
+            rd.filter_map(|e| e.ok())
+                .map(|e| e.path())
+                .filter(|p| p.extension().map(|x| x == "apk").unwrap_or(false))
+                .collect()
+        })
+        .unwrap_or_default();
+    files.sort();
+    files.iter().map(|p| inspect_apk(p)).collect()
 }
 
 /// Установить APK на запущенный Android-эмулятор через adb (если доступен).

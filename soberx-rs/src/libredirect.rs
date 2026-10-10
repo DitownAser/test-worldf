@@ -46,10 +46,6 @@ int getaddrinfo(const char *node, const char *service,
 }
 "#;
 
-fn have(cmd: &str) -> bool {
-    Command::new("which").arg(cmd).output().map(|o| o.status.success()).unwrap_or(false)
-}
-
 /// Собрать libredirect.so, если ещё нет. Вернуть путь или None.
 pub fn ensure_libredirect(build_dir: &Path) -> Option<PathBuf> {
     let so = build_dir.join("libredirect.so");
@@ -61,7 +57,7 @@ pub fn ensure_libredirect(build_dir: &Path) -> Option<PathBuf> {
             return Some(so);
         }
     }
-    if !have("gcc") {
+    if !crate::wineclient::have("gcc") {
         return None;
     }
     std::fs::create_dir_all(build_dir).ok()?;
