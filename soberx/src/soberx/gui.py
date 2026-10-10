@@ -118,19 +118,28 @@ def run_gui() -> int:
             from .wineclient import WineClient
             worker(lambda: f"pid {WineClient(st).launch().pid}")
 
-        def do_apk_chooser(*_):
-            dlg = Gtk.FileChooserDialog(title="Выберите APK", transient_for=win,
+        def file_dialog(title: str, filter_name: str, pattern: str, action_label: str):
+            """Одноразовый FileChooserDialog с одним фильтром."""
+            dlg = Gtk.FileChooserDialog(title=title, transient_for=win,
                                         action=Gtk.FileChooserAction.OPEN)
-            flt = Gtk.FileFilter(); flt.set_name("Android APK"); flt.add_pattern("*.apk")
+            flt = Gtk.FileFilter()
+            flt.set_name(filter_name)
+            flt.add_pattern(pattern)
             dlg.add_filter(flt)
             dlg.add_button("Отмена", Gtk.ResponseType.CANCEL)
-            dlg.add_button("Установить", Gtk.ResponseType.OK)
+            dlg.add_button(action_label, Gtk.ResponseType.OK)
+            return dlg
+
+        def do_apk_chooser(*_):
+            dlg = file_dialog("Выберите APK", "Android APK", "*.apk", "Установить")
+
             def resp(d, r):
                 if r == Gtk.ResponseType.OK:
                     fp = Path(d.get_filename())
                     worker(lambda: Installer(st, on_progress).install_apk(fp) and refresh_apks())
                 dlg.destroy()
-            dlg.connect("response", resp); dlg.present()
+            dlg.connect("response", resp)
+            dlg.present()
 
         def do_apk_official(*_):
             worker(lambda: Installer(st, on_progress).install_apk(None) and refresh_apks())
@@ -154,12 +163,9 @@ def run_gui() -> int:
         box.append(kb_row)
 
         def do_kb_import(*_):
-            dlg = Gtk.FileChooserDialog(title="Конфиг управления GameLoop", transient_for=win,
-                                        action=Gtk.FileChooserAction.OPEN)
-            flt = Gtk.FileFilter(); flt.set_name("GameLoop XML"); flt.add_pattern("*.xml")
-            dlg.add_filter(flt)
-            dlg.add_button("Отмена", Gtk.ResponseType.CANCEL)
-            dlg.add_button("Импортировать", Gtk.ResponseType.OK)
+            dlg = file_dialog("Конфиг управления GameLoop", "GameLoop XML", "*.xml",
+                              "Импортировать")
+
             def resp(d, r):
                 if r == Gtk.ResponseType.OK:
                     from .inputmap import ControlProfile
@@ -167,7 +173,8 @@ def run_gui() -> int:
                     prof.save(xdg_config_home() / "soberx" / "controls.json")
                     notify(f"импортировано биндов: {len(prof.mappings)}")
                 dlg.destroy()
-            dlg.connect("response", resp); dlg.present()
+            dlg.connect("response", resp)
+            dlg.present()
 
         def do_kb_export(*_):
             from .inputmap import load_profile
@@ -200,9 +207,9 @@ def run_gui() -> int:
 
 def main() -> int:
     try:
-        import gi  # noqa
+        import gi  # noqa: F401
     except ImportError:
         from .cli import main as cli_main
         print("PyGObject/GTK недоступен — запускаю CLI. Пример: soberx --help")
-        return cli_main(["--help"] and ["login"] if False else ["whoami"])
+        return cli_main(["whoami"])
     return run_gui()

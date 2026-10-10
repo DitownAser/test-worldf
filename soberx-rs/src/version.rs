@@ -1,6 +1,7 @@
 //! Версии Roblox и URL чанков — порт src/soberx/version.py (схема vinegarhq/sober).
 
 use anyhow::{anyhow, Result};
+use std::io::Read;
 use std::path::Path;
 
 pub const VERSION_URL: &str = "https://setup.rbxcdn.com/version";
@@ -21,19 +22,16 @@ pub const CLIENT_CHUNKS: &[&str] = &[
     "data.prf",
 ];
 
-fn get(url: &str) -> Result<Vec<u8>> {
-    crate::fasthttp::get_bytes(url)
-}
-
 /// Актуальная версия клиента (r-xxxxxxx).
 pub fn current_version() -> Result<String> {
-    if let Ok(data) = get(CLIENT_URL) {
-        let j: serde_json::Value = serde_json::from_slice(&data)?;
+    if let Ok(j) = crate::http::get_json(CLIENT_URL) {
         if let Some(v) = j["clientVersionUpload"].as_str() {
             return Ok(v.to_string());
         }
     }
-    let v = String::from_utf8(get(VERSION_URL)?)?.trim().to_string();
+    let v = String::from_utf8(crate::http::get_bytes(VERSION_URL)?)?
+        .trim()
+        .to_string();
     let ok = v.len() >= 9
         && v.as_bytes()[0].is_ascii_lowercase()
         && v.as_bytes()[1] == b'-'
@@ -54,8 +52,7 @@ pub fn channel_version(channel: &str) -> Result<String> {
         "legacy_avi" => "https://clientsettingscdn.roblox.com/v2/client-version/WindowsChannel-AVI",
         _ => return Err(anyhow!("неизвестный канал: {channel}")),
     };
-    let data = get(url)?;
-    let j: serde_json::Value = serde_json::from_slice(&data)?;
+    let j = crate::http::get_json(url)?;
     j["clientVersionUpload"]
         .as_str()
         .map(|s| s.to_string())
@@ -83,15 +80,14 @@ pub fn chunk_storage_for(_version: &str, channel: &str) -> String {
 }
 
 fn storage_from_apk() -> Result<String> {
-    let data = get(
+    let j = crate::http::get_json(
         "https://clientsettingscdn.roblox.com/v2/client-version/AndroidPlatform",
     )?;
-    let j: serde_json::Value = serde_json::from_slice(&data)?;
     let u = j["clientVersionUpload"]
         .as_str()
         .ok_or_else(|| anyhow!("нет версии Android"))?
         .to_string();
-    let apk = get(&format!("https://setup.rbxcdn.com/{u}-roblox.apk"))?;
+    let apk = crate::http::get_bytes(&format!("https://setup.rbxcdn.com/{u}-roblox.apk"))?;
     let reader = std::io::Cursor::new(apk);
     let mut zf = zip::ZipArchive::new(reader)?;
     let mut vf = String::new();
@@ -113,7 +109,7 @@ pub fn chunks_base(version: &str, storage: &str) -> String {
 /// Скачать securitychecks.qjs.js (нужен клиенту, как в sober).
 pub fn get_qjs(version: &str, storage: &str, dest_dir: &Path) -> Result<std::path::PathBuf> {
     let url = format!("{}securitychecks.qjs.js", chunks_base(version, storage));
-    let data = crate::fasthttp::get_bytes(&url)?;
+    let data = crate::http::get_bytes(&url)?;
     let dest = dest_dir.join("securitychecks.qjs.js");
     std::fs::write(&dest, data)?;
     Ok(dest)
@@ -121,12 +117,9 @@ pub fn get_qjs(version: &str, storage: &str, dest_dir: &Path) -> Result<std::pat
 
 /// Скачать все чанки клиента в versions/<version> — ПАРАЛЛЕЛЬНО (fasthttp),
 /// как это делает быстрый путь загрузки. Возвращает список успешно скачанных файлов.
-pub fn download_client_chunks(
-    version: &str,
-    storage: &str,
-    dest_dir: &Path,
-) -> Vec<String> {
+pub fn download_client_chunks(version: &str, storage: &str, dest_dir: &Path) -> Vec<String> {
     let base = chunks_base(version, storage);
+    let threads = crate::fasthttp::default_threads();
     let jobs: Vec<crate::fasthttp::ChunkJob> = CLIENT_CHUNKS
         .iter()
         .map(|name| crate::fasthttp::ChunkJob {
@@ -136,11 +129,9 @@ pub fn download_client_chunks(
             sha256: None,
         })
         .collect();
-    let (results, total) = crate::fasthttp::download_batch(jobs, crate::fasthttp::default_threads());
+    let (results, total) = crate::fasthttp::download_batch(jobs, threads);
     if total > 0 {
-        println!("[soberx] чанки: {} байт за один проход ({} потоков)", total, crate::fasthttp::default_threads());
+        println!("[soberx] чанки: {total} байт за один проход ({threads} потоков)");
     }
     results.iter().filter(|r| r.ok).map(|r| r.name.clone()).collect()
 }
-
-use std::io::Read;
