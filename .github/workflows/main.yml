@@ -32,7 +32,7 @@ jobs:
         env:
           # Передаем системный токен во внутреннее окружение линтера
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false # Сканировать только новые изменения
+          VALIDATE_ALL_CODEBASE: true # Сканировать только новые изменения
           DISABLE_SECURITY: true       # Игнорировать уязвимости, фокус на качестве кода
           APPLY_FIXES: all             # Автоматически исправлять опечатки форматирования
           APPLY_FIXES_EVENT: pull_request
