@@ -30,7 +30,7 @@ jobs:
         uses: oxsecurity/megalinter@v10.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_ALL_CODEBASE: true
           DISABLE_SECURITY: true
           APPLY_FIXES: all
           APPLY_FIXES_EVENT: pull_request
