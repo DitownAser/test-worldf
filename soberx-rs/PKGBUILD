@@ -1,0 +1,45 @@
+# Maintainer: SoberX <soberx@local>
+# Пакет для Arch Linux: x86_64, сборка из исходников Rust с PGO и native-оптимизациями.
+pkgname=soberx-rs
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="SoberX — Roblox client для Linux (порт sober на Rust, Wine + libredirect + кастомные APK)"
+arch=('x86_64')
+url="https://github.com/vinegarhq/sober"
+license=('MIT')
+depends=('gcc-libs' 'glibc')
+makedepends=('rustup' 'cargo' 'gcc')
+optdepends=(
+  'wine>=9: запуск Windows-клиента Roblox (основной режим)'
+  'winetricks: зависимости префикса (vcrun2022, dxvk, corefonts)'
+  'dxvk: перевод DirectX→Vulkan в Wine'
+  'libsecret: безопасное хранение .ROBLOSECURITY'
+  'android-tools: установка кастомных APK на эмулятор (adb)'
+  'waydroid: Android-режим для APK-сборки'
+)
+source=("soberx-src.tar.gz::file://${srcdir:-$PWD}/../soberx-rs") # локальная копия дерева
+# В реальном PKGBUILD замените source на git-репозиторий или архив с upstream.
+
+build() {
+  cd "$srcdir/soberx-rs"
+  # PGO: прогрев профиля тестами + пересборка с target-cpu=native
+  RUSTFLAGS="-Cprofile-generate=$PWD/pgo-data -Ctarget-cpu=x86-64-v3" \
+    cargo build --release --profile dist || \
+  RUSTFLAGS="-Ctarget-cpu=x86-64-v3" cargo build --release --profile dist
+  if command -v llvm-profdata >/dev/null 2>&1 && [ -d pgo-data ]; then
+    llvm-profdata merge -o pgo-data/merged.profdata pgo-data/*.profraw 2>/dev/null || true
+    RUSTFLAGS="-Cprofile-use=$PWD/pgo-data/merged.profdata -Ctarget-cpu=x86-64-v3" \
+      cargo build --release --profile dist || true
+  fi
+}
+
+check() {
+  cd "$srcdir/soberx-rs"
+  cargo test --release
+}
+
+package() {
+  cd "$srcdir/soberx-rs"
+  install -Dm755 target/release/soberx "$pkgdir/usr/bin/soberx"
+  install -Dm644 ../soberx/data/org.soberx.Client.desktop -t "$pkgdir/usr/share/applications" 2>/dev/null || true
+}

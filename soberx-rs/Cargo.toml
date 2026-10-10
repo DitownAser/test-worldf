@@ -28,7 +28,13 @@ rand = "0.8"
 
 [profile.release]
 opt-level = 3
-lto = true
+lto = "fat"
 codegen-units = 1
 strip = true
 panic = "abort"
+
+[profile.dist]
+inherits = "release"
+# максимум агрессивности для релизной сборки под Arch: PGO + target-cpu=native задаются
+# в build.sh через RUSTFLAGS (в Cargo.toml их указывать нельзя — сломает portable-сборку)
+lto = "fat"

@@ -65,6 +65,9 @@ pub fn xdg_data_home() -> PathBuf {
         .unwrap_or_else(|| dirs::home_dir().unwrap_or_default().join(".local").join("share"))
 }
 
+static CACHE: std::sync::OnceLock<std::sync::Mutex<Option<(std::time::SystemTime, Settings)>>> =
+    std::sync::OnceLock::new();
+
 impl Settings {
     pub fn settings_dir() -> PathBuf {
         xdg_config_home().join("soberx")
@@ -74,20 +77,41 @@ impl Settings {
         Self::settings_dir().join("settings.json")
     }
 
+    /// Загрузка с кэшем по mtime файла: повторные чтения — из памяти.
     pub fn load() -> Self {
         let path = Self::file();
-        match fs::read_to_string(&path) {
+        let mtime = fs::metadata(&path).and_then(|m| m.modified()).ok();
+        let cache = CACHE.get_or_init(Default::default);
+        {
+            let guard = cache.lock().unwrap();
+            if let Some((t, s)) = guard.as_ref() {
+                if Some(*t) == mtime {
+                    return s.clone();
+                }
+            }
+        }
+        let loaded = match fs::read_to_string(&path) {
             Ok(s) => serde_json::from_str(&s).unwrap_or_default(),
             Err(_) => Self::default(),
+        };
+        if let Some(t) = mtime {
+            *cache.lock().unwrap() = Some((t, loaded.clone()));
         }
+        loaded
     }
 
     pub fn save(&self) -> anyhow::Result<()> {
         let dir = Self::settings_dir();
         fs::create_dir_all(&dir)?;
-        let tmp = dir.join("settings.tmp");
+        let tmp = dir.join(format!("settings.tmp.{}", std::process::id()));
         fs::write(&tmp, serde_json::to_string_pretty(self)?)?;
-        fs::rename(tmp, Self::file())?;
+        fs::rename(&tmp, Self::file())?;
+        // обновить кэш
+        if let Ok(t) = fs::metadata(Self::file()).map(|m| m.modified()) {
+            if let Ok(t) = t {
+                *CACHE.get_or_init(Default::default).lock().unwrap() = Some((t, self.clone()));
+            }
+        }
         Ok(())
     }
 

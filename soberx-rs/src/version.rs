@@ -1,6 +1,6 @@
 //! Версии Roblox и URL чанков — порт src/soberx/version.py (схема vinegarhq/sober).
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{anyhow, Result};
 use std::path::Path;
 
 pub const VERSION_URL: &str = "https://setup.rbxcdn.com/version";
@@ -22,14 +22,7 @@ pub const CLIENT_CHUNKS: &[&str] = &[
 ];
 
 fn get(url: &str) -> Result<Vec<u8>> {
-    let resp = ureq::get(url)
-        .set("User-Agent", "SoberX/1.0")
-        .timeout(std::time::Duration::from_secs(60))
-        .call()
-        .with_context(|| format!("GET {url}"))?;
-    let mut buf = Vec::new();
-    resp.into_reader().read_to_end(&mut buf)?;
-    Ok(buf)
+    crate::fasthttp::get_bytes(url)
 }
 
 /// Актуальная версия клиента (r-xxxxxxx).
@@ -120,25 +113,34 @@ pub fn chunks_base(version: &str, storage: &str) -> String {
 /// Скачать securitychecks.qjs.js (нужен клиенту, как в sober).
 pub fn get_qjs(version: &str, storage: &str, dest_dir: &Path) -> Result<std::path::PathBuf> {
     let url = format!("{}securitychecks.qjs.js", chunks_base(version, storage));
-    crate::download::download(&url, &dest_dir.join("securitychecks.qjs.js"), None, None)
+    let data = crate::fasthttp::get_bytes(&url)?;
+    let dest = dest_dir.join("securitychecks.qjs.js");
+    std::fs::write(&dest, data)?;
+    Ok(dest)
 }
 
-/// Скачать все чанки клиента в versions/<version> (точная логика sober).
-/// Возвращает список успешно скачанных файлов.
+/// Скачать все чанки клиента в versions/<version> — ПАРАЛЛЕЛЬНО (fasthttp),
+/// как это делает быстрый путь загрузки. Возвращает список успешно скачанных файлов.
 pub fn download_client_chunks(
     version: &str,
     storage: &str,
     dest_dir: &Path,
 ) -> Vec<String> {
-    let mut got = Vec::new();
-    for name in CLIENT_CHUNKS {
-        let url = format!("{}{}", chunks_base(version, storage), name);
-        match crate::download::download(&url, &dest_dir.join(name), None, None) {
-            Ok(_) => got.push((*name).to_string()),
-            Err(_) => continue, // часть чанков может отсутствовать на старых версиях
-        }
+    let base = chunks_base(version, storage);
+    let jobs: Vec<crate::fasthttp::ChunkJob> = CLIENT_CHUNKS
+        .iter()
+        .map(|name| crate::fasthttp::ChunkJob {
+            name: (*name).to_string(),
+            url: format!("{base}{name}"),
+            dest: dest_dir.join(name),
+            sha256: None,
+        })
+        .collect();
+    let (results, total) = crate::fasthttp::download_batch(jobs, crate::fasthttp::default_threads());
+    if total > 0 {
+        println!("[soberx] чанки: {} байт за один проход ({} потоков)", total, crate::fasthttp::default_threads());
     }
-    got
+    results.iter().filter(|r| r.ok).map(|r| r.name.clone()).collect()
 }
 
 use std::io::Read;

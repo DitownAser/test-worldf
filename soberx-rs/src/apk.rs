@@ -193,7 +193,7 @@ pub fn inspect_apk(path: &Path) -> ApkInfo {
 /// Скачать официальный Android-APK с канала релизов.
 pub fn download_official(dest_dir: &Path) -> Result<PathBuf> {
     fs::create_dir_all(dest_dir)?;
-    let body = crate::download::get_bytes(PUBNUB_CHANNEL)?;
+    let body = crate::fasthttp::get_bytes(PUBNUB_CHANNEL)?;
     let j: serde_json::Value = serde_json::from_slice(&body)?;
     let url = if let Some(o) = j.get("url").and_then(|v| v.as_str()) {
         o.to_string()

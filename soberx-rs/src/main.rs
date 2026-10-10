@@ -4,6 +4,7 @@
 mod apk;
 mod auth;
 mod download;
+mod fasthttp;
 mod inputmap;
 mod libredirect;
 mod settings;

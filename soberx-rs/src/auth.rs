@@ -6,7 +6,7 @@ use std::io::{BufRead, BufReader, Write};
 use std::net::TcpListener;
 use std::path::PathBuf;
 use std::process::Command;
-use std::sync::{mpsc, Arc, Mutex};
+use std::sync::{Arc, Mutex};
 
 pub const AUTH_PORT: u16 = 59251; // тот же порт обратного вызова, что у официального клиента
 

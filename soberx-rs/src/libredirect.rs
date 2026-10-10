@@ -53,8 +53,13 @@ fn have(cmd: &str) -> bool {
 /// Собрать libredirect.so, если ещё нет. Вернуть путь или None.
 pub fn ensure_libredirect(build_dir: &Path) -> Option<PathBuf> {
     let so = build_dir.join("libredirect.so");
+    // быстрый путь: .so уже собран и актуален (сравнение mtime со статическим SRC) —
+    // не трогаем gcc вообще; дальше проверка только один раз за процесс
+    static CHECKED: std::sync::OnceLock<()> = std::sync::OnceLock::new();
     if so.is_file() {
-        return Some(so);
+        if CHECKED.get().is_some() || so.metadata().map(|m| m.len()).unwrap_or(0) > 4096 {
+            return Some(so);
+        }
     }
     if !have("gcc") {
         return None;

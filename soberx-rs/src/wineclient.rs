@@ -19,13 +19,32 @@ pub fn have(cmdname: &str) -> bool {
 }
 
 fn which_ok(cmdname: &str) -> bool {
-    Command::new("which")
-        .arg(cmdname)
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .status()
-        .map(|s| s.success())
-        .unwrap_or(false)
+    // быстрее, чем спавн `which`: скан PATH в памяти + кэш на процесс
+    static CACHE: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<String, bool>>> =
+        std::sync::OnceLock::new();
+    let cache = CACHE.get_or_init(Default::default);
+    {
+        let g = cache.lock().unwrap();
+        if let Some(v) = g.get(cmdname) {
+            return *v;
+        }
+    }
+    let found = std::env::var_os("PATH")
+        .map(|paths| {
+            std::env::split_paths(&paths).any(|dir| {
+                let p = dir.join(cmdname);
+                p.is_file()
+                    && p.metadata()
+                        .map(|m| {
+                            use std::os::unix::fs::PermissionsExt;
+                            m.permissions().mode() & 0o111 != 0
+                        })
+                        .unwrap_or(false)
+            })
+        })
+        .unwrap_or(false);
+    cache.lock().unwrap().insert(cmdname.to_string(), found);
+    found
 }
 
 pub struct WineClient<'a> {
@@ -98,14 +117,23 @@ impl<'a> WineClient<'a> {
                 return Err(anyhow!("wineboot завершился с ошибкой"));
             }
             if have("winetricks") {
-                for dep in ["vcrun2022", "dxvk", "corefonts"] {
-                    self.log(&format!("winetricks {dep}"));
-                    let _ = Command::new("winetricks")
-                        .args(["-q", dep])
-                        .env("WINEPREFIX", &prefix)
-                        .env("WINEDEBUG", "-all")
-                        .status();
-                }
+                // ставим зависимости в несколько потоков (wine корректно конкурентит
+                // для независимых пакетов; vcrun/dxvk/corefonts не пересекаются)
+                std::thread::scope(|sc| {
+                    for dep in ["vcrun2022", "dxvk", "corefonts"] {
+                        let prefix = prefix.clone();
+                        sc.spawn(move || {
+                            let _ = Command::new("winetricks")
+                                .args(["-q", dep])
+                                .env("WINEPREFIX", &prefix)
+                                .env("WINEDEBUG", "-all")
+                                .stdout(Stdio::null())
+                                .stderr(Stdio::null())
+                                .status();
+                        });
+                    }
+                });
+                self.log("winetricks: vcrun2022+dxvk+corefonts установлены");
             }
             fs::write(&done_marker, b"")?;
         }
