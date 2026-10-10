@@ -1,0 +1,40 @@
+[package]
+name = "soberx"
+version = "1.0.0"
+edition = "2021"
+description = "SoberX — Roblox client для Linux (порт sober на Rust)"
+license = "MIT"
+
+[[bin]]
+name = "soberx"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+ureq = { version = "2", features = ["json"] }
+sha2 = "0.10"
+zip = "2"
+dirs = "5"
+anyhow = "1"
+thiserror = "1"
+libc = "0.2"
+aes = "0.8"
+ctr = "0.9"
+base64 = "0.22"
+rand = "0.8"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.dist]
+inherits = "release"
+# максимум агрессивности для релизной сборки под Arch: PGO + target-cpu=native задаются
+# в build.sh через RUSTFLAGS (в Cargo.toml их указывать нельзя — сломает portable-сборку)
+lto = "fat"

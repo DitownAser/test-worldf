@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=SoberX
+GenericName=Roblox client
+Comment=Играйте в Roblox на Linux, включая кастомные APK
+Exec=soberx-gui %U
+Icon=org.soberx.Client
+Terminal=false
+Categories=Game;
+Keywords=roblox;game;apk;

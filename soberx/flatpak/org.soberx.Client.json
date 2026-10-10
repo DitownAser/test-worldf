@@ -1,0 +1,38 @@
+{
+  "app-id": "org.soberx.Client",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "46",
+  "sdk": "org.gnome.Sdk",
+  "command": "soberx-gui",
+  "tags": ["Roblox", "Game"],
+  "finish-args": [
+    "--share=network",
+    "--share=ipc",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--socket=pulseaudio",
+    "--talk-name=org.freedesktop.secrets",
+    "--filesystem=home"
+  ],
+  "cleanup": ["/include", "/lib/pkgconfig", "*.pyc"],
+  "modules": [
+    {
+      "name": "python-deps",
+      "buildsystem": "simple",
+      "build-commands": [":"],
+      "modules": []
+    },
+    {
+      "name": "soberx",
+      "buildsystem": "simple",
+      "build-commands": [
+        "pip3 install --prefix=/app --no-deps .",
+        "install -Dm644 data/org.soberx.Client.desktop /app/share/applications/org.soberx.Client.desktop"
+      ],
+      "sources": [
+        { "type": "dir", "path": "../", "skip-list-dirs": [".git", "flatpak"] }
+      ]
+    }
+  ]
+}
