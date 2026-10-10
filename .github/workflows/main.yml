@@ -1,0 +1,37 @@
+name: Quality Check
+
+on:
+  push:
+    branches: [main, master, dev]
+  pull_request:
+    branches: [main, master, dev]
+
+permissions: read-all
+
+jobs:
+  megalinter:
+    name: MegaLinter
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      issues: write
+      pull_requests: write
+
+    steps:
+      # 1. Скачиваем код вашего проекта
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Позволяет проверять только измененные файлы
+
+      # 2. Запускаем MegaLinter (тот самый блок, который вы нашли)
+      - name: MegaLinter
+        uses: oxsecurity/megalinter@v10.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: false # Проверяет только новые/измененные файлы, так анализ проходит гораздо быстрее
+          DISABLE_SECURITY: true       # Отключаем поиск уязвимостей, фокусируемся только на качестве кода
+          APPLY_FIXES: all             # Если линтер может сам исправить ошибку стиля, он это сделает
+          APPLY_FIXES_EVENT: pull_request
+          APPLY_FIXES_MODE: commit
