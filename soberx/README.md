@@ -78,3 +78,16 @@ APK Roblox не поддерживает клавиатуру — в sober эт�
   * профиль биндов WASD→виртуальный-стик: `soberx input list`, экспорт `soberx input profile --export controls.json`;
   * импорт готовых конфигов GameLoop/LDPlayer: `soberx input profile --import-gameloop game.xml`;
   * ручная эмуляция тапов в контейнер: `soberx input feed w space` (через adb sendevent).
+
+## Точь-в-точь цикл sober (Windows-клиент через Wine)
+
+SoberX повторяет механизм оригинального sober (vinegarhq), ничего не копируя из бинарей:
+
+1. **version-файл** (`~/.config/soberx/version`, `version_atchi`) — тот же 7-строчный формат: версия канала, URL чанк-хранилища, reserved, DH-параметры, подпись, агент.
+2. **Чанки клиента** — скачивание `RobloxPlayerBeta.exe` + DLL (`AppLaunch.dll`, `c1..c5.dll`, `nativehtml_*.dll`, `rbxcrash-handler.exe`, `data.prf`) с content-CDN по схеме `<storage>/content/<version>/` + `securitychecks.qjs.js`.
+3. **Wine-префикс** — `wineboot --init`, winetricks vcrun2022/dxvk/corefonts (то же, что делает installer у sober).
+4. **Вход как в sober** — браузер открывает roblox.com/login с redirect на `http://localhost:59251/auth?ROBLOSECURITY=...`; локальный HTTP-сервер ловит токен (аналог webview-окна sober_services): `soberx login-wine`.
+5. **libredirect.so** — настоящий LD_PRELOAD-хук getaddrinfo (собирается gcc при первом запуске), подменяет заблокированные хосты на roproxy-зеркала — ровно та функциональность, что у sober.
+6. **Запуск** — `soberx run [--place ID]`: `wine RobloxPlayerBeta.exe -t<токен> -a<place>` c LD_PRELOAD; GUI-кнопки «Обновить клиент (Wine)» и «Играть» вызывают тот же код.
+
+Команды: `soberx update` → `soberx login-wine` → `soberx run`. APK-режим (`apk install`, `launch --apk-mode`) остался опциональным для кастомных сборок.

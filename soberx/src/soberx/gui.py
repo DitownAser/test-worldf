@@ -109,10 +109,14 @@ def run_gui() -> int:
             worker(f)
 
         def do_update(*_):
-            worker(lambda: Installer(st, on_progress).install_wine())
+            # точь-в-точь цикл sober: version-файл -> чанки -> qjs -> wine-префикс
+            from .wineclient import WineClient
+            worker(lambda: WineClient(st, lambda s: GLib.idle_add(on_progress, s, 1, 1)).update())
 
         def do_launch(*_):
-            worker(lambda: f"pid {Installer(st, on_progress).launch().pid}")
+            # запуск Windows-клиента через wine + LD_PRELOAD libredirect (как у sober)
+            from .wineclient import WineClient
+            worker(lambda: f"pid {WineClient(st).launch().pid}")
 
         def do_apk_chooser(*_):
             dlg = Gtk.FileChooserDialog(title="Выберите APK", transient_for=win,

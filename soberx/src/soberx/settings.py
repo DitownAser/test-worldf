@@ -19,6 +19,7 @@ def xdg_data_home() -> Path:
 class Settings:
     # общие
     username: str = ""            # имя пользователя Roblox (для пути клиента)
+    token: str = ""               # .ROBLOSECURITY (как токен sober в keyring)
     channel: str = "stable"       # stable | canary | atchi | legacy_avi
     discord_rpc: bool = True
     browser: str = "xdg-open"     # команда открытия ссылок авторизации
@@ -89,6 +90,11 @@ class Settings:
     @property
     def apk_store_dir(self) -> Path:
         return self.data_dir / "apks"
+
+    @property
+    def settings_dir(self) -> Path:
+        """Каталог с version-файлами (аналог ~/.var/app/.../config/sober)."""
+        return xdg_config_home() / "soberx"
 
     @property
     def log_file(self) -> Path:

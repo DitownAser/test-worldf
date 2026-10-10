@@ -49,3 +49,68 @@ def bootstrapper_url(version: str) -> str:
 
 def setup_base_url(version: str) -> str:
     return f"https://setup.rbxcdn.com/{version}"
+
+
+# ---- чанки (точная схема sober: version + chunk-storage + qjs + dlls) ----
+
+DEFAULT_CHUNK_STORAGE = "https://roblox-1eb8602b03ee7600c9b97d8aa07d1095content.content.invisioncloudstatic.com"
+
+
+def chunk_storage_for(version: str, channel: str = "stable") -> str:
+    """Получить URL чанк-хранилища из APK-версии (как делает sober через AndroidChannel),
+    либо вернуть канонический CDN по умолчанию для wine-канала."""
+    if channel in ("stable", "canary", "atchi"):
+        # у Roblox единый content-CDN; берём его из публичного version-файла stable
+        try:
+            j = json.loads(http_get(
+                "https://clientsettingscdn.roblox.com/v2/client-version/AndroidPlatform").decode())
+            u = j["clientVersionUpload"]
+            data = http_get(f"https://setup.rbxcdn.com/{u}-roblox.apk", timeout=60)
+            import io, zipfile
+            with zipfile.ZipFile(io.BytesIO(data)) as zf:
+                vf = zf.read("assets/Roblox/version").decode()
+                return vf.split("\n")[1].strip()
+        except Exception:
+            pass
+    return DEFAULT_CHUNK_STORAGE
+
+
+def chunks_base(version: str, storage: str) -> str:
+    """Базовый URL чанков: <storage>/content/<version>/"""
+    return f"{storage.rstrip('/')}/content/{version}/"
+
+
+def get_qjs(version: str, storage: str, dest_dir) -> "Path":
+    """Скачать securitychecks-qjs.js (нужен клиенту, как в sober)."""
+    from pathlib import Path
+    from .download import download
+    url = f"{chunks_base(version, storage)}securitychecks.qjs.js"
+    return download(url, Path(dest_dir) / "securitychecks.qjs.js")
+
+
+# Файлы клиента, которые sober качает из чанков (список wine-дистрибуции)
+CLIENT_CHUNKS = [
+    "RobloxPlayerBeta.exe",
+    "AppLaunch.dll",
+    "Microsoft.WindowsAppRuntime.Bootstrap.dll",
+    "c1.dll", "c2.dll", "c3.dll", "c4.dll", "c5.dll",
+    "nativehtml_1.dll", "nativehtml_2.dll", "nativehtml_3.dll",
+    "VideoDecodingExtensionManifest.xml",
+    "rbxcrash-handler.exe", "data.prf",
+]
+
+
+def download_client_chunks(version: str, storage: str, dest_dir, progress=None):
+    """Скачать все чанки клиента в versions/<version> (точная логика sober)."""
+    from pathlib import Path
+    from .download import download
+    dest = Path(dest_dir)
+    got = []
+    for name in CLIENT_CHUNKS:
+        try:
+            download(chunks_base(version, storage) + name, dest / name, progress=progress)
+            got.append(name)
+        except Exception:
+            # часть чанков может отсутствовать на старых версиях — пропускаем
+            continue
+    return got

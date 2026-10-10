@@ -27,6 +27,10 @@ def main(argv=None) -> int:
 
     sub.add_parser("update", help="установить/обновить Windows-клиент (wine)")
 
+    sr = sub.add_parser("run", help="запустить игру через Wine (главный путь, как в sober)")
+    sr.add_argument("--place", help="placeId сервера")
+    slg = sub.add_parser("login-wine", help="вход через redirect на localhost:59251 (webview-цикл sober)")
+
     sa = sub.add_parser("apk", help="работа с APK")
     sg = sa.add_subparsers(dest="apkg", required=True)
     sg.add_parser("list", help="список установленных APK")
@@ -71,7 +75,20 @@ def main(argv=None) -> int:
     elif args.cmd == "channel":
         st.channel = args.name; st.save(); print("канал:", args.name)
     elif args.cmd == "update":
-        d = inst.install_wine(); print("установлено в", d)
+        from .wineclient import WineClient
+        wc = WineClient(st, lambda s: print(s, file=sys.stderr))
+        d = wc.update()
+        print("установлено в", d)
+    elif args.cmd == "login-wine":
+        from .wineclient import WineClient
+        wc = WineClient(st, lambda s: print(s, file=sys.stderr))
+        wc.login()
+        print("вход выполнен:", st.username or "(имя недоступно)")
+    elif args.cmd == "run":
+        from .wineclient import WineClient
+        wc = WineClient(st, lambda s: print(s, file=sys.stderr))
+        proc = wc.launch(args.place)
+        print("Roblox запущен через Wine, pid", proc.pid)
     elif args.cmd == "apk":
         if args.apkg == "list":
             for i in installed_list(st.apk_store_dir):
