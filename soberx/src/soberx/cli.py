@@ -2,19 +2,21 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 from pathlib import Path
 
-from . import version as vermod
-from .apk import inspect_apk, install_apk, installed_list
+from .apk import inspect_apk, installed_list
 from .auth import AuthManager
 from .install import Installer
 from .settings import Settings, xdg_config_home
 
 
-def main(argv=None) -> int:
-    st = Settings.load()
-    auth = AuthManager(xdg_config_home() / "soberx")
+def _prog(stage: str, cur: int, tot: int) -> None:
+    print(f"[{cur:>3}/{tot}] {stage}", file=sys.stderr)
+
+
+def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser("soberx", description="SoberX — Roblox на Linux + кастомные APK")
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -27,18 +29,17 @@ def main(argv=None) -> int:
 
     sub.add_parser("update", help="установить/обновить Windows-клиент (wine)")
 
-    sr = sub.add_parser("run", help="запустить игру через Wine (главный путь, как в sober)")
-    sr.add_argument("--place", help="placeId сервера")
-    slg = sub.add_parser("login-wine", help="вход через redirect на localhost:59251 (webview-цикл sober)")
+    sub.add_parser("run", help="запустить игру через Wine (главный путь, как в sober)") \
+       .add_argument("--place", help="placeId сервера")
+    sub.add_parser("login-wine",
+                   help="вход через redirect на localhost:59251 (webview-цикл sober)")
 
     sa = sub.add_parser("apk", help="работа с APK")
     sg = sa.add_subparsers(dest="apkg", required=True)
     sg.add_parser("list", help="список установленных APK")
     sg.add_parser("official", help="скачать официальный APK")
-    a_i = sg.add_parser("install", help="установить кастомный APK")
-    a_i.add_argument("file", type=Path)
-    a_c = sg.add_parser("check", help="проверить APK")
-    a_c.add_argument("file", type=Path)
+    sg.add_parser("install", help="установить кастомный APK").add_argument("file", type=Path)
+    sg.add_parser("check", help="проверить APK").add_argument("file", type=Path)
 
     sl = sub.add_parser("launch", help="запустить клиент")
     sl.add_argument("--place", help="placeId сервера")
@@ -51,68 +52,95 @@ def main(argv=None) -> int:
     ip.add_argument("--export", type=Path, help="сохранить профиль JSON")
     ip.add_argument("--import-gameloop", type=Path, help="импорт XML-конфига GameLoop")
     ip.add_argument("--set-file", type=Path, help="использовать файл профиля при запуске")
-    il = ig.add_parser("list", help="показать текущий профиль")
+    ig.add_parser("list", help="показать текущий профиль")
     ifeed = ig.add_parser("feed", help="выполнить триггеры: soberx input feed w a space")
     ifeed.add_argument("triggers", nargs="+")
     ifeed.add_argument("--serial", help="adb-серийник устройства")
     ifeed.add_argument("--dev", default="/dev/input/event2", help="evdev-устройство в контейнере")
+    return p
 
-    args = p.parse_args(argv)
 
-    def prog(stage, cur, tot):
-        print(f"[{cur:>3}/{tot}] {stage}", file=sys.stderr)
+class App:
+    """Контекст команд CLI: настройки, авторизация, инсталлятор."""
 
-    inst = Installer(st, prog)
+    def __init__(self):
+        self.st = Settings.load()
+        self.auth = AuthManager(xdg_config_home() / "soberx")
+        self.inst = Installer(self.st, _prog)
 
-    if args.cmd == "login":
-        tok = auth.login_interactive(st.browser, print, lambda u: print("откройте:", u))
+    # ---------- авторизация ----------
+    def cmd_login(self, args) -> int:
+        self.auth.login_interactive(self.st.browser, print, lambda u: print("откройте:", u))
         print("вход выполнен")
-    elif args.cmd == "logout":
-        auth.logout(); print("выход")
-    elif args.cmd == "whoami":
-        u = auth.whoami()
-        print(u.get("name", "не авторизован"))
-    elif args.cmd == "channel":
-        st.channel = args.name; st.save(); print("канал:", args.name)
-    elif args.cmd == "update":
+        return 0
+
+    def cmd_logout(self, args) -> int:
+        self.auth.logout()
+        print("выход")
+        return 0
+
+    def cmd_whoami(self, args) -> int:
+        print(self.auth.whoami().get("name", "не авторизован"))
+        return 0
+
+    def cmd_channel(self, args) -> int:
+        self.st.channel = args.name
+        self.st.save()
+        print("канал:", args.name)
+        return 0
+
+    # ---------- wine-цикл (как sober) ----------
+    def cmd_update(self, args) -> int:
         from .wineclient import WineClient
-        wc = WineClient(st, lambda s: print(s, file=sys.stderr))
-        d = wc.update()
-        print("установлено в", d)
-    elif args.cmd == "login-wine":
+        wc = WineClient(self.st, lambda s: print(s, file=sys.stderr))
+        print("установлено в", wc.update())
+        return 0
+
+    def cmd_login_wine(self, args) -> int:
         from .wineclient import WineClient
-        wc = WineClient(st, lambda s: print(s, file=sys.stderr))
+        wc = WineClient(self.st, lambda s: print(s, file=sys.stderr))
         wc.login()
-        print("вход выполнен:", st.username or "(имя недоступно)")
-    elif args.cmd == "run":
+        print("вход выполнен:", self.st.username or "(имя недоступно)")
+        return 0
+
+    def cmd_run(self, args) -> int:
         from .wineclient import WineClient
-        wc = WineClient(st, lambda s: print(s, file=sys.stderr))
+        wc = WineClient(self.st, lambda s: print(s, file=sys.stderr))
         proc = wc.launch(args.place)
         print("Roblox запущен через Wine, pid", proc.pid)
-    elif args.cmd == "apk":
+        return 0
+
+    # ---------- APK ----------
+    def cmd_apk(self, args) -> int:
         if args.apkg == "list":
-            for i in installed_list(st.apk_store_dir):
-                print(f"{i.path.name}: pkg={i.package} ver={i.version_name} abi={','.join(i.abi)} valid={i.valid}")
+            for i in installed_list(self.st.apk_store_dir):
+                print(f"{i.path.name}: pkg={i.package} ver={i.version_name} "
+                      f"abi={','.join(i.abi)} valid={i.valid}")
         elif args.apkg == "official":
-            f = inst.install_apk(None); print("готово:", f)
+            print("готово:", self.inst.install_apk(None))
         elif args.apkg == "install":
-            f = inst.install_apk(args.file); print("APK установлен:", f)
+            print("APK установлен:", self.inst.install_apk(args.file))
         elif args.apkg == "check":
             i = inspect_apk(args.file)
-            print(f"pkg={i.package} ver={i.version_name} code={i.version_code} abi={i.abi} valid={i.valid} err={i.error}")
-    elif args.cmd == "launch":
+            print(f"pkg={i.package} ver={i.version_name} code={i.version_code} "
+                  f"abi={i.abi} valid={i.valid} err={i.error}")
+        return 0
+
+    def cmd_launch(self, args) -> int:
         if args.apk_mode:
-            st.input_mode = "apk-mapping"
-        proc = inst.launch(args.place)
+            self.st.input_mode = "apk-mapping"
+        proc = self.inst.launch(args.place)
         print("запущено, pid", proc.pid)
-        if getattr(st, "input_mode", "") == "apk-mapping":
+        if self.st.input_mode == "apk-mapping":
             from .inputmap import load_profile
             prof = load_profile(None, xdg_config_home() / "soberx")
             print(f"APK-режим: управление клавиатурой через профиль «{prof.name}» "
                   f"({len(prof.mappings)} биндов). Правый клик/камера — через scrcpy.")
-    elif args.cmd == "input":
-        from .inputmap import (AdbTouchBackend, ControlProfile, InputMapper,
-                               load_profile)
+        return 0
+
+    # ---------- профиль управления ----------
+    def cmd_input(self, args) -> int:
+        from .inputmap import InputMapper, AdbTouchBackend, ControlProfile, load_profile
         cfgdir = xdg_config_home() / "soberx"
         if args.icmd == "profile":
             if args.import_gameloop:
@@ -120,7 +148,6 @@ def main(argv=None) -> int:
                 prof.save(cfgdir / "controls.json")
                 print(f"импортировано {len(prof.mappings)} биндов из GameLoop XML -> controls.json")
             elif args.set_file:
-                import shutil
                 shutil.copyfile(args.set_file, cfgdir / "controls.json")
                 print("профиль применён:", args.set_file)
             elif args.export:
@@ -133,18 +160,26 @@ def main(argv=None) -> int:
             print(f"профиль: {prof.name}  экран {prof.screen_w}x{prof.screen_h}")
             for m in prof.mappings:
                 arrow = f"->{m.swipe_to}" if m.swipe_to else ""
-                print(f"  {m.trigger:<16} {m.action:<6} ({m.target_x:.2f},{m.target_y:.2f}){arrow}  {m.label}")
+                print(f"  {m.trigger:<16} {m.action:<6} "
+                      f"({m.target_x:.2f},{m.target_y:.2f}){arrow}  {m.label}")
         elif args.icmd == "feed":
-            import shutil as _sh
-            if not _sh.which("adb"):
-                print("ошибка: не найден adb (установите android-tools / platform-tools)", file=sys.stderr)
+            if not shutil.which("adb"):
+                print("ошибка: не найден adb (установите android-tools / platform-tools)",
+                      file=sys.stderr)
                 return 2
             prof = load_profile(None, cfgdir)
             mapper = InputMapper(prof, AdbTouchBackend(serial=args.serial, dev=args.dev))
             for t in args.triggers:
                 ok = mapper.apply_trigger(t)
                 print(f"{t}: {'выполнено' if ok else 'нет бинда'}")
-    return 0
+        return 0
+
+
+def main(argv=None) -> int:
+    args = _build_parser().parse_args(argv)
+    app = App()
+    handler = getattr(app, f"cmd_{args.cmd.replace('-', '_')}")
+    return handler(args)
 
 
 if __name__ == "__main__":

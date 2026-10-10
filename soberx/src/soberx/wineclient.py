@@ -12,9 +12,8 @@ libredirect собирается на месте; кастомные APK — о�
 """
 from __future__ import annotations
 
+import json
 import os
-import shutil
-import socket
 import subprocess
 import threading
 import time
@@ -24,12 +23,17 @@ from typing import Callable
 from urllib.parse import urlparse, parse_qs, unquote
 
 from . import version as ver
+from .http import open_url
 from .download import download
 from .libredirect import ensure_libredirect
 from .settings import Settings
+from .util import have
 from .versionfile import VersionFile, read_version, write_version
 
 AUTH_PORT = 59251  # тот же порт обратного вызова, что у официального клиента
+USERNAME_SYNC_URL = "https://apis.roproxy.com/auth/v2/usernamesync"
+# winetricks-зависимости для игрового префикса
+WINETRICKS_DEPS = ("vcrun2022", "dxvk", "corefonts")
 
 
 class _AuthHandler(BaseHTTPRequestHandler):
@@ -83,12 +87,11 @@ class WineClient:
         vf = read_version(self.st.settings_dir, self.st.channel)
         storage = (vf.chunk_storage if vf else ver.chunk_storage_for(v, self.st.channel))
         dst = self.st.versions_dir / v
-        got = ver.download_client_chunks(v, storage, dst,
-                                         progress=lambda a, b: None)
+        got = ver.download_client_chunks(v, storage, dst)
         if "RobloxPlayerBeta.exe" not in got:
             # fallback: прямой URL установочного CDN (как делал старый install_wine)
-            base = ver.setup_base_url(v)
-            download(f"{base}/RobloxPlayerBeta.exe", dst / "RobloxPlayerBeta.exe")
+            download(f"{ver.setup_base_url(v)}/RobloxPlayerBeta.exe",
+                     dst / "RobloxPlayerBeta.exe")
         try:
             ver.get_qjs(v, storage, dst)
         except Exception as e:
@@ -106,18 +109,19 @@ class WineClient:
     def _ensure_prefix(self):
         prefix = self.st.prefix_dir
         prefix.mkdir(parents=True, exist_ok=True)
-        env = {**os.environ, "WINEPREFIX": str(prefix), "WINEDEBUG": "-all"}
         if not have("wine"):
             raise RuntimeError("wine не найден — установите wine (>=9)")
         done_marker = prefix / ".soberx-booted"
-        if not done_marker.is_file():
-            self.log("wineboot --init")
-            subprocess.run(["wineboot", "--init"], env=env, check=True, timeout=600)
-            for dep in ("vcrun2022", "dxvk", "corefonts"):
-                if have("winetricks"):
-                    self.log(f"winetricks {dep}")
-                    subprocess.run(["winetricks", "-q", dep], env=env, timeout=1800)
-            done_marker.touch()
+        if done_marker.is_file():
+            return
+        env = {**os.environ, "WINEPREFIX": str(prefix), "WINEDEBUG": "-all"}
+        self.log("wineboot --init")
+        subprocess.run(["wineboot", "--init"], env=env, check=True, timeout=600)
+        for dep in WINETRICKS_DEPS:
+            if have("winetricks"):
+                self.log(f"winetricks {dep}")
+                subprocess.run(["winetricks", "-q", dep], env=env, timeout=1800)
+        done_marker.touch()
 
     # ---------- авторизация через redirect-сервер (как webview у sober) ----------
     def login(self) -> str:
@@ -139,16 +143,8 @@ class WineClient:
         return tok
 
     # ---------- запуск игры ----------
-    def launch(self, place: str | None = None) -> subprocess.Popen:
-        v = self.st.last_version
-        exe = self.st.versions_dir / v / "RobloxPlayerBeta.exe"
-        if not exe.is_file():
-            raise RuntimeError("клиент не установлен — выполните обновление")
-        env = {**os.environ, "WINEPREFIX": str(self.st.prefix_dir)}
-        # libredirect через LD_PRELOAD — точный механизм sober против блокировок
-        so = ensure_libredirect(self.st.data_dir / "libredirect")
-        if so:
-            env["LD_PRELOAD"] = f"{so}:{env.get('LD_PRELOAD', '')}".rstrip(":")
+    def _launch_args(self, exe: Path, place: str | None) -> list[str]:
+        """Аргументы командной строки RobloxPlayerBeta (как у sober-лоадера)."""
         args = [str(exe)]
         if self.st.token:
             args.append(f"-t{self.st.token}")
@@ -160,23 +156,31 @@ class WineClient:
             args.append(f"--fps={self.st.custom_fps}")
         if self.st.use_winewayland:
             args.append("--renderer=D3D11")
-        self.log("запуск: wine " + " ".join(a[:6] + "***" if a.startswith("-t") else a for a in args))
-        return subprocess.Popen(["wine"] + args, env=env)
+        return args
+
+    def launch(self, place: str | None = None) -> subprocess.Popen:
+        v = self.st.last_version
+        exe = self.st.versions_dir / v / "RobloxPlayerBeta.exe"
+        if not exe.is_file():
+            raise RuntimeError("клиент не установлен — выполните обновление")
+        env = {**os.environ, "WINEPREFIX": str(self.st.prefix_dir)}
+        # libredirect через LD_PRELOAD — точный механизм sober против блокировок
+        so = ensure_libredirect(self.st.data_dir / "libredirect")
+        if so:
+            env["LD_PRELOAD"] = f"{so}:{env.get('LD_PRELOAD', '')}".rstrip(":")
+        args = self._launch_args(exe, place)
+        # не печатаем токен в лог
+        shown = [("***" if a.startswith("-t") else a) for a in args]
+        self.log("запуск: wine " + " ".join(shown))
+        return subprocess.Popen(["wine", *args], env=env)
 
 
 def username_from_token(token: str) -> str | None:
-    """best-effort: имя пользователя по .ROBLOSECURITY через auth sync endpoint"""
+    """best-effort: имя пользователя по .ROBLOSECURITY через auth sync endpoint."""
     try:
-        import json, urllib.request
-        req = urllib.request.Request(
-            "https://apis.roproxy.com/auth/v2/usernamesync",
-            headers={"Cookie": f".ROBLOSECURITY={token}", "User-Agent": "SoberX/1.0"})
-        with urllib.request.urlopen(req, timeout=15) as r:
+        with open_url(USERNAME_SYNC_URL, method="GET", timeout=15,
+                      headers={"Cookie": f".ROBLOSECURITY={token}"}) as r:
             j = json.loads(r.read().decode())
             return j.get("userName") or j.get("username")
     except Exception:
         return None
-
-
-def have(cmdname: str) -> bool:
-    return shutil.which(cmdname) is not None

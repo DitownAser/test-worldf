@@ -1,7 +1,7 @@
 //! Авторизация Roblox: web-вход через redirect на localhost:59251 (flow как у sober)
 //! + хранение .ROBLOSECURITY в libsecret (secret-tool) или файле 0600.
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{anyhow, Result};
 use std::io::{BufRead, BufReader, Write};
 use std::net::TcpListener;
 use std::path::PathBuf;
@@ -181,15 +181,10 @@ pub fn login_interactive(browser_cmd: &str, on_status: &dyn Fn(&str)) -> Result<
 
 /// best-effort: имя пользователя по .ROBLOSECURITY через auth sync endpoint
 pub fn username_from_token(token: &str) -> Option<String> {
-    let j: serde_json::Value = ureq::get("https://apis.roproxy.com/auth/v2/usernamesync")
-        .set("Cookie", &format!(".ROBLOSECURITY={token}"))
-        .set("User-Agent", "SoberX/1.0")
-        .timeout(std::time::Duration::from_secs(15))
-        .call()
-        .ok()
-        .and_then(|r| r.into_json().ok())
-        .context("usernamesync")
-        .ok()?;
+    let j = crate::http::get_json_with_cookie(
+        "https://apis.roproxy.com/auth/v2/usernamesync",
+        token,
+    )?;
     j["userName"]
         .as_str()
         .or_else(|| j["username"].as_str())
@@ -198,13 +193,7 @@ pub fn username_from_token(token: &str) -> Option<String> {
 
 /// whoami через users.roblox.com
 pub fn whoami(token: &str) -> Option<serde_json::Value> {
-    ureq::get("https://users.roblox.com/v1/users/authenticated")
-        .set("Cookie", &format!(".ROBLOSECURITY={token}"))
-        .set("User-Agent", "SoberX/1.0")
-        .timeout(std::time::Duration::from_secs(15))
-        .call()
-        .ok()
-        .and_then(|r| r.into_json().ok())
+    crate::http::get_json_with_cookie("https://users.roblox.com/v1/users/authenticated", token)
 }
 
 #[cfg(test)]

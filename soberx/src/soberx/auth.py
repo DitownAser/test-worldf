@@ -6,21 +6,23 @@
 from __future__ import annotations
 
 import json
-import secrets
 import subprocess
-import threading
 import time
-import urllib.request
 from pathlib import Path
 from typing import Callable
+
+from .http import http_post_json, open_url
 
 AUTH_BASE = "https://auth.roblox.com"
 CSRF_URL = f"{AUTH_BASE}/v2/logout"
 POLL_URL = f"{AUTH_BASE}/v2/authentication/login/check"
 CREATE_URL = f"{AUTH_BASE}/v2/authentication/login/create"
+USERS_AUTHENTICATED_URL = "https://users.roblox.com/v1/users/authenticated"
 
 OnStatus = Callable[[str], None]       # текстовый статус
 OnUrl = Callable[[str], None]          # ссылка для открытия в браузере
+
+_SECRET_ATTRS = ("service", "soberx", "account", "roblox")
 
 
 class AuthManager:
@@ -30,61 +32,53 @@ class AuthManager:
         self._csrf: str | None = None
 
     # ---------- хранение ----------
+    def _secret_tool(self, *args: str, stdin: bytes | None = None,
+                     timeout: int = 5) -> subprocess.CompletedProcess | None:
+        """Запуск secret-tool; None, если libsecret недоступна."""
+        try:
+            return subprocess.run(["secret-tool", *args], input=stdin,
+                                  capture_output=True, text=stdin is not None,
+                                  timeout=timeout)
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            return None
+
     def saved_cookie(self) -> str | None:
         """Читаем сохранённый токен: сначала libsecret, затем файл."""
-        try:
-            out = subprocess.run(
-                ["secret-tool", "lookup", "service", "soberx", "account", "roblox"],
-                capture_output=True, text=True, timeout=5)
-            if out.returncode == 0 and out.stdout.strip():
-                return out.stdout.strip()
-        except (FileNotFoundError, subprocess.TimeoutExpired):
-            pass
+        out = self._secret_tool("lookup", *_SECRET_ATTRS)
+        if out is not None and out.returncode == 0 and out.stdout.strip():
+            return out.stdout.strip()
         try:
             return json.loads(self._cookie_file.read_text())["token"]
         except (FileNotFoundError, KeyError, json.JSONDecodeError):
             return None
 
     def store_cookie(self, token: str) -> None:
-        try:
-            p = subprocess.run(["secret-tool", "store", "--label=SoberX Roblox",
-                                "service", "soberx", "account", "roblox"],
-                               input=token.encode(), capture_output=True, timeout=10)
-            if p.returncode == 0:
-                self._cookie_file.unlink(missing_ok=True)
-                self._token = token
-                return
-        except (FileNotFoundError, subprocess.TimeoutExpired):
-            pass
-        self._cookie_file.parent.mkdir(parents=True, exist_ok=True)
-        self._cookie_file.write_text(json.dumps({"token": token}))
-        self._cookie_file.chmod(0o600)
+        p = self._secret_tool("store", "--label=SoberX Roblox", *_SECRET_ATTRS,
+                              stdin=token.encode(), timeout=10)
+        if p is not None and p.returncode == 0:
+            self._cookie_file.unlink(missing_ok=True)
+        else:
+            self._cookie_file.parent.mkdir(parents=True, exist_ok=True)
+            self._cookie_file.write_text(json.dumps({"token": token}))
+            self._cookie_file.chmod(0o600)
         self._token = token
 
     def logout(self) -> None:
         self._token = None
         self._cookie_file.unlink(missing_ok=True)
-        try:
-            subprocess.run(["secret-tool", "clear", "service", "soberx"],
-                           capture_output=True, timeout=5)
-        except FileNotFoundError:
-            pass
+        self._secret_tool("clear", "service", "soberx")
 
     # ---------- web flow ----------
-    def _req(self, url: str, data: bytes | None = None, method: str = "POST"):
-        req = urllib.request.Request(url, data=data, method=method,
-                                     headers={"User-Agent": "SoberX/1.0",
-                                              "Content-Type": "application/json"})
-        if self._csrf:
-            req.add_header("x-csrf-token", self._csrf)
-        return urllib.request.urlopen(req, timeout=30)
-
     def _refresh_csrf(self) -> None:
         try:
-            r = self._req(CSRF_URL, b"{}", "POST")
-            self._csrf = r.headers.get("x-csrf-token")
+            with http_post_json(CSRF_URL, {}) as r:
+                self._csrf = r.headers.get("x-csrf-token")
         except Exception:
             self._csrf = None
+
+    def _post(self, url: str, payload: dict):
+        headers = {"x-csrf-token": self._csrf} if self._csrf else None
+        return http_post_json(url, payload, extra_headers=headers)
 
     def login_interactive(self, browser_cmd: str, on_status: OnStatus,
                           on_url: OnUrl) -> str:
@@ -95,19 +89,18 @@ class AuthManager:
         Возвращает .ROBLOSECURITY после успеха. Бросает TimeoutError за 5 мин.
         """
         self._refresh_csrf()
-        device_id = secrets.token_hex(16)
-        r = self._req(CREATE_URL, json.dumps({
+        body = json.loads(self._post(CREATE_URL, {
             "deviceType": "AdditionalDeviceLogin",
             "identification": True,
-        }).encode())
-        body = json.loads(r.read())
+        }).read())
         deep_link = body.get("deepLink") or body.get("redirectUrl")
         if not deep_link:
             raise RuntimeError("Roblox не вернул ссылку входа")
         on_url(deep_link)
-        subprocess.Popen([browser_cmd, deep_link]) if browser_cmd else None
+        if browser_cmd:
+            subprocess.Popen([browser_cmd, deep_link])
 
-        poll = self._req(POLL_URL, json.dumps({"deviceToken": body["deviceToken"]}).encode())
+        poll = self._post(POLL_URL, {"deviceToken": body["deviceToken"]})
         deadline = time.time() + 300
         while time.time() < deadline:
             resp = json.loads(poll.read())
@@ -124,12 +117,13 @@ class AuthManager:
 
     # ---------- проверка сессии ----------
     def whoami(self) -> dict:
+        """Информация о текущем аккаунте ({} если не авторизован/нет сети)."""
         token = self._token or self.saved_cookie()
         if not token:
             return {}
-        req = urllib.request.Request("https://users.roblox.com/v1/users/authenticated",
-                                     headers={"Cookie": f".ROBLOSECURITY={token}"})
         try:
-            return json.loads(urllib.request.urlopen(req, timeout=15).read())
+            with open_url(USERS_AUTHENTICATED_URL, method="GET", timeout=15,
+                          headers={"Cookie": f".ROBLOSECURITY={token}"}) as r:
+                return json.loads(r.read())
         except Exception:
             return {}

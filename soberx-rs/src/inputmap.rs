@@ -123,7 +123,7 @@ impl Profile {
 
     /// Выполнить действие через adb (input swipe / input tap).
     pub fn feed_action(&self, action: &Action, serial: Option<&str>) -> Result<()> {
-        if which_missing("adb") {
+        if !crate::wineclient::have("adb") {
             return Err(anyhow!("adb не найден — установите android-tools"));
         }
         let args: Vec<String> = match serial {
@@ -154,16 +154,6 @@ impl Profile {
             .ok_or_else(|| anyhow!("нет бинда для клавиши {key}"))?;
         self.feed_action(action, serial)
     }
-}
-
-fn which_missing(cmd: &str) -> bool {
-    Command::new("which")
-        .arg(cmd)
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .status()
-        .map(|s| !s.success())
-        .unwrap_or(true)
 }
 
 fn extract_attr<'a>(tag: &'a str, name: &str) -> Option<&'a str> {

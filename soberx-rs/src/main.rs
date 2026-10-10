@@ -5,6 +5,7 @@ mod apk;
 mod auth;
 mod download;
 mod fasthttp;
+mod http;
 mod inputmap;
 mod libredirect;
 mod settings;
@@ -103,25 +104,7 @@ fn main() -> Result<()> {
             st.save()?;
             println!("выход выполнен");
         }
-        Cmd::Whoami => {
-            let token = if !st.token.is_empty() {
-                st.token.clone()
-            } else {
-                auth::saved_cookie(&Settings::settings_dir()).unwrap_or_default()
-            };
-            if token.is_empty() {
-                println!("не авторизован — выполните `soberx login`");
-                return Ok(());
-            }
-            match auth::whoami(&token) {
-                Some(j) => println!(
-                    "{} (id {})",
-                    j["name"].as_str().unwrap_or("?"),
-                    j["id"].as_i64().unwrap_or(0)
-                ),
-                None => println!("токен сохранён, но сессия не проверяется (нет сети?)"),
-            }
-        }
+        Cmd::Whoami => whoami(&st)?,
         Cmd::Channel { name } => match name {
             None => println!("канал: {}", st.channel),
             Some(n) => {
@@ -237,4 +220,31 @@ fn load_profile(st: &Settings) -> inputmap::Profile {
         }
     }
     inputmap::Profile::default()
+}
+
+/// `soberx whoami`: токен из настроек или хранилища + запрос сессии.
+fn whoami(st: &Settings) -> Result<()> {
+    let token = effective_token(st);
+    if token.is_empty() {
+        println!("не авторизован — выполните `soberx login`");
+        return Ok(());
+    }
+    match auth::whoami(&token) {
+        Some(j) => println!(
+            "{} (id {})",
+            j["name"].as_str().unwrap_or("?"),
+            j["id"].as_i64().unwrap_or(0)
+        ),
+        None => println!("токен сохранён, но сессия не проверяется (нет сети?)"),
+    }
+    Ok(())
+}
+
+/// Токен из настроек, иначе — из сохранённого cookie-хранилища.
+fn effective_token(st: &Settings) -> String {
+    if !st.token.is_empty() {
+        st.token.clone()
+    } else {
+        auth::saved_cookie(&Settings::settings_dir()).unwrap_or_default()
+    }
 }
