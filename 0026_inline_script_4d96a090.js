@@ -1,0 +1,1 @@
+document.title + "\n" + document.body.innerText
