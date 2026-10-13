@@ -1,0 +1,1 @@
+this.onerror=null; this.src='https://rip.linkvertise.lol/favicon.ico';

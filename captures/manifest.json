@@ -1,0 +1,262 @@
+[
+  {
+    "id": 1,
+    "file_name": "0001_app.getmadium.xyz_1-3at-bas7qha.js_2284aac9.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0001_app.getmadium.xyz_1-3at-bas7qha.js_2284aac9.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/1-3at-bas7qha.js",
+    "origin": "(none)",
+    "sha256": "2284aac91e636e1e20535ae9d3aabeaf025630b98927f195f381343920c6a6ff",
+    "size_bytes": 27351,
+    "saved_at": "2026-10-13T12:09:59.534Z"
+  },
+  {
+    "id": 2,
+    "file_name": "0002_app.getmadium.xyz_2r57u--hxt63n.js_cbc6ac25.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0002_app.getmadium.xyz_2r57u--hxt63n.js_cbc6ac25.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/2r57u--hxt63n.js",
+    "origin": "(none)",
+    "sha256": "cbc6ac259ffef8b9f3424fd8f729281e89f50da0d29b8f0c65d4f2b213852ed6",
+    "size_bytes": 191044,
+    "saved_at": "2026-10-13T12:09:59.540Z"
+  },
+  {
+    "id": 3,
+    "file_name": "0003_static.cloudflareinsights.com_v4bc70e2c01a94c73b74392e4234840661791215815920_3e5bc7ca.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0003_static.cloudflareinsights.com_v4bc70e2c01a94c73b74392e4234840661791215815920_3e5bc7ca.js",
+    "url": "https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920",
+    "origin": "(none)",
+    "sha256": "3e5bc7ca508f5d5aa7255341243840c8d2b70c8aea323800b51610df3f5a8a2c",
+    "size_bytes": 31679,
+    "saved_at": "2026-10-13T12:09:59.540Z"
+  },
+  {
+    "id": 4,
+    "file_name": "0004_app.getmadium.xyz_05-c3ty_6dwfk.js_aee2d073.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0004_app.getmadium.xyz_05-c3ty_6dwfk.js_aee2d073.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/05-c3ty_6dwfk.js",
+    "origin": "(none)",
+    "sha256": "aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0",
+    "size_bytes": 3377,
+    "saved_at": "2026-10-13T12:09:59.541Z"
+  },
+  {
+    "id": 5,
+    "file_name": "0005_app.getmadium.xyz_14mrh2-p_w84d.js_a3ac200f.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0005_app.getmadium.xyz_14mrh2-p_w84d.js_a3ac200f.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/14mrh2-p_w84d.js",
+    "origin": "(none)",
+    "sha256": "a3ac200f3ab8bfa57cf78882057741ddb5c0fbc9e2490c5d951c099b37484206",
+    "size_bytes": 54646,
+    "saved_at": "2026-10-13T12:09:59.541Z"
+  },
+  {
+    "id": 6,
+    "file_name": "0006_app.getmadium.xyz_3rxl-jt3pdxgx.js_dfa58a0b.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0006_app.getmadium.xyz_3rxl-jt3pdxgx.js_dfa58a0b.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/3rxl-jt3pdxgx.js",
+    "origin": "(none)",
+    "sha256": "dfa58a0bec19af1dccd5dab0f65d810211dfdd1192e7698cfd4e89ba24af2a4b",
+    "size_bytes": 227538,
+    "saved_at": "2026-10-13T12:09:59.546Z"
+  },
+  {
+    "id": 7,
+    "file_name": "0007_app.getmadium.xyz_1rv5cqy1cv9gv.js_c98dd55b.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0007_app.getmadium.xyz_1rv5cqy1cv9gv.js_c98dd55b.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/1rv5cqy1cv9gv.js",
+    "origin": "(none)",
+    "sha256": "c98dd55b2acdca6a5d68d0a3e1118787d7bd211001d44088e1992ea250dac80d",
+    "size_bytes": 44632,
+    "saved_at": "2026-10-13T12:09:59.547Z"
+  },
+  {
+    "id": 8,
+    "file_name": "0008_app.getmadium.xyz_3bk1ncv43s_n_.js_c7cb6ba5.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0008_app.getmadium.xyz_3bk1ncv43s_n_.js_c7cb6ba5.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/3bk1ncv43s_n_.js",
+    "origin": "(none)",
+    "sha256": "c7cb6ba56c2778d4bd6fe461c4b11a3f7a494568fbf89da08e68c9e709c85512",
+    "size_bytes": 24643,
+    "saved_at": "2026-10-13T12:09:59.547Z"
+  },
+  {
+    "id": 9,
+    "file_name": "0009_app.getmadium.xyz_turbopack-1aka0xl4--cdp.js_7c95ea25.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0009_app.getmadium.xyz_turbopack-1aka0xl4--cdp.js_7c95ea25.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/turbopack-1aka0xl4--cdp.js",
+    "origin": "(none)",
+    "sha256": "7c95ea250760404012d165b187b71d2e0c36c14cf071e027fec899f85a35119f",
+    "size_bytes": 10547,
+    "saved_at": "2026-10-13T12:09:59.547Z"
+  },
+  {
+    "id": 10,
+    "file_name": "0010_app.getmadium.xyz_15o_cqm9i62ub.js_a6615a6b.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0010_app.getmadium.xyz_15o_cqm9i62ub.js_a6615a6b.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/15o_cqm9i62ub.js",
+    "origin": "(none)",
+    "sha256": "a6615a6b7a67d5ce781ce8a6b806a89a7eac4976182bf89ee56c45e13c7d2e6e",
+    "size_bytes": 144834,
+    "saved_at": "2026-10-13T12:09:59.549Z"
+  },
+  {
+    "id": 11,
+    "file_name": "0011_app.getmadium.xyz_3itmfn2pwk7vn.js_6598548d.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0011_app.getmadium.xyz_3itmfn2pwk7vn.js_6598548d.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/3itmfn2pwk7vn.js",
+    "origin": "(none)",
+    "sha256": "6598548d8aef5165ba3ef345cf2f99a121c30026a52303bee8b9d82f649d0d8e",
+    "size_bytes": 2271,
+    "saved_at": "2026-10-13T12:09:59.550Z"
+  },
+  {
+    "id": 12,
+    "file_name": "0012_app.getmadium.xyz_28xce_ymh3-qf.js_100d8545.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0012_app.getmadium.xyz_28xce_ymh3-qf.js_100d8545.js",
+    "url": "https://app.getmadium.xyz/_next/static/chunks/28xce_ymh3-qf.js",
+    "origin": "(none)",
+    "sha256": "100d8545fd3e18e0ae4f5bc0e1a6c69a0f1bf02ac30cfd59e5933a2c44944a3a",
+    "size_bytes": 144834,
+    "saved_at": "2026-10-13T12:09:59.552Z"
+  },
+  {
+    "id": 13,
+    "file_name": "0013_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_86eeb2c8.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0013_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_86eeb2c8.js",
+    "url": "https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269",
+    "origin": "(none)",
+    "sha256": "86eeb2c884c64244d67d5491097c6a7e716f04a6f808f58243f0953bc82257cb",
+    "size_bytes": 14745,
+    "saved_at": "2026-10-13T12:10:32.651Z"
+  },
+  {
+    "id": 14,
+    "file_name": "0014_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_cec1d666.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0014_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_cec1d666.js",
+    "url": "https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269",
+    "origin": "(none)",
+    "sha256": "cec1d666e4a304241a812c8821825f9520385359a403e6544edbb6c3140d4470",
+    "size_bytes": 7302,
+    "saved_at": "2026-10-13T12:10:32.651Z"
+  },
+  {
+    "id": 15,
+    "file_name": "0015_cimiefiiaegbelhefglklhhakcgmhkai_page-script.js_0613b31b.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0015_cimiefiiaegbelhefglklhhakcgmhkai_page-script.js_0613b31b.js",
+    "url": "chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js",
+    "origin": "(none)",
+    "sha256": "0613b31b9b9848ad1cf6051c9a1810b2ae7885c3ec67e71a73ec253f9496c04c",
+    "size_bytes": 13160,
+    "saved_at": "2026-10-13T12:10:32.708Z"
+  },
+  {
+    "id": 16,
+    "file_name": "0016_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_d9a89fd5.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0016_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_d9a89fd5.js",
+    "url": "https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269#API",
+    "origin": "(none)",
+    "sha256": "d9a89fd5ee5d7c160729f2a4f14a8eb68fa29f87d347291e2dce48179691d926",
+    "size_bytes": 70,
+    "saved_at": "2026-10-13T12:10:32.768Z"
+  },
+  {
+    "id": 17,
+    "file_name": "0017_kys.linkvertise.lol_favicon.ico_126c09c7.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0017_kys.linkvertise.lol_favicon.ico_126c09c7.js",
+    "url": "https://kys.linkvertise.lol/favicon.ico",
+    "origin": "(none)",
+    "sha256": "126c09c7a188db7e18c838117cf9cc5a162c942995930f5466bde20d847349cf",
+    "size_bytes": 23242,
+    "saved_at": "2026-10-13T12:10:33.058Z"
+  },
+  {
+    "id": 18,
+    "file_name": "0018_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_5dae25e1.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0018_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_5dae25e1.js",
+    "url": "https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed",
+    "origin": "(none)",
+    "sha256": "5dae25e1b6c0ce3be5894d094978cc8e339301bbc60d0cc2d5440a26ba0d6c08",
+    "size_bytes": 7729,
+    "saved_at": "2026-10-13T12:10:34.475Z"
+  },
+  {
+    "id": 19,
+    "file_name": "0019_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_1de36d84.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0019_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_1de36d84.js",
+    "url": "https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed",
+    "origin": "(none)",
+    "sha256": "1de36d84fb1a47ee999b312b86a829a820b2b5ae793268ac1b2d93313affc478",
+    "size_bytes": 22106,
+    "saved_at": "2026-10-13T12:10:34.492Z"
+  },
+  {
+    "id": 20,
+    "file_name": "0020_kys.linkvertise.lol_Z_b9322ed3.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0020_kys.linkvertise.lol_Z_b9322ed3.js",
+    "url": "https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE",
+    "origin": "(none)",
+    "sha256": "b9322ed3dd99f71b40ce56781754cd4ce08c0ec8159204e1add4dcd56dfa79b2",
+    "size_bytes": 751,
+    "saved_at": "2026-10-13T12:10:35.343Z"
+  },
+  {
+    "id": 21,
+    "file_name": "0021_kys.linkvertise.lol_Z_6317583f.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0021_kys.linkvertise.lol_Z_6317583f.js",
+    "url": "https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE",
+    "origin": "(none)",
+    "sha256": "6317583f9848e2d50f607a0cdb2e266e064e7ba9669d887639d8f63b9247bea3",
+    "size_bytes": 501,
+    "saved_at": "2026-10-13T12:10:35.343Z"
+  },
+  {
+    "id": 22,
+    "file_name": "0022_kys.linkvertise.lol_Z_64f3af71.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0022_kys.linkvertise.lol_Z_64f3af71.js",
+    "url": "https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE",
+    "origin": "(none)",
+    "sha256": "64f3af71bfe654d243007140d3b22e2012f5ac957b01d4ccabb6eb9e08be1a06",
+    "size_bytes": 12960,
+    "saved_at": "2026-10-13T12:10:35.343Z"
+  },
+  {
+    "id": 23,
+    "file_name": "0023_kys.linkvertise.lol_Z_f92f45df.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0023_kys.linkvertise.lol_Z_f92f45df.js",
+    "url": "https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE",
+    "origin": "(none)",
+    "sha256": "f92f45df99cf8fa69cd385a982e6145b637ab60d56e482e695352df6cd6f02e3",
+    "size_bytes": 23465,
+    "saved_at": "2026-10-13T12:10:35.345Z"
+  },
+  {
+    "id": 24,
+    "file_name": "0024_inline_script_05438659.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0024_inline_script_05438659.js",
+    "url": "(inline)",
+    "origin": "(none)",
+    "sha256": "054386596c35319d2955e3c6c457004e297d0059ec7e2dda3faa14663b6d3699",
+    "size_bytes": 439632,
+    "saved_at": "2026-10-13T12:10:36.136Z"
+  },
+  {
+    "id": 25,
+    "file_name": "0025__a0d94da9-a922-42ab-8f4b-e887b9e453d7_f1c48171.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0025__a0d94da9-a922-42ab-8f4b-e887b9e453d7_f1c48171.js",
+    "url": "blob:https://kys.linkvertise.lol/a0d94da9-a922-42ab-8f4b-e887b9e453d7",
+    "origin": "(none)",
+    "sha256": "f1c48171d0f82ab79021050f13e475063755c3d2aea860ae4472dc284f9e5682",
+    "size_bytes": 961,
+    "saved_at": "2026-10-13T12:10:36.937Z"
+  },
+  {
+    "id": 26,
+    "file_name": "0026_inline_script_4d96a090.js",
+    "file_path": "/home/ditown/Проекты/test1/captures/scripts/0026_inline_script_4d96a090.js",
+    "url": "(inline)",
+    "origin": "(none)",
+    "sha256": "4d96a0905b13977c141e8c2d6d6a3bf2f2bbeb7479de90857b86f096e1c0d800",
+    "size_bytes": 47,
+    "saved_at": "2026-10-13T12:12:22.698Z"
+  }
+]

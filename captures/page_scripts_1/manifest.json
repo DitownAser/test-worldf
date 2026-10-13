@@ -1,0 +1,487 @@
+{
+  "capture_path": "/home/ditown/.gemini/antigravity-cli/brain/c1bcdf1d-af57-4a85-b102-0dd34f8f0d76/.system_generated/steps/87/output.txt",
+  "capture_sha256": "36b4035e07523ae80514e153456faa74bfdd0739124deb99b40b94ca4e39e73c",
+  "capture_kind": "page-inspection",
+  "source_evidence_id": "ev_8db775c3146710a6728a9cfd6b7f888f7f2e5413a2136838b4ea29096ce14cb0",
+  "capture_completeness": {
+    "status": "policy_filtered",
+    "conditions": [
+      "attach_limited",
+      "policy_filtered"
+    ],
+    "policy_filtered_sections": [
+      "accessibility",
+      "console_text",
+      "json_body_shapes",
+      "metadata",
+      "resources",
+      "scripts",
+      "storage_keys",
+      "websocket_shapes",
+      "workers"
+    ],
+    "attach_limited_sections": [
+      "console_events",
+      "metadata",
+      "network_requests",
+      "websocket_connections",
+      "websocket_frames"
+    ],
+    "truncated_sections": [],
+    "unavailable_sections": [],
+    "excluded": [
+      {
+        "section": "accessibility",
+        "reason": "not_approved",
+        "count": 19
+      },
+      {
+        "section": "console_text",
+        "reason": "not_approved",
+        "count": null
+      },
+      {
+        "section": "json_body_shapes",
+        "reason": "not_approved",
+        "count": null
+      },
+      {
+        "section": "metadata",
+        "reason": "disallowed_origin",
+        "count": 2
+      },
+      {
+        "section": "resources",
+        "reason": "disallowed_origin",
+        "count": 2
+      },
+      {
+        "section": "scripts",
+        "reason": "disallowed_origin",
+        "count": 1
+      },
+      {
+        "section": "scripts",
+        "reason": "unsupported_url",
+        "count": 5
+      },
+      {
+        "section": "storage_keys",
+        "reason": "not_approved",
+        "count": null
+      },
+      {
+        "section": "websocket_shapes",
+        "reason": "not_approved",
+        "count": null
+      },
+      {
+        "section": "workers",
+        "reason": "out_of_target_scope",
+        "count": 1
+      }
+    ],
+    "dropped_events": {
+      "scripts": 0,
+      "network_requests": 0,
+      "console_events": 0,
+      "websocket_connections": 0,
+      "websocket_frames": 0,
+      "webmcp_tools": 0,
+      "timeline_events": 0,
+      "total": 0
+    }
+  },
+  "output_directory": "/home/ditown/Проекты/test1/captures/page_scripts_1",
+  "analysis_input": {
+    "input_path": "/home/ditown/Проекты/test1/captures/page_scripts_1/files",
+    "format": "directory"
+  },
+  "scripts": [
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_1b48ab177f7fe50b696002df97d60cbd540dacecd3d569d3a92f53abc3386d0b",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/turbopack-1aka0xl4--cdp.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/turbopack-1aka0xl4--cdp.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "7c95ea250760404012d165b187b71d2e0c36c14cf071e027fec899f85a35119f",
+        "bytes": 10547,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_1e1c8d12fb5d9847322e436b7b00bb02ef856b14b466ed058dc3c4aeabae0ff8",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/3rxl-jt3pdxgx.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/3rxl-jt3pdxgx.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "dfa58a0bec19af1dccd5dab0f65d810211dfdd1192e7698cfd4e89ba24af2a4b",
+        "bytes": 227538,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_20bad417b09c28708b73bd71111fa212de286d64272b57b9ffd4239f7a516fe9",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/3bk1ncv43s_n_.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/3bk1ncv43s_n_.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "c7cb6ba56c2778d4bd6fe461c4b11a3f7a494568fbf89da08e68c9e709c85512",
+        "bytes": 24643,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_2c7021ff74befa7145167078193846a93b5cf59b0e46581db6fc088a04d1976e",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/1rv5cqy1cv9gv.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/1rv5cqy1cv9gv.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "c98dd55b2acdca6a5d68d0a3e1118787d7bd211001d44088e1992ea250dac80d",
+        "bytes": 44632,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_31b073781babc9c04433c6410074071d508be44d6136e5bb98a89dabdaf0e8a4",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/?lootlabs=credited",
+      "content": {
+        "state": "exported",
+        "relative_path": "isolated/source-5-88bbfe4332abbda85872ae42a41278d7526ceda104a6cd4c13315cc4fb8fe018.js",
+        "layout": "isolated",
+        "layout_reason": "URL path is not an ordinary portable JavaScript module path.",
+        "sha256": "3814cddd18b2095e01abb745a99e5ada90178e709c09879324c3b623f2d829ea",
+        "bytes": 43,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_399c875b84abe4ca5a6daf66de150e3bc5ae97d5612c16cb04b8005ede4304e9",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/1-3at-bas7qha.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/1-3at-bas7qha.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "2284aac91e636e1e20535ae9d3aabeaf025630b98927f195f381343920c6a6ff",
+        "bytes": 27351,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_41ea328c859b4de48f3ad3a17ff78c1ce3425265c3dfd4ed1b14e0d706d78d13",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/?lootlabs=credited",
+      "content": {
+        "state": "exported",
+        "relative_path": "isolated/source-7-a5c3607e71d0a666514c7a5a1dbc1cce95931d8705adf157ea82fdb747068ea2.js",
+        "layout": "isolated",
+        "layout_reason": "URL path is not an ordinary portable JavaScript module path.",
+        "sha256": "c862652ca8d06ae655e55f4f296531545b8de69a99f5fe205f90681e9405c3b8",
+        "bytes": 2031,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_49899b56c788afe208b82ad60cf2e4cf87beed20932a25b55b16b07211d9b4e8",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/?lootlabs=credited",
+      "content": {
+        "state": "exported",
+        "relative_path": "isolated/source-8-235c2994921f11475720bdbeeb071ba2c006f094e9b325894ce0b2959a199ade.js",
+        "layout": "isolated",
+        "layout_reason": "URL path is not an ordinary portable JavaScript module path.",
+        "sha256": "38014a947e25cb5d12aede13dfa6e728a83b246c9cff98f38a400bbb8789c0f4",
+        "bytes": 112,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_545d0025eb78551909d37eb9807b8d5c4b5eed85821cc7410189d0d8ebaf6ee0",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/3itmfn2pwk7vn.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/3itmfn2pwk7vn.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "6598548d8aef5165ba3ef345cf2f99a121c30026a52303bee8b9d82f649d0d8e",
+        "bytes": 2271,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_848b9a92a10b0d7678399efe22c34c99fdab76390ecaa2520d33125598cf1404",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/?lootlabs=credited",
+      "content": {
+        "state": "exported",
+        "relative_path": "isolated/source-10-a723a70c3dd6a6f3883c1d9addd414387465b62caafcca935c29361fd26b5897.js",
+        "layout": "isolated",
+        "layout_reason": "URL path is not an ordinary portable JavaScript module path.",
+        "sha256": "5049e51423b8ec88b61e3143b4d4fe22c546002ccf6f532bf4d7043868075a67",
+        "bytes": 422,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_8922ca0111a343a488707a5844c9fb8524324fa40230e2ccda7bdf06dad76050",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/2r57u--hxt63n.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/2r57u--hxt63n.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "cbc6ac259ffef8b9f3424fd8f729281e89f50da0d29b8f0c65d4f2b213852ed6",
+        "bytes": 191044,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_ba5c3a58d08cb617801e235b9ec0653aeaf15dd120509dab4107defe4e10725a",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/14mrh2-p_w84d.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/14mrh2-p_w84d.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "a3ac200f3ab8bfa57cf78882057741ddb5c0fbc9e2490c5d951c099b37484206",
+        "bytes": 54646,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_c132020ace34dbf0bb416268169fa1ebe24e53f56d62124b2c8b66666e724501",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/28xce_ymh3-qf.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/28xce_ymh3-qf.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "100d8545fd3e18e0ae4f5bc0e1a6c69a0f1bf02ac30cfd59e5933a2c44944a3a",
+        "bytes": 144834,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_c74e2a73b470e482a4c1c35ca84e7e600ab8a5a6b5123bbba42517e3fa00d332",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/?lootlabs=credited",
+      "content": {
+        "state": "exported",
+        "relative_path": "isolated/source-14-9dbff48c76ebde846f77ca963be862cc2afc90a2353516955c314d36e197f1f9.js",
+        "layout": "isolated",
+        "layout_reason": "URL path is not an ordinary portable JavaScript module path.",
+        "sha256": "e5e4224341e378b5a9955bc5921bbc0cb0a2114f0fc7fb1bbdf1a05391f11e44",
+        "bytes": 177,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_cba1951e42d99df4b85c8e97f7105234ca3f3862e4ab5a8f93c250e910c3a35a",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/?lootlabs=credited",
+      "content": {
+        "state": "exported",
+        "relative_path": "isolated/source-15-b1cd729f7b8ec3eade3a940b4ed1bee73b842737122e6c8102ec3382f9cb826b.js",
+        "layout": "isolated",
+        "layout_reason": "URL path is not an ordinary portable JavaScript module path.",
+        "sha256": "792b29cf43b25c0dcaae1a7f07386de85f7ba48e790476a4d5519cda4a3f87ec",
+        "bytes": 4508,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_d6deedfbe45b2280ce1f6a4abdb2930bd7c6dbf91d48c94b4088f3447377c976",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/05-c3ty_6dwfk.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/05-c3ty_6dwfk.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0",
+        "bytes": 3377,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    },
+    {
+      "source": {
+        "kind": "page-script",
+        "script_key": "scr_fdaccf37e7b160a4f9d5718471cf9379f90281660466675b1d8f44e192945113",
+        "frame_id": "F99F416692AE71D76DCD9EF1FB825F95",
+        "is_module": false,
+        "language": "JavaScript",
+        "source_map_url": null
+      },
+      "url": "https://app.getmadium.xyz/_next/static/chunks/15o_cqm9i62ub.js",
+      "content": {
+        "state": "exported",
+        "relative_path": "origins/52d155e2186e4b153dfbc7cec86d82e40a56f4dedffae321877374c1b17ff5cd/_next/static/chunks/15o_cqm9i62ub.js",
+        "layout": "url-path",
+        "layout_reason": null,
+        "sha256": "a6615a6b7a67d5ce781ce8a6b806a89a7eac4976182bf89ee56c45e13c7d2e6e",
+        "bytes": 144834,
+        "media_type": "text/javascript",
+        "redacted": null,
+        "representation": "debugger-source-utf8"
+      }
+    }
+  ],
+  "limitations": [
+    "Observation starts when REA attaches; prior network and console activity is unavailable.",
+    "Raw network headers, bodies, cookies, storage values, console objects, and WebSocket payloads are never retained; explicitly requested primitive console text is retained verbatim, while payload captures retain value-free shapes.",
+    "Source maps are reported only as declarative URLs and are not fetched.",
+    "URL-less scripts and console events without an allowed source URL are excluded because their origin cannot be proven.",
+    "Only script bytes retained in this capture are exported. Sources are not refetched or executed, and a response or Debugger source does not prove execution.",
+    "Ordinary unambiguous URL paths preserve relative module layouts by origin, including case-distinct spellings. Query variants, exact path collisions, file/directory prefixes, inline sources, and unrepresentable paths are isolated. A case-distinct pair is isolated only when the destination filesystem cannot store both spellings; the record names that pair. Browser module relationships of isolated paths remain unknown.",
+    "Local JavaScript analysis does not implement browser import maps, root-relative URL resolution, remote URL loading, or browser runtime behavior. It may strip import queries and fragments; isolated variants are not canonical targets.",
+    "Source-map declarations are retained as metadata. No source maps or missing dependencies are fetched or reconstructed.",
+    "Captured response bytes are browser-decoded bytes; Debugger sources are the exposed text encoded as UTF-8. Redacted bytes are exported exactly as retained, and may no longer parse as JavaScript."
+  ]
+}

@@ -1,0 +1,3 @@
+console.log("[TEMP]: Hashing process started!!!")
+const levels=["error","warn","info","log"];function randBytes(n){const buf=new Uint8Array(n);crypto.getRandomValues(buf);return buf;}
+async function tick(){const bytes=randBytes(32);const digest=await crypto.subtle.digest("SHA-512",bytes);const hash=[...new Uint8Array(digest)].map((b)=>b.toString(16).padStart(2,"0")).join("");const level=levels[(crypto.getRandomValues(new Uint8Array(1))[0])%levels.length];console[level](`${hash}`);console.clear()}
