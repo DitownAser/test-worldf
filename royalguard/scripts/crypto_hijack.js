@@ -30,6 +30,10 @@
   window.__HIJACK_INSTALLED__ = true;
 
   const LOG = [];
+  // счётчики отправленных записей: лимит нужен, чтобы binding-сообщения
+  // (Runtime.bindingCalled) не переполняли CDP-буфер при плотном RTDL-трафике
+  let sentCount = 0;
+  const SENT_LIMIT = 3000;
   const b64 = (buf) => {
     try {
       const u8 = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
@@ -45,11 +49,22 @@
     } catch (e) { return null; }
   };
   const now = () => performance.now().toFixed(1);
+  // канал в CDP: binding __hijack_send (capture_attach.js) — не зависит от
+  // формата console-логов и уровня логирования; console.log остаётся страховкой
+  const send = (obj) => {
+    try {
+      if (typeof window.__hijack_send === 'function' && sentCount < SENT_LIMIT) {
+        window.__hijack_send(JSON.stringify(obj));
+        sentCount++;
+      }
+    } catch (e) {}
+  };
   const rec = (obj) => {
     obj.t = now();
     LOG.push(obj);
-    // дублируем в консоль — CDP-логгер captures/ подхватит console.* сам
-    console.log('[HIJACK]', JSON.stringify(obj));
+    send(obj);
+    // дублируем в консоль — старые CDP-логгеры captures/ подхватят console.*
+    try { console.log('[HIJACK]', JSON.stringify(obj)); } catch (e) {}
   };
 
   // --- маскировка обёрток: native toString ---------------------------------
@@ -73,7 +88,8 @@
   const subtle = crypto.subtle;
 
   const wrapMethod = (obj, name, before, after) => {
-    const orig = obj[name].bind(obj);
+    const orig = obj[name] && obj[name].bind(obj);
+    if (!orig) return; // метода нет в этом движке — пропускаем молча
     const wrapped = async function (...args) {
       let ctx;
       try { ctx = before && before(args); } catch (e) {}
@@ -81,7 +97,7 @@
       try { after && after(args, res, ctx); } catch (e) {}
       return res;
     };
-    return disguise(Object.defineProperty(wrapped, 'name', { value: name }), orig);
+    obj[name] = disguise(Object.defineProperty(wrapped, 'name', { value: name }), orig);
   };
 
   // Ключевые объекты CryptoKey непрозрачны — храним "метки", которые сами
@@ -94,11 +110,33 @@
     const key = await origGenerate(alg, extractable, usages);
     const tag = 'gen:' + (alg.name || '?') + ':' + (alg.namedCurve || alg.length || '') + '#' + LOG.length;
     keyTags.set(key, tag);
-    if (key.privateKey) keyTags.set(key.privateKey, tag + '/priv');
-    if (key.publicKey) keyTags.set(key.publicKey, tag + '/pub');
-    rec({ op: 'generateKey', alg, tag });
+    if (key && key.privateKey) keyTags.set(key.privateKey, tag + '/priv');
+    if (key && key.publicKey) keyTags.set(key.publicKey, tag + '/pub');
+    // сериализуем alg безопасно: в новых движках PQC-параметры (e.g. ML-KEM)
+    // содержат BigInt — JSON.stringify на них падает
+    rec({ op: 'generateKey', alg: safeAlg(alg), tag });
     return key;
   }, origGenerate);
+
+  // Безопасная сериализация параметров алгоритма: объекты RsaPssParams/
+  // PqcAlgorithm и т.п. могут содержать BigInt — JSON.stringify на них бросает
+  // TypeError, а rec() вызывается ДО return (то есть вне try) и обрушил бы всю
+  // операцию шифрования страницы. Превращаем всё в строки.
+  const safeAlg = (alg) => {
+    try {
+      if (alg == null) return null;
+      if (typeof alg !== 'object') return String(alg);
+      const out = {};
+      for (const k of Object.keys(alg)) {
+        const v = alg[k];
+        if (typeof v === 'bigint') out[k] = String(v);
+        else if (v instanceof ArrayBuffer || ArrayBuffer.isView(v)) out[k] = hex(v);
+        else if (typeof v === 'object' && v !== null) { try { out[k] = JSON.parse(JSON.stringify(v, (kk, vv) => typeof vv === 'bigint' ? String(vv) : vv)); } catch (e) { out[k] = String(v); } }
+        else out[k] = v;
+      }
+      return out;
+    } catch (e) { return { name: (() => { try { return alg.name; } catch (e2) { return '?'; } })(), unparsable: true }; }
+  };
 
   const origImport = subtle.importKey.bind(subtle);
   subtle.importKey = disguise(async function (format, keyData, alg, extractable, usages) {
@@ -106,7 +144,7 @@
     const tag = 'imp:' + format + ':' + (alg.name || '?');
     keyTags.set(key, tag);
     rec({
-      op: 'importKey', format, alg,
+      op: 'importKey', format, alg: safeAlg(alg),
       dataHex: typeof keyData === 'string' ? keyData.slice(0, 64) : hex(keyData),
       dataFullB64: typeof keyData !== 'string' ? b64(keyData) : null,
       tag,
@@ -133,7 +171,7 @@
     const tag = 'drv:' + (alg.name || '?') + '#' + LOG.length;
     keyTags.set(key, tag);
     rec({
-      op: 'deriveKey', alg, derivedAlg,
+      op: 'deriveKey', alg: safeAlg(alg), derivedAlg: safeAlg(derivedAlg),
       baseKeyTag: keyTags.get(baseKey) || 'untagged', tag,
     });
     return key;
@@ -170,7 +208,7 @@
   subtle.sign = disguise(async function (alg, key, data) {
     const res = await origSign(alg, key, data);
     rec({
-      op: 'sign', alg, keyTag: keyTags.get(key) || 'untagged',
+      op: 'sign', alg: safeAlg(alg), keyTag: keyTags.get(key) || 'untagged',
       dataUtf8: (() => { try { return new TextDecoder().decode(data).slice(0, 1000); } catch (e) { return null; } })(),
       sigHex: hex(new Uint8Array(res)),
     });
@@ -204,7 +242,7 @@
   subtle.digest = disguise(async function (alg, data) {
     const res = await origDigest(alg, data);
     rec({
-      op: 'digest', alg,
+      op: 'digest', alg: safeAlg(alg),
       dataUtf8: (() => { try { return new TextDecoder().decode(data).slice(0, 500); } catch (e) { return null; } })(),
       hashHex: hex(new Uint8Array(res)),
       dataLen: data.byteLength,
@@ -221,9 +259,23 @@
   const dumpWasm = (bytes, where) => {
     const u8 = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
     const magic = hex(u8.slice(0, 8));
-    rec({ op: 'wasm', where, size: u8.length, magic, b64: b64(u8) });
+    // ВАЖНО: не кладем base64 всего модуля в rec() — LOG хранится в памяти
+    // страницы и сериализуется через __HIJACK_DUMP__; для wasm-модулей в
+    // сотни KB это убивало вкладку (OOM / обрыв CDP). Полный байт лежит в
+    // __WASM_DUMPS__, а здесь только превью + размер.
+    rec({ op: 'wasm', where, size: u8.length, magic, b64preview: b64(u8.slice(0, 512)) });
     // дополнительно: сохранить в IndexedDB-free способ — просто глобал для выгрузки
     (window.__WASM_DUMPS__ = window.__WASM_DUMPS__ || []).push({ where, bytes: u8 });
+  };
+
+  // Заголовок Response мог быть Headers-объектом — конструктор Response с ним
+  // может бросать; приводим к plain-объекту и не даём ошибке обрушить загрузку wasm
+  const headersToObj = (h) => {
+    try {
+      if (!h) return {};
+      if (typeof h.forEach === 'function') { const o = {}; h.forEach((v, k) => { o[k] = v; }); return o; }
+      return Object.assign({}, h);
+    } catch (e) { return {}; }
   };
 
   if (WebAssembly.instantiate) {
@@ -252,7 +304,14 @@
       const resp = await response;
       const buf = await resp.arrayBuffer();
       dumpWasm(buf, 'instantiateStreaming:' + (resp.url || '?'));
-      const fresh = new Response(buf, { headers: resp.headers, status: resp.status });
+      let fresh;
+      try {
+        fresh = new Response(buf, { headers: headersToObj(resp.headers), status: resp.status, statusText: resp.statusText });
+      } catch (e) {
+        // если пересоздать Response не вышло — отдаём пустой Response с тем же
+        // контентом нельзя; лучший вариант: повторный fetch оригинального URL
+        try { fresh = await fetch(resp.url); } catch (e2) { throw e; }
+      }
       return ois(Promise.resolve(fresh), importObject);
     }, ois);
   }
@@ -264,11 +323,17 @@
   // =========================================================================
   const ofetch = window.fetch;
   window.fetch = disguise(async function (input, init) {
-    const url = typeof input === 'string' ? input : (input && input.url) || '?';
-    const body = init && init.body;
-    if (/linkvertise|getmadium|lootlabs/.test(url)) {
+    const url = typeof input === 'string' ? input
+      : (input && typeof input.url === 'string' ? input.url : ((input && input.url) || '?'));
+    // тело может лежать и в Request-объекте (fetch(new Request(url,{body}))),
+    // а не только в init — раньше такие запросы терялись
+    let body = init && init.body;
+    if (body == null && input && typeof Request !== 'undefined' && input instanceof Request) {
+      try { body = await input.clone().text(); } catch (e) {}
+    }
+    if (/linkvertise|getmadium|lootlabs|royalguard|pushToTalk|RTDL/i.test(url)) {
       rec({
-        op: 'fetch', url, method: (init && init.method) || 'GET',
+        op: 'fetch', url, method: (init && init.method) || (input && input.method) || 'GET',
         bodyHead: typeof body === 'string' ? body.slice(0, 500) : (body ? '[non-string]' : null),
       });
     }

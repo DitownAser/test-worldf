@@ -56,7 +56,8 @@ const OUT_DIR = path.join(__dirname, '..', 'captures',
   'attach_' + new Date().toISOString().replace(/[:.]/g, '-'));
 const SCRIPTS_DIR = path.join(OUT_DIR, 'scripts');
 const RESP_DIR = path.join(OUT_DIR, 'responses');
-for (const d of [OUT_DIR, SCRIPTS_DIR, RESP_DIR]) fs.mkdirSync(d, { recursive: true });
+const WASM_DIR = path.join(OUT_DIR, 'wasm');
+for (const d of [OUT_DIR, SCRIPTS_DIR, RESP_DIR, WASM_DIR]) fs.mkdirSync(d, { recursive: true });
 
 const trafficPath = path.join(OUT_DIR, 'traffic.jsonl');
 const eventsPath  = path.join(OUT_DIR, 'events.log');
@@ -90,7 +91,7 @@ async function attachToTarget(targetInfo) {
   } catch (_) {}
 
   const reqMap = new Map(); // requestId -> {id,url,type}
-  await Network.enable();
+  await Network.enable().catch((e) => { log('Network.enable не удался:', e.message); });
   Network.requestWillBeSent(({ requestId, request, method, url, type, postData, initiator }) => {
     const id = ++reqCounter;
     reqMap.set(requestId, { id, url, type });
@@ -114,6 +115,10 @@ async function attachToTarget(targetInfo) {
       const name = `${String(meta.id).padStart(4, '0')}_${String(meta.url).replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90)}.js`;
       fs.writeFileSync(path.join(SCRIPTS_DIR, name), buf);
     } catch (_) {}
+    // wasm-модуль SquareVM мог прийти обычным fetch/arraybuffer — как только
+    // страница инстанцирует его, crypto_hijack положит байты в __WASM_DUMPS__;
+    // забираем их на диск сразу после окончания загрузки ресурсов
+    setTimeout(() => saveWasmDumps(client, targetId).catch(() => {}), 1500);
   });
 
   try {
@@ -121,7 +126,7 @@ async function attachToTarget(targetInfo) {
     Log.on('entryAdded', ({ entry }) => event(`console:${entry.level}`, { text: entry.text, source: entry.url }));
   } catch (_) {}
 
-  await Runtime.enable();
+  await Runtime.enable().catch((e) => { log('Runtime.enable не удался:', e.message); });
   Runtime.on('consoleAPICalled', ({ type, args }) => {
     const text = (args || []).map(a => a.value !== undefined ? String(a.value) : (a.description || a.type)).join(' ');
     event(`runtime:${type}`, { text });
@@ -137,6 +142,14 @@ async function attachToTarget(targetInfo) {
   clients.push(client);
   log('+ таргет:', targetId, '-', (targetInfo.url || '').slice(0, 100));
 
+  // если hijack-скрипт внедрился уже ПОСЛЕ того, как страница загрузилась
+  // (подключение к живой вкладке), init-script сработает только на след.
+  // навигации — поэтому догружаем его в текущий документ немедленно и
+  // перезаписываем binding в уже существующем контексте
+  try {
+    await Runtime.evaluate({ expression: HIJACK_SRC, includeCommandLineAPI: false }).catch(() => {});
+  } catch (_) {}
+
   // периодически вытаскиваем полный hijack-дамп (страховка от обрезки консоли)
   dumpers.push(async () => {
     try {
@@ -147,11 +160,47 @@ async function attachToTarget(targetInfo) {
         catch (_) { cStream.write(result.value + '\n'); }
       }
     } catch (_) {}
+    await saveWasmDumps(client, targetId);
   });
 }
 
 const clients = [];
 const dumpers = [];
+const savedWasm = new Set();
+
+// ── выгрузка дампов wasm-модулей из страницы на диск ─────────────────────
+// В странице байты лежат в window.__WASM_DUMPS__ (crypto_hijack не дублирует
+// их base64 в LOG — иначе вкладка падала). Вытаскиваем частями по CDP.
+async function saveWasmDumps(client, targetId) {
+  try {
+    const { result } = await client.Runtime.evaluate({
+      expression: '(window.__WASM_DUMPS__||[]).map(w=>({where:w.where,size:w.bytes.length}))',
+      returnByValue: true });
+    const list = (result && result.value) || [];
+    for (let i = 0; i < list.length; i++) {
+      const key = targetId + '#' + i;
+      if (savedWasm.has(key)) continue;
+      savedWasm.add(key);
+      const parts = [];
+      const CHUNK = 256 * 1024; // ~341KB base64 на чанк — безопасно для CDP
+      let ok = true;
+      for (let off = 0; off < list[i].size; off += CHUNK) {
+        const r = await client.Runtime.evaluate({
+          expression: `(()=>{const u=(window.__WASM_DUMPS__||[])[${i}];if(!u)return '';return btoa(String.fromCharCode.apply(null,u.bytes.subarray(${off},${off + CHUNK})))})()`,
+          returnByValue: true });
+        const p = r && r.result && r.result.value;
+        if (!p && list[i].size > 0) { ok = false; break; }
+        parts.push(p || '');
+      }
+      if (ok && parts.length) {
+        const name = `${targetId.slice(0, 8)}_${String(list[i].where).replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-60)}.wasm`;
+        fs.writeFileSync(path.join(WASM_DIR, name), Buffer.from(parts.join(''), 'base64'));
+        log('+ wasm-дамп сохранён:', name, `(${list[i].size} байт)`);
+        event('WASM-SAVED', { file: name, size: list[i].size, where: list[i].where });
+      }
+    }
+  } catch (_) {}
+}
 
 (async () => {
   // проверка, что браузер вообще слушает debug-порт
