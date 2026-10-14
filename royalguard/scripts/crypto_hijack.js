@@ -34,6 +34,9 @@
   // (Runtime.bindingCalled) не переполняли CDP-буфер при плотном RTDL-трафике
   let sentCount = 0;
   const SENT_LIMIT = 3000;
+  // максимум записей, хранимых в памяти страницы для __HIJACK_DUMP__
+  // (страховочный хвост; всё пишется наружу через send() в реальном времени)
+  const MAX_LOG = 2000;
   const b64 = (buf) => {
     try {
       const u8 = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
@@ -49,6 +52,8 @@
     } catch (e) { return null; }
   };
   const now = () => performance.now().toFixed(1);
+  // безопасный UTF-8 из Uint8Array (TextDecoder есть везде, но на всякий — try)
+  const utf8 = (u8, max) => { try { return new TextDecoder().decode(u8).slice(0, max || 2000); } catch (e) { return null; } };
   // канал в CDP: binding __hijack_send (capture_attach.js) — не зависит от
   // формата console-логов и уровня логирования; console.log остаётся страховкой
   const send = (obj) => {
@@ -62,6 +67,13 @@
   const rec = (obj) => {
     obj.t = now();
     LOG.push(obj);
+    // ОГРАНИЧЕНИЕ ПАМЯТИ: раньше LOG рос бесконечно, а __HIJACK_DUMP__
+    // сериализовал его ЦЕЛИКОМ в одну CDP-строку (JSON.stringify(LOG,null,1)).
+    // На плотном RTDL-трафике это давал многомегабайтные сообщения, падение
+    // вкладки и обрыв сессии. Храним в LOG только последние MAX_LOG записей;
+    // всё отправляется наружу через send() в реальном времени, поэтому данные
+    // не теряются — дамп служит лишь страховочным «хвостом».
+    if (LOG.length > MAX_LOG) LOG.splice(0, LOG.length - MAX_LOG);
     send(obj);
     // дублируем в консоль — старые CDP-логгеры captures/ подхватят console.*
     try { console.log('[HIJACK]', JSON.stringify(obj)); } catch (e) {}
@@ -70,7 +82,13 @@
   // --- маскировка обёрток: native toString ---------------------------------
   const fakeNative = new WeakMap();
   function disguise(fn, nativeFn) {
-    fakeNative.set(fn, Function.prototype.toString.call(nativeFn));
+    // guard: nativeFn может быть undefined/уже обёрнутым при повторном
+    // внедрении скрипта в живую вкладку — не даём упасть всей операции
+    try {
+      fakeNative.set(fn, Function.prototype.toString.call(nativeFn));
+    } catch (e) {
+      try { fakeNative.set(fn, 'function ' + (fn.name || '') + '() { [native code] }'); } catch (e2) {}
+    }
     return fn;
   }
   const origToString = Function.prototype.toString;
@@ -157,8 +175,8 @@
     const bits = await origDerive(alg, baseKey, length);
     // ECDH(X25519)-секрет = общий секрет RTDL-туннеля "YX". Ловим его здесь.
     rec({
-      op: 'deriveBits', alg: { name: alg.name, curve: alg.curve },
-      baseKeyTag: keyTags.get(baseKey) || 'untagged',
+      op: 'deriveBits', alg: safeAlg(alg),
+      baseKeyTag: keyTags.get(baseKey) || 'untagged', length,
       secretB64: b64(bits), secretHexPrefix: hex(new Uint8Array(bits)),
     });
     // если alg содержит salt/info (HKDF) — тоже записываем
@@ -184,7 +202,7 @@
       op: 'encrypt', alg: { name: alg.name, iv: hex(alg.iv), additionalData: hex(alg.additionalData), tagLength: alg.tagLength },
       keyTag: keyTags.get(key) || 'untagged',
       plainLen: pU8.length,
-      plainUtf8: (() => { try { return new TextDecoder().decode(pU8).slice(0, 2000); } catch (e) { return null; } })(),
+      plainUtf8: utf8(pU8, 2000),
       plainB64: b64(pU8),
     });
     return origEncrypt(alg, key, plaintext);
@@ -198,7 +216,7 @@
       op: 'decrypt', alg: { name: alg.name, iv: hex(alg.iv) },
       keyTag: keyTags.get(key) || 'untagged',
       cipherLen: u8.length,
-      plainUtf8: (() => { try { return new TextDecoder().decode(u8).slice(0, 4000); } catch (e) { return null; } })(),
+      plainUtf8: utf8(u8, 4000),
       plainB64: b64(u8),
     });
     return res;
@@ -209,7 +227,7 @@
     const res = await origSign(alg, key, data);
     rec({
       op: 'sign', alg: safeAlg(alg), keyTag: keyTags.get(key) || 'untagged',
-      dataUtf8: (() => { try { return new TextDecoder().decode(data).slice(0, 1000); } catch (e) { return null; } })(),
+      dataUtf8: utf8(data instanceof Uint8Array ? data : new Uint8Array(data), 1000),
       sigHex: hex(new Uint8Array(res)),
     });
     return res;
@@ -243,7 +261,7 @@
     const res = await origDigest(alg, data);
     rec({
       op: 'digest', alg: safeAlg(alg),
-      dataUtf8: (() => { try { return new TextDecoder().decode(data).slice(0, 500); } catch (e) { return null; } })(),
+      dataUtf8: utf8(data instanceof Uint8Array ? data : new Uint8Array(data), 500),
       hashHex: hex(new Uint8Array(res)),
       dataLen: data.byteLength,
     });
@@ -351,7 +369,7 @@
   // =========================================================================
   // Выгрузка собранного (запускать из консоли/CDP после сессии)
   // =========================================================================
-  window.__HIJACK_DUMP__ = () => JSON.stringify(LOG, null, 1);
+  window.__HIJACK_DUMP__ = () => JSON.stringify(LOG);
   window.__HIJACK_WASMS__ = () => (window.__WASM_DUMPS__ || []).map(w => ({ where: w.where, size: w.bytes.length }));
   // скачивание дампа wasm: window.__HIJACK_SAVEWASM__(0)
   window.__HIJACK_SAVEWASM__ = (i) => {
@@ -364,5 +382,7 @@
     a.click();
   };
 
-  rec({ op: 'installed', ua: navigator.userAgent });
+  // href критичен: без него записи из нескольких сайтов одной цепочки
+  // (Madium / linkvertise / lootlabs) неотличимы друг от друга в crypto.jsonl
+  rec({ op: 'installed', ua: navigator.userAgent, href: location.href });
 })();

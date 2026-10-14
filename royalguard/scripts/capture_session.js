@@ -173,17 +173,19 @@ function findChrome() {
   const reqMap = new Map();      // requestId -> id (для сохранения исходников)
 
   await Network.enable();
-  Network.requestWillBeSent(({ requestId, request, method, url, type, postData, initiator }) => {
+  Network.requestWillBeSent(({ requestId, request, method, type, postData, initiator }) => {
     const id = ++reqCounter;
+    // БАГ ИСПРАВЛЕН: url берём из request.url — корневого поля url в событии нет
+    const url = (request && request.url) || '';
     reqMap.set(requestId, id);
     write(tStream, { dir: 'req', id, ts: stamp(), method, url, type,
       headers: request.headers, postData: (postData || '').slice(0, 4000),
       initiator: initiator && initiator.type });
     if (/pushToTalk|PGPSC|PGPG|RTDL|handshake/i.test(url)) event('RG-ENDPOINT', { id, url });
   });
-  Network.responseReceived(({ requestId, response, url, type }) => {
-    write(tStream, { dir: 'resp', id: reqMap.get(requestId), ts: stamp(), status: response.status, url,
-      type, headers: response.headers });
+  Network.responseReceived(({ requestId, response }) => {
+    write(tStream, { dir: 'resp', id: reqMap.get(requestId), ts: stamp(), status: response.status,
+      url: response.url, type: response.type, headers: response.headers });
   });
   Network.loadingFinished(({ requestId }) => {
     // сохраняем исходники страниц на диск (как в исходном дампе captures/)
