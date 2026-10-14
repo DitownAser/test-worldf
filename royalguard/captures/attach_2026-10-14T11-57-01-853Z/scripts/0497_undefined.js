@@ -1,0 +1,1 @@
+import{n as e}from"./BMFkXR-G.js";import{fm as t}from"./BZ_Vvja7.js";function n(e){return e===`kz`?`https://winlinekz.onelink.me/DiMr`:`https://winlineby.onelink.me/mg4S`}function r(){let r=t.get.INSTANCE;return e(n(r))}export{r as t};

@@ -1,0 +1,4 @@
+import{Am as e,Jm as t,Lh as n,Om as r,fh as i,gh as a,ih as o,nh as s,om as c,ym as l}from"./BZ_Vvja7.js";function u(){return o(`div`)}async function d(e){let t=await e();return p(t.default||t)}var f=new WeakMap;function p(e){if(f.has(e))return f.get(e);let t={...e};return t.render?t.render=(t,n,r,i,a,s)=>i.mounted$??t.mounted$?o(e.render?.bind(t)(t,n,r,i,a,s)):u():t.template&&=`
+      <template v-if="mounted$">${e.template}</template>
+      <template v-else><div></div></template>
+    `,t.setup=(t,d)=>{let f=r(),p=n(f.isHydrating===!1);a(c,!0);let m=s();m&&(m._nuxtClientOnly=!0),i(()=>{p.value=!0});let h=e.setup?.(t,d)||{};return l(h)?Promise.resolve(h).then(e=>typeof e==`function`?(...t)=>p.value||!f.isHydrating?o(e(...t)):u():(e||={},e.mounted$=p,e)):typeof h==`function`?(...e)=>p.value||!f.isHydrating?o(h(...e)):u():Object.assign(h,{mounted$:p})},f.set(e,t),t}export{d as createClientPage};

@@ -1,0 +1,1 @@
+function e(e){if(!e)return``;let t=e.match(/(?:mobile\/|https?:\/\/[^/]+\/|[^/]+\/)(.+)/);return t?`/${t[1]}`:`/`}export{e as t};
