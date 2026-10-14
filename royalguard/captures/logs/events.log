@@ -1,0 +1,318 @@
+[2026-10-13 12:08:21] [SYSTEM] Starting Chrome CDP Capture Monitor...
+[2026-10-13 12:08:21] [SYSTEM] Connected to Chrome: Chrome/155.0.8059.39
+[2026-10-13 12:08:21] [SYSTEM] CDP WebSocket connected. Activating AutoAttach for all tabs, navigations, and workers...
+[2026-10-13 12:08:21] [ATTACH] Target [browser_ui]: chrome://omnibox-popup.top-chrome/
+[2026-10-13 12:08:21] [ATTACH] Target [browser_ui]: chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html
+[2026-10-13 12:08:21] [ATTACH] Target [page]: https://app.getmadium.xyz/?lootlabs=credited
+[2026-10-13 12:08:21] [ATTACH] Target [service_worker]: chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/service-worker.js
+[2026-10-13 12:09:59] [SYSTEM] ==============================================
+[2026-10-13 12:09:59] [SYSTEM] CDP Real-Time Deep Logger Started
+[2026-10-13 12:09:59] [SYSTEM] Logging to: /home/ditown/Проекты/test1/captures
+[2026-10-13 12:09:59] [SYSTEM] ==============================================
+[2026-10-13 12:09:59] [TAB_ATTACHED] Connecting to page: [Madium] https://app.getmadium.xyz/?lootlabs=credited (ID: F99F416692AE71D76DCD9EF1FB825F95)
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0001_app.getmadium.xyz_1-3at-bas7qha.js_2284aac9.js (26.7 KB) <- https://app.getmadium.xyz/_next/static/chunks/1-3at-bas7qha.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0002_app.getmadium.xyz_2r57u--hxt63n.js_cbc6ac25.js (186.6 KB) <- https://app.getmadium.xyz/_next/static/chunks/2r57u--hxt63n.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0003_static.cloudflareinsights.com_v4bc70e2c01a94c73b74392e4234840661791215815920_3e5bc7ca.js (30.9 KB) <- https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0004_app.getmadium.xyz_05-c3ty_6dwfk.js_aee2d073.js (3.3 KB) <- https://app.getmadium.xyz/_next/static/chunks/05-c3ty_6dwfk.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0005_app.getmadium.xyz_14mrh2-p_w84d.js_a3ac200f.js (53.4 KB) <- https://app.getmadium.xyz/_next/static/chunks/14mrh2-p_w84d.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0006_app.getmadium.xyz_3rxl-jt3pdxgx.js_dfa58a0b.js (222.2 KB) <- https://app.getmadium.xyz/_next/static/chunks/3rxl-jt3pdxgx.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0007_app.getmadium.xyz_1rv5cqy1cv9gv.js_c98dd55b.js (43.6 KB) <- https://app.getmadium.xyz/_next/static/chunks/1rv5cqy1cv9gv.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0008_app.getmadium.xyz_3bk1ncv43s_n_.js_c7cb6ba5.js (24.1 KB) <- https://app.getmadium.xyz/_next/static/chunks/3bk1ncv43s_n_.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0009_app.getmadium.xyz_turbopack-1aka0xl4--cdp.js_7c95ea25.js (10.3 KB) <- https://app.getmadium.xyz/_next/static/chunks/turbopack-1aka0xl4--cdp.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0010_app.getmadium.xyz_15o_cqm9i62ub.js_a6615a6b.js (141.4 KB) <- https://app.getmadium.xyz/_next/static/chunks/15o_cqm9i62ub.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0011_app.getmadium.xyz_3itmfn2pwk7vn.js_6598548d.js (2.2 KB) <- https://app.getmadium.xyz/_next/static/chunks/3itmfn2pwk7vn.js
+[2026-10-13 12:09:59] [SCRIPT_SAVED] 0012_app.getmadium.xyz_28xce_ymh3-qf.js_100d8545.js (141.4 KB) <- https://app.getmadium.xyz/_next/static/chunks/28xce_ymh3-qf.js
+[2026-10-13 12:09:59] [TAB_READY] Monitoring active for: https://app.getmadium.xyz/?lootlabs=credited
+[2026-10-13 12:10:30] [REQUEST] [#1 GET Fetch] https://auth.getmadium.xyz/account/me (initiator: script)
+[2026-10-13 12:10:30] [REQUEST] [#2 OPTIONS Other] https://auth.getmadium.xyz/account/me (initiator: preflight)
+[2026-10-13 12:10:31] [RESPONSE] [HTTP 204 ] https://auth.getmadium.xyz/account/me
+[2026-10-13 12:10:31] [RESPONSE] [HTTP 200 application/json] https://auth.getmadium.xyz/account/me
+[2026-10-13 12:10:31] [API_RESPONSE_SAVED] resp_me_3a0d73f2.json <- https://auth.getmadium.xyz/account/me
+[2026-10-13 12:10:31] [REQUEST] [#3 OPTIONS Other] https://auth.getmadium.xyz/getkey/lootlabs/start (initiator: preflight)
+[2026-10-13 12:10:31] [REQUEST] [#4 POST Fetch] https://auth.getmadium.xyz/getkey/lootlabs/start (initiator: script)
+[2026-10-13 12:10:31] [RESPONSE] [HTTP 204 ] https://auth.getmadium.xyz/getkey/lootlabs/start
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 200 application/json] https://auth.getmadium.xyz/getkey/lootlabs/start
+[2026-10-13 12:10:32] [REQUEST] [#5 GET Document] https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269 (initiator: script)
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 200 text/html] https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269
+[2026-10-13 12:10:32] [NAVIGATE] [Main Frame] -> https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269
+[2026-10-13 12:10:32] [REQUEST] [#6 GET Other] https://kys.linkvertise.lol/cdn-cgi/speculation (initiator: other)
+[2026-10-13 12:10:32] [REQUEST] [#7 GET Image] https://kys.linkvertise.lol/favicon.ico (initiator: parser)
+[2026-10-13 12:10:32] [REQUEST] [#8 GET Script] https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920 (initiator: parser)
+[2026-10-13 12:10:32] [REQUEST] [#9 GET Script] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js (initiator: script)
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 200 application/speculationrules+json] https://kys.linkvertise.lol/cdn-cgi/speculation
+[2026-10-13 12:10:32] [SCRIPT_SAVED] 0013_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_86eeb2c8.js (14.4 KB) <- https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 200 text/javascript] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js
+[2026-10-13 12:10:32] [SCRIPT_SAVED] 0014_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_cec1d666.js (7.1 KB) <- https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269
+[2026-10-13 12:10:32] [API_RESPONSE_SAVED] resp_speculation_44196811.json <- https://kys.linkvertise.lol/cdn-cgi/speculation
+[2026-10-13 12:10:32] [SCRIPT_SAVED] 0015_cimiefiiaegbelhefglklhhakcgmhkai_page-script.js_0613b31b.js (12.9 KB) <- chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 404 text/html] https://kys.linkvertise.lol/favicon.ico
+[2026-10-13 12:10:32] [REQUEST] [#10 GET Image] https://rip.linkvertise.lol/favicon.ico (initiator: parser)
+[2026-10-13 12:10:32] [SCRIPT_SAVED] 0016_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_d9a89fd5.js (0.1 KB) <- https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269#API
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 200 text/javascript] https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920
+[2026-10-13 12:10:32] [RESPONSE] [HTTP 200 image/vnd.microsoft.icon] https://rip.linkvertise.lol/favicon.ico
+[2026-10-13 12:10:32] [REQUEST] [#11 POST XHR] https://kys.linkvertise.lol/cdn-cgi/rum? (initiator: script)
+[2026-10-13 12:10:32] [REQUEST] [#12 GET Other] https://kys.linkvertise.lol/favicon.ico (initiator: other)
+[2026-10-13 12:10:33] [RESPONSE] [HTTP 204 text/plain] https://kys.linkvertise.lol/cdn-cgi/rum?
+[2026-10-13 12:10:33] [RESPONSE] [HTTP 404 text/html] https://kys.linkvertise.lol/favicon.ico
+[2026-10-13 12:10:33] [SCRIPT_SAVED] 0017_kys.linkvertise.lol_favicon.ico_126c09c7.js (22.7 KB) <- https://kys.linkvertise.lol/favicon.ico
+[2026-10-13 12:10:33] [REQUEST] [#13 POST Document] https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269 (initiator: other)
+[2026-10-13 12:10:34] [REQUEST] [#14 GET Document] http://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed (initiator: other)
+[2026-10-13 12:10:34] [REQUEST] [#15 GET Document] https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed (initiator: other)
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 text/html] https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed
+[2026-10-13 12:10:34] [NAVIGATE] [Main Frame] -> https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed
+[2026-10-13 12:10:34] [REQUEST] [#16 GET Other] https://kys.linkvertise.lol/cdn-cgi/speculation (initiator: other)
+[2026-10-13 12:10:34] [REQUEST] [#17 GET Script] https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920 (initiator: parser)
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 text/javascript] https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920
+[2026-10-13 12:10:34] [REQUEST] [#18 GET Script] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js (initiator: script)
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:o1] spectator
+[2026-10-13 12:10:34] [REQUEST] [#19 GET Fetch] https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#20 GET Fetch] https://securepubads.g.doubleclick.net/tag/js/gpt.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#21 GET Fetch] https://static.ads-twitter.com/uwt.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#22 GET Fetch] https://acdn.adnxs.com/ast/ast.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#23 GET Fetch] https://c.amazon-adsystem.com/aax2/apstag.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#24 GET Fetch] https://cdn.taboola.com/libtrc/unip/1/tfa.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#25 GET Fetch] https://sb.scorecardresearch.com/beacon.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#26 GET Fetch] https://widgets.outbrain.com/outbrain.js (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#27 GET Fetch] https://ad.doubleclick.net/ddm/clk/289 (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#28 GET Fetch] https://sync.mathtag.com/sync/img (initiator: script)
+[2026-10-13 12:10:34] [REQUEST] [#29 GET Image] https://pixel.rubiconproject.com/tap.php?v=probe (initiator: parser)
+[2026-10-13 12:10:34] [REQUEST] [#30 GET Image] https://sync.mathtag.com/sync/img?probe=1 (initiator: parser)
+[2026-10-13 12:10:34] [REQUEST] [#31 GET Image] data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E (initiator: parser)
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 image/svg+xml] data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E
+[2026-10-13 12:10:34] [SCRIPT_SAVED] 0018_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_5dae25e1.js (7.5 KB) <- https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed
+[2026-10-13 12:10:34] [SCRIPT_SAVED] 0019_kys.linkvertise.lol_009b16ef-56de-47ea-873f-ddf90bf60269_1de36d84.js (21.6 KB) <- https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=998cc989-3ac6-4d6e-9a3d-e692a2c549ed
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 text/javascript] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 application/speculationrules+json] https://kys.linkvertise.lol/cdn-cgi/speculation
+[2026-10-13 12:10:34] [API_RESPONSE_SAVED] resp_speculation_44196811.json <- https://kys.linkvertise.lol/cdn-cgi/speculation
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] AdHeader h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] ad-container h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] advertise h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] adsbygoogle h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] adsbox h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] ad-placement h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] BannerAd h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1] ad-unit h=250 w=300 -> ok
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c1-result] false
+[2026-10-13 12:10:34] [REQUEST] [#32 GET Document] https://kys.linkvertise.lol/TaskStarted/009b16ef-56de-47ea-873f-ddf90bf60269 (initiator: script)
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 text/javascript] https://sb.scorecardresearch.com/beacon.js
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c2] ok https://sb.scorecardresearch.com/beacon.js
+[2026-10-13 12:10:34] [REQUEST] [#33 GET Document] https://kys.linkvertise.lol/TaskStarted/009b16ef-56de-47ea-873f-ddf90bf60269?RG_Token=0aa901b9-fe33-4710-8a01-b639a8eb5f8c (initiator: script)
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 text/javascript] https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c2] ok https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 text/javascript] https://securepubads.g.doubleclick.net/tag/js/gpt.js
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c2] ok https://securepubads.g.doubleclick.net/tag/js/gpt.js
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 application/javascript] https://c.amazon-adsystem.com/aax2/apstag.js
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c2] ok https://c.amazon-adsystem.com/aax2/apstag.js
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 200 application/javascript] https://static.ads-twitter.com/uwt.js
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c2] ok https://static.ads-twitter.com/uwt.js
+[2026-10-13 12:10:34] [RESPONSE] [HTTP 400 text/html] https://ad.doubleclick.net/ddm/clk/289
+[2026-10-13 12:10:34] [CONSOLE] [log] [adb:c2] ok https://ad.doubleclick.net/ddm/clk/289
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 image/gif] https://pixel.rubiconproject.com/tap.php?v=probe
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 application/javascript] https://acdn.adnxs.com/ast/ast.js
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c2] ok https://acdn.adnxs.com/ast/ast.js
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c3] ok https://pixel.rubiconproject.com/tap.php?v=probe
+[2026-10-13 12:10:35] [REQUEST] [#34 GET Document] https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE (initiator: script)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 application/javascript] https://cdn.taboola.com/libtrc/unip/1/tfa.js
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c2] ok https://cdn.taboola.com/libtrc/unip/1/tfa.js
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c3] timeout https://sync.mathtag.com/sync/img?probe=1
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c3-result] blocked=0/2 detected=false
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 application/x-javascript] https://widgets.outbrain.com/outbrain.js
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c2] ok https://widgets.outbrain.com/outbrain.js
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c2] AbortError https://sync.mathtag.com/sync/img
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:c2-result] score=0/22 blocked=false
+[2026-10-13 12:10:35] [CONSOLE] [log] [adb:final] checks=[false,false,false] detected=false in 801ms
+[2026-10-13 12:10:35] [REQUEST] [#35 POST Ping] https://kys.linkvertise.lol/DTOM/009b16ef-56de-47ea-873f-ddf90bf60269/adblock (initiator: script)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 text/html] https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [NAVIGATE] [Main Frame] -> https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [REQUEST] [#36 GET Other] https://kys.linkvertise.lol/cdn-cgi/speculation (initiator: other)
+[2026-10-13 12:10:35] [REQUEST] [#37 GET Script] https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920 (initiator: parser)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 text/javascript] https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920
+[2026-10-13 12:10:35] [REQUEST] [#38 GET Script] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js (initiator: script)
+[2026-10-13 12:10:35] [CONSOLE] [log] [TEMP]: Hashing process started!!!
+[2026-10-13 12:10:35] [CONSOLE] [error] [LBS] boot BOOT#1(navigate)
+[2026-10-13 12:10:35] [REQUEST] [#39 GET Fetch] https://kys.linkvertise.lol/vm/q?s=sVlRxIId4jULhDSyXYBc5HoE (initiator: script)
+[2026-10-13 12:10:35] [REQUEST] [#40 GET Image] data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E (initiator: parser)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 image/svg+xml] data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E
+[2026-10-13 12:10:35] [REQUEST] [#41 GET Font] https://kys.linkvertise.lol/cf-fonts/s/bebas-neue/5.2.7/latin/400/normal.woff2 (initiator: parser)
+[2026-10-13 12:10:35] [REQUEST] [#42 GET Font] https://kys.linkvertise.lol/cf-fonts/s/share-tech-mono/5.2.7/latin/400/normal.woff2 (initiator: parser)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 text/javascript] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js
+[2026-10-13 12:10:35] [SCRIPT_SAVED] 0020_kys.linkvertise.lol_Z_b9322ed3.js (0.7 KB) <- https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [SCRIPT_SAVED] 0021_kys.linkvertise.lol_Z_6317583f.js (0.5 KB) <- https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [SCRIPT_SAVED] 0022_kys.linkvertise.lol_Z_64f3af71.js (12.7 KB) <- https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [SCRIPT_SAVED] 0023_kys.linkvertise.lol_Z_f92f45df.js (22.9 KB) <- https://kys.linkvertise.lol/vm/Z?v=5&s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 application/speculationrules+json] https://kys.linkvertise.lol/cdn-cgi/speculation
+[2026-10-13 12:10:35] [API_RESPONSE_SAVED] resp_speculation_44196811.json <- https://kys.linkvertise.lol/cdn-cgi/speculation
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 font/woff2] https://kys.linkvertise.lol/cf-fonts/s/bebas-neue/5.2.7/latin/400/normal.woff2
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 font/woff2] https://kys.linkvertise.lol/cf-fonts/s/share-tech-mono/5.2.7/latin/400/normal.woff2
+[2026-10-13 12:10:35] [REQUEST] [#43 POST XHR] https://kys.linkvertise.lol/cdn-cgi/rum? (initiator: script)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 text/plain] https://kys.linkvertise.lol/vm/q?s=sVlRxIId4jULhDSyXYBc5HoE
+[2026-10-13 12:10:35] [SPA_NAVIGATE] [In-page Navigation] -> https://kys.linkvertise.lol/vm/Z?data=mpSRRAlAWNWJqd5vPSKtbOMtd3cYLeNbqe2xJ5cN2Dp/ugRnFJZeT3MVe8Pe15jZO9fylStkfdT41d74PMYPeHYz7cdjNKm/SHNwbi2ctzBH0LB6qljUF1ueiFDSybAFnNyMPvix609YoWuG8/e4KUyVMHT/bU7X6reM8tibJJJmiJY/FqN/cEVbKQ4UcqJrWahZrhmx3C9p2SoRqbRy%2BcB8FoJipz9/1Fhq0LX2YBWmCx1QsZlqwGAXkHVw640zvJRHsZnraz/xLD0w3i90ai3k0hVrlUE9jqW7I9DwV//oEc2FBJ3tXky9yAjZoKUybsMlmr1q6DeYn9is2MG87Ong5B3h%2BD9OH3Kci4kiT8LH%2BLL9sTkMzl6NxzXp9qTN/GTpOPnuax6fLpk5xygoAaHdcwAXoxhh50hJKNuZzj7UfuGZolZwspjg8QmHWeoEwb4bfY87EYR%2BTLFQ2rNxRkOwFN6LF3oo/hEbr1ZqeEadWhrrrac8DMvnbtr5RmFbQ5UdlK2JJbQHBzrceeL/YrV1Zlc8ltdjvGLAzHC/rha/ds/UQeNHUh62LMWskz166M9yAgYNkYb153%2BHSBsOjY%2BEnowzH/Tz8oFfG0a7d10DCPWHOfjI%2BMWsv8yLgcLAflYZu8gotuMatPT18Y9LI9suCe7c8r%2B4aVaeeK74aTulRQXgUZt8Tf0H/0eoghdW8WgkBhOKRC5T0OmkHGWXKYKxIo31TGjQ1xyndJuub7DgyrPZZYAP0gKlpa2X4ST20DI63hEogp0JhhPgT34Bz9MLfBV9K9D/RsWLiDagCcw%3D&iframeUrl=xVIYEXAyGfnRSHhd8%2BDssBHiQ7YPePS8YkT3zzCzD4oW%2ByqeVgpSQ1PEiaWMG%2BJD43nMkJ/UyCxIiUoW0lOk3ZdkuZ33B7FAXI8aMPfYpguxYZUxwfxRzDEYWaQw02UZZT2NFW0/nTNZiJE4ENeUATXqUQi0ApqZqt8KTMlSIcPEqY1SzjmLM5A9wR/vtir/rcsk%2Bo%2BGVnwXUBQtxUoON3jLSRkC1m6xV4NFBfym/sDqvcp3edNk2uK/kuZPmC0IOByvRWRq8SHgel%2BMakiers8V8lThE5dZsGt3/B8cUCaLP5Y9m6qv1gpuR66kVv2SvKu9odO%2BoAS4jNmeraUdz6cj3DIcoypMDKkCEF%2Bbn3ZdLNgZEZ1/XCJNcoKt3Pl3yzbPehc0tXj5b/S%2BWK8RWvLOaljNFNw7qEswfjB/uStPwF0/VJ/H82GI9r9/zj3oOBt%2BTv7cUvEQof%2BIB93CdH5IqsYC5GqyzFyZAO6owwzGDGiPFearQ0WLOGRB57HF0IfBB7ckEuRNm8CQKnLJMYnTGStUWZa47dGzQSRVCrcTVoh0CJWtfw8aN%2BPbQNDJgWDQw2KUQSpXrhI19SDPFgIJhcdgscE2Zciiugh6QNJu0I9bXst2ak12nvP7VZf5LXwRbF7Q80kjSTrxO%2BCtkHHH9L0xB5xEJ9ZDP36Onwfriuwb6SYB2LMq%2BgIZa5LH/SMoEC4VeNerM8ydocehXsKHD8bsq4ucRhytxYauWEX%2BcjxH4FrVcRhsMLGj6GF3jABhb1RJ/9kCYN/TJnGwWA%3D%3D&UserID=c5b0e80e-2049-4605-92c0-ea390f3b3c7a&TaskID=009b16ef-56de-47ea-873f-ddf90bf60269&Themid=da0630f750a617bd654ee71fb984c99f93c5121b60f96cc192e07caf321e6d003e5708e8cd8f989610309e965a4d5b0eb874d8d425fbca9a245019baf7e83893
+[2026-10-13 12:10:35] [REQUEST] [#44 GET Fetch] https://kys.linkvertise.lol/api/v1/securityFileID?v=0f300e2e-81ae-4123-a0ba-353b2b49b6c6 (initiator: script)
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 204 text/plain] https://kys.linkvertise.lol/cdn-cgi/rum?
+[2026-10-13 12:10:35] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/v1/securityFileID?v=0f300e2e-81ae-4123-a0ba-353b2b49b6c6
+[2026-10-13 12:10:35] [REQUEST] [#45 GET Fetch] https://cdn.trw.lat/rgc/cdn/756a3eed-4317-4ee5-a294-cd682606a460.txt (initiator: script)
+[2026-10-13 12:10:36] [RESPONSE] [HTTP 200 text/plain] https://cdn.trw.lat/rgc/cdn/756a3eed-4317-4ee5-a294-cd682606a460.txt
+[2026-10-13 12:10:36] [CONSOLE] [log] %c[RGCS]%c Royal-Guard YX · Yates Exchange · https://trw.lat/ds font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:10:36] [SCRIPT_SAVED] 0024_inline_script_05438659.js (429.3 KB) <- (inline)
+[2026-10-13 12:10:36] [SPA_NAVIGATE] [In-page Navigation] -> https://kys.linkvertise.lol/vm/Z/1?info=Link+Is+Sandboxed!!
+[2026-10-13 12:10:36] [CONSOLE] [log] %c[RGCS]%c Connecting to upstream... font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:10:36] [REQUEST] [#46 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=45556c98-20a8-4bf1-b82c-f03addf4bc0f-55743d70f50ae877562cfd8749510fc2 (initiator: script)
+[2026-10-13 12:10:36] [CONSOLE] [log]   _____                   _         _____                     _    _____            _              
+ |  __ \                 | |      / ____|                    | |  / ____|          | |             
+ | |__) |___  _   _  __ _| |______| |  __ _   _ ___ _ _ __ __| | | (___   ___ _ __ | |_ _ __ _   _ 
+ |  _  // _ \| | | |/ _` | |______| | |_ | | | |/ _` | '__/ _` |  \___ \ / _ \ '_ \| __| '__| | | |
+ | | \ \ (_) | |_| | (_| | |      | |__| | |_| | (_| | | | (_| |  ____) |  __/ | | | |_| |  | |_| |
+ |_|  \_\___/ \__, |\__,_|_|       \_____|\__,_|\__,_|_|  \__,_| |_____/ \___|_| |_|\__|_|   \__, |
+               __/ |                                                                          __/ |
+              |___/                                                                          |___/ 
+
+[2026-10-13 12:10:36] [REQUEST] [#47 GET Script] blob:https://kys.linkvertise.lol/6d76d68a-be40-4561-9f89-bf9abc1d7619 (initiator: other)
+[2026-10-13 12:10:36] [CONSOLE] [log] %c[RGCS]%c Secure execution context online. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:10:36] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=45556c98-20a8-4bf1-b82c-f03addf4bc0f-55743d70f50ae877562cfd8749510fc2
+[2026-10-13 12:10:36] [REQUEST] [#48 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=d45a4cf0289b2d17f31419b659bfdccca2504fb17bbecf746b7aab5ac1ae0b7b&hmacv=f89c20d0-84e4-4dcc-81c5-5d9f41176b01 (initiator: script)
+[2026-10-13 12:10:36] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=d45a4cf0289b2d17f31419b659bfdccca2504fb17bbecf746b7aab5ac1ae0b7b&hmacv=f89c20d0-84e4-4dcc-81c5-5d9f41176b01
+[2026-10-13 12:10:36] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:f89c20d0-84e4-4dcc-81c5-5d9f41176b01] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:10:36] [CONSOLE] [log] %c YX SECURITY CODE %c 🌙  🍣  🐧  🌙  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:10:36] [REQUEST] [#49 GET Fetch] https://kys.linkvertise.lol/api/RTDL/v4/SquareVM?RG_Socks=14d19e23-8b0c-4349-98f8-aec899909f6c (initiator: script)
+[2026-10-13 12:10:36] [RESPONSE] [HTTP 200 text/event-stream] https://kys.linkvertise.lol/api/RTDL/v4/SquareVM?RG_Socks=14d19e23-8b0c-4349-98f8-aec899909f6c
+[2026-10-13 12:10:36] [CONSOLE] [log] %c[RGCS]%c RTDL connected. [sid:6f492a7e-ca79-4576-b3e4-711b0bfe1e53] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:10:36] [REQUEST] [#50 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:10:36] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:10:36] [REQUEST] [#51 GET Document] blob:https://kys.linkvertise.lol/a0d94da9-a922-42ab-8f4b-e887b9e453d7 (initiator: script)
+[2026-10-13 12:10:36] [RESPONSE] [HTTP 200 text/html] blob:https://kys.linkvertise.lol/a0d94da9-a922-42ab-8f4b-e887b9e453d7
+[2026-10-13 12:10:36] [SUBFRAME_NAVIGATE] [Subframe] -> blob:https://kys.linkvertise.lol/a0d94da9-a922-42ab-8f4b-e887b9e453d7
+[2026-10-13 12:10:36] [REQUEST] [#52 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:10:36] [REQUEST] [#53 GET Document] https://kys.linkvertise.lol/VMc/VGuard_v1?TID=035ca88c-e461-4c90-8843-bf729421c163&TAD=1LzABE8JteapsPfyIbMd%2B2XUeMb5TEHIKpjNNDuLwBuR0vRs4o1jBT9p0T%2F4KHftLgwGNNeNTndJTH5VI4pAl9hwASyLXDDlz7tA9%2FTWyHd6RgdUbq%2FfC9h9dpcYCRD%2FlGRWGMkYMOEtoteJZNVjDyFF7dVmXaUm597YmBf95AwafqFgfHZCLfBErn8FI0RwfHaRm%2BK4WF%2BomE6%2FvWTVXz%2BDYqz9YCIExsdSHct0jE6d%2BbNrvNoj398gqrfOq1GwQThmXXijehR9Sh%2BI3UthvwmeUBBG05ilaOvncYy0zwErn81%2BVWJioqAdw6fx7wbTfukRQcbysak%2FnRh7xS1i21Drtk2PrPnLRuF7vH6MyHoknE86TbYJ8xR7FSR3Vb9nXzGkIa8VmRUgksk5al7KMRcSutPpYOs5teXikVzJjvRjftUAnWexAFJiM7Cw6RO2P3PGSRPKe3G%2BH7pgp2Bfss5UGKu4TcsJP%2BWFIIR71tiinc8xvVZa9%2BsdDY8hy5lguc5Ar0LiKRkJFv37zeriGDBTicA25UHTxQ778qu1XFQXPpXKH%2BmzrRdDrNVjjbWZDTOkFN6phrKFkB6hs%2B26BuYPZp1Pl9jVXrA69Hy87ahqtkUssmUnf2mRnmtwcEgTA48k%2BpLlu5VpEJxludswrzp24GLNXQ1IqgWYyE0Inld96SCaa6dGiRCkwEij945D1hNWSFboXYTkwOpeDfnnheVOIvwChbejKf1n3q5a0MsgB4M38HcZz8Cc1DHklpTb7vYU8rZd9%2BRzMQDaV4m3cts1pI1NgfXrWOVvV00jhTA%3D (initiator: script)
+[2026-10-13 12:10:36] [SCRIPT_SAVED] 0025__a0d94da9-a922-42ab-8f4b-e887b9e453d7_f1c48171.js (0.9 KB) <- blob:https://kys.linkvertise.lol/a0d94da9-a922-42ab-8f4b-e887b9e453d7
+[2026-10-13 12:10:37] [SUBFRAME_NAVIGATE] [Subframe] -> about:blank
+[2026-10-13 12:10:37] [REQUEST] [#54 GET Script] chrome-extension://cimiefiiaegbelhefglklhhakcgmhkai/page-script.js (initiator: script)
+[2026-10-13 12:10:37] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:10:37] [REQUEST] [#55 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:10:37] [REQUEST] [#56 GET Document] https://links.lootlabs.gg/s?yzgyivRm&data=aorLQP8NBpIPrR1KXWoJ/cBcAAoPmlmhxqKQyHqkxWqcI5wrwYOyw2ly2jqJ3VLtgJsbgEyrudsH43G5gt6RUYJ2krq5Kh/EUkk1BrPKsZ39AfqrcBSe68/eD9lVSHOmOmNNI3PKNKSLItAoNFOaMBagsgkKHKjWuEVp9EwjGJWqRWk1e%2BKJ6Rgvn1sPpq8g2ZxCe/1IsOxzSvu0N/CSTxDEpXgXBSHNXyATLbo7RZjgLDNVwgkM/MOAnJShxjqkY17GnhCrm9lmHzE0g%2Brh%2Bg1T2Qubl%2Bhr2UQu/Far2AsD4sIhou8%2B5ECHZhwya7crLs%2BuvNF51svBdlEBYRyiZrva2y2l6RfqVDm16eQuoPHrAxO4irUBXXHjb47%2B2DImhNsuGBakdnjwDwu%2BM22bcxy6b/XzhKj6HqnkGe/iHzpn%2B1%2BFhhF/eR%2B4wRRdpjbzwVlJS752XkPzksIX82SApw%3D%3D&puid=c5b0e80e-2049-4605-92c0-ea390f3b3c7a (initiator: script)
+[2026-10-13 12:10:37] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:10:37] [RESPONSE] [HTTP 200 text/html] https://links.lootlabs.gg/s?yzgyivRm&data=aorLQP8NBpIPrR1KXWoJ/cBcAAoPmlmhxqKQyHqkxWqcI5wrwYOyw2ly2jqJ3VLtgJsbgEyrudsH43G5gt6RUYJ2krq5Kh/EUkk1BrPKsZ39AfqrcBSe68/eD9lVSHOmOmNNI3PKNKSLItAoNFOaMBagsgkKHKjWuEVp9EwjGJWqRWk1e%2BKJ6Rgvn1sPpq8g2ZxCe/1IsOxzSvu0N/CSTxDEpXgXBSHNXyATLbo7RZjgLDNVwgkM/MOAnJShxjqkY17GnhCrm9lmHzE0g%2Brh%2Bg1T2Qubl%2Bhr2UQu/Far2AsD4sIhou8%2B5ECHZhwya7crLs%2BuvNF51svBdlEBYRyiZrva2y2l6RfqVDm16eQuoPHrAxO4irUBXXHjb47%2B2DImhNsuGBakdnjwDwu%2BM22bcxy6b/XzhKj6HqnkGe/iHzpn%2B1%2BFhhF/eR%2B4wRRdpjbzwVlJS752XkPzksIX82SApw%3D%3D&puid=c5b0e80e-2049-4605-92c0-ea390f3b3c7a
+[2026-10-13 12:10:37] [CONSOLE] [error] [LBS-F] hide t=3281ms [o3:1 ifr:1 ovl:0 mw:1018]
+[2026-10-13 12:10:37] [CONSOLE] [error] [LBS-F] mut attributes.class clase=[fade-out]
+[2026-10-13 12:10:44] [CONSOLE] [error] [LBS-F] visibility hidden=true
+[2026-10-13 12:10:44] [REQUEST] [#57 POST Ping] https://kys.linkvertise.lol/cdn-cgi/rum? (initiator: script)
+[2026-10-13 12:10:44] [REQUEST] [#58 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:10:44] [RESPONSE] [HTTP 204 text/plain] https://kys.linkvertise.lol/cdn-cgi/rum?
+[2026-10-13 12:10:45] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:10:51] [REQUEST] [#59 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:10:51] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:11:06] [REQUEST] [#60 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:11:06] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:11:21] [REQUEST] [#61 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:11:21] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:11:26] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:11:26] [REQUEST] [#62 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=7148d1cb-1743-43dc-bce1-67cb468611a3-9c12531a3072f6fae795e7acccd834ba (initiator: script)
+[2026-10-13 12:11:27] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=7148d1cb-1743-43dc-bce1-67cb468611a3-9c12531a3072f6fae795e7acccd834ba
+[2026-10-13 12:11:27] [REQUEST] [#63 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=e39d966d68dd7c9776620070bd27e7bde7aa3c14b3ad9fdbe767321b551cf424&hmacv=af1a748c-c425-4148-b4b3-7e4b34daeb3d (initiator: script)
+[2026-10-13 12:11:27] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=e39d966d68dd7c9776620070bd27e7bde7aa3c14b3ad9fdbe767321b551cf424&hmacv=af1a748c-c425-4148-b4b3-7e4b34daeb3d
+[2026-10-13 12:11:27] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:af1a748c-c425-4148-b4b3-7e4b34daeb3d] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:11:27] [CONSOLE] [log] %c YX SECURITY CODE %c 🍍  🐠  🌴  🌽  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:11:27] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:11:36] [REQUEST] [#64 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:11:36] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:11:46] [CONSOLE] [error] [LBS-F] visibility hidden=false
+[2026-10-13 12:11:46] [REQUEST] [#65 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:11:46] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:11:49] [CONSOLE] [error] [LBS-F] visibility hidden=true
+[2026-10-13 12:11:49] [REQUEST] [#66 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:11:49] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:11:51] [REQUEST] [#67 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:11:52] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:12:06] [REQUEST] [#68 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:12:06] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:12:08] [CONSOLE] [error] [LBS-F] visibility hidden=false
+[2026-10-13 12:12:08] [REQUEST] [#69 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:12:08] [CONSOLE] [error] [LBS-F] visibility hidden=true
+[2026-10-13 12:12:08] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:12:08] [REQUEST] [#70 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:12:09] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:12:16] [REQUEST] [#71 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=17dd528d-8dbe-4234-a55d-28f41a6539e4-ae5236a28887a541aa687b01cc112534 (initiator: script)
+[2026-10-13 12:12:16] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=17dd528d-8dbe-4234-a55d-28f41a6539e4-ae5236a28887a541aa687b01cc112534
+[2026-10-13 12:12:16] [REQUEST] [#72 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=f64043b1165b09e86f908ca32acf72a1169a9d87f47dad4bb61ba3e2f7f89229&hmacv=f397aac6-3088-4164-b0c3-6316750c77d5 (initiator: script)
+[2026-10-13 12:12:17] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=f64043b1165b09e86f908ca32acf72a1169a9d87f47dad4bb61ba3e2f7f89229&hmacv=f397aac6-3088-4164-b0c3-6316750c77d5
+[2026-10-13 12:12:17] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:f397aac6-3088-4164-b0c3-6316750c77d5] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:12:17] [CONSOLE] [log] %c YX SECURITY CODE %c 🐨  🍋  🍩  🌴  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:12:21] [REQUEST] [#73 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:12:22] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:12:22] [SCRIPT_SAVED] 0026_inline_script_4d96a090.js (0.0 KB) <- (inline)
+[2026-10-13 12:12:36] [REQUEST] [#74 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:12:36] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:12:51] [REQUEST] [#75 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:12:51] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:13:06] [REQUEST] [#76 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:13:06] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:13:07] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:13:07] [REQUEST] [#77 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=78bd95cf-b866-4928-8f5b-e7a73170c415-cb9d1cf14bfc8273be917bfbc9ab2523 (initiator: script)
+[2026-10-13 12:13:09] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=78bd95cf-b866-4928-8f5b-e7a73170c415-cb9d1cf14bfc8273be917bfbc9ab2523
+[2026-10-13 12:13:09] [REQUEST] [#78 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=db67ab2ca56ab4c26ac723b5519b4d738b37f51b22f2e81a5bf84d8475bcf966&hmacv=fcb6dde0-11bd-4b7a-b70d-aadcd34dc3e1 (initiator: script)
+[2026-10-13 12:13:09] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=db67ab2ca56ab4c26ac723b5519b4d738b37f51b22f2e81a5bf84d8475bcf966&hmacv=fcb6dde0-11bd-4b7a-b70d-aadcd34dc3e1
+[2026-10-13 12:13:09] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:fcb6dde0-11bd-4b7a-b70d-aadcd34dc3e1] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:13:09] [CONSOLE] [log] %c YX SECURITY CODE %c 🎺  🍕  🍑  🌹  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:13:09] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:13:29] [REQUEST] [#79 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:13:29] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:13:59] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:13:59] [REQUEST] [#80 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=98cbb411-18c0-4cab-8c5f-f83d1aed2ac4-b1320c1a17e9a12eaf43ab20fdd23662 (initiator: script)
+[2026-10-13 12:13:59] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=98cbb411-18c0-4cab-8c5f-f83d1aed2ac4-b1320c1a17e9a12eaf43ab20fdd23662
+[2026-10-13 12:13:59] [REQUEST] [#81 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=9de73e9703d96c1f331ddd988e8405b4ce9461c729cbf71c0f62b92ebad53053&hmacv=e7e7fca3-1b35-4e18-838a-3df7f781e5a7 (initiator: script)
+[2026-10-13 12:14:00] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=9de73e9703d96c1f331ddd988e8405b4ce9461c729cbf71c0f62b92ebad53053&hmacv=e7e7fca3-1b35-4e18-838a-3df7f781e5a7
+[2026-10-13 12:14:00] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:e7e7fca3-1b35-4e18-838a-3df7f781e5a7] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:14:00] [CONSOLE] [log] %c YX SECURITY CODE %c 🦊  🦊  🎲  🥝  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:14:00] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:14:29] [REQUEST] [#82 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:14:30] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:14:50] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:14:50] [REQUEST] [#83 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=34bd7975-0452-412e-8fc5-a5ccbfeee369-788283bd150753e971b1a0946ecc3063 (initiator: script)
+[2026-10-13 12:14:50] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=34bd7975-0452-412e-8fc5-a5ccbfeee369-788283bd150753e971b1a0946ecc3063
+[2026-10-13 12:14:50] [REQUEST] [#84 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=30e05050db08558b7e77f2be249c526f24e3ef886685df177674e3c717243378&hmacv=c8ec1f3b-67dc-4ed0-9343-083371e7cf92 (initiator: script)
+[2026-10-13 12:14:51] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=30e05050db08558b7e77f2be249c526f24e3ef886685df177674e3c717243378&hmacv=c8ec1f3b-67dc-4ed0-9343-083371e7cf92
+[2026-10-13 12:14:51] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:c8ec1f3b-67dc-4ed0-9343-083371e7cf92] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:14:51] [CONSOLE] [log] %c YX SECURITY CODE %c 🚗  🐨  🐔  🍉  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:14:51] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:15:29] [REQUEST] [#85 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:15:31] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:15:41] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:15:41] [REQUEST] [#86 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=adcc0e84-4219-43b0-a956-0bd1fd35241c-7c80bf23c7dab6e34836eb240822328e (initiator: script)
+[2026-10-13 12:15:41] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=adcc0e84-4219-43b0-a956-0bd1fd35241c-7c80bf23c7dab6e34836eb240822328e
+[2026-10-13 12:15:41] [REQUEST] [#87 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=320574bbaa896fb9df088eeea906b9eabdb5dfeec879edd83fb1dc90697d1548&hmacv=21fdce94-f619-45dd-aec4-d6cb70a5b287 (initiator: script)
+[2026-10-13 12:15:42] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=320574bbaa896fb9df088eeea906b9eabdb5dfeec879edd83fb1dc90697d1548&hmacv=21fdce94-f619-45dd-aec4-d6cb70a5b287
+[2026-10-13 12:15:42] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:21fdce94-f619-45dd-aec4-d6cb70a5b287] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:15:42] [CONSOLE] [log] %c YX SECURITY CODE %c 🍕  🔥  🎺  🦊  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:15:42] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:16:29] [REQUEST] [#88 POST Fetch] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53 (initiator: script)
+[2026-10-13 12:16:30] [RESPONSE] [HTTP 400 application/json] https://kys.linkvertise.lol/api/rg/v2/enigma/RTDL/pushToTalk?sid=6f492a7e-ca79-4576-b3e4-711b0bfe1e53
+[2026-10-13 12:16:32] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:16:32] [REQUEST] [#89 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=fdc42983-6947-4e15-aacc-58de42c5be66-b2816b6d0da80af3b76c69ca1d649f2c (initiator: script)
+[2026-10-13 12:16:32] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=fdc42983-6947-4e15-aacc-58de42c5be66-b2816b6d0da80af3b76c69ca1d649f2c
+[2026-10-13 12:16:32] [REQUEST] [#90 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=b9dddcd1bd2ec39554824895f59a48ec4951544ad1bf2869efec4d843b8f873b&hmacv=2c0a7a9f-98c9-4870-ab7f-cf57006b2682 (initiator: script)
+[2026-10-13 12:16:33] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=b9dddcd1bd2ec39554824895f59a48ec4951544ad1bf2869efec4d843b8f873b&hmacv=2c0a7a9f-98c9-4870-ab7f-cf57006b2682
+[2026-10-13 12:16:33] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:2c0a7a9f-98c9-4870-ab7f-cf57006b2682] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:16:33] [CONSOLE] [log] %c YX SECURITY CODE %c 🔔  🍊  🍉  🌴  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:16:33] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:17:23] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:17:23] [REQUEST] [#91 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=26f9407b-736f-4af3-a181-5cd5f310c110-e751560879e64c6c1165032e29fff49f (initiator: script)
+[2026-10-13 12:17:23] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=26f9407b-736f-4af3-a181-5cd5f310c110-e751560879e64c6c1165032e29fff49f
+[2026-10-13 12:17:24] [REQUEST] [#92 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=08e676e6161006a9aa764a58d3b77f12cac87440734e22049287b44f8275c978&hmacv=09b74972-2185-4e90-8dcd-f2e37e857532 (initiator: script)
+[2026-10-13 12:17:24] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=08e676e6161006a9aa764a58d3b77f12cac87440734e22049287b44f8275c978&hmacv=09b74972-2185-4e90-8dcd-f2e37e857532
+[2026-10-13 12:17:24] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:09b74972-2185-4e90-8dcd-f2e37e857532] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:17:24] [CONSOLE] [log] %c YX SECURITY CODE %c 🐸  🐬  🦖  🐬  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:17:24] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:18:14] [CONSOLE] [log] %c[RGCS]%c YX re-handshake… font-weight:bold;padding:2px 6px;border-radius:3px;background:#1a3a5c;color:#7ecfff; 
+[2026-10-13 12:18:14] [REQUEST] [#93 GET Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=4bc1bbc3-55ad-42c8-b6fc-795c79e1c809-e867db1c968c94b97d821f154dbfdac1 (initiator: script)
+[2026-10-13 12:18:15] [RESPONSE] [HTTP 201 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPG?RG_Ant=4bc1bbc3-55ad-42c8-b6fc-795c79e1c809-e867db1c968c94b97d821f154dbfdac1
+[2026-10-13 12:18:15] [REQUEST] [#94 POST Fetch] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=62c9553ddf6a3b4cdf3b9bfcc5fec5602627ce7672316ebb36b237ffb04fef60&hmacv=366a18a3-ccaf-4d08-b1d4-9d0a982de285 (initiator: script)
+[2026-10-13 12:18:15] [RESPONSE] [HTTP 200 application/json] https://kys.linkvertise.lol/api/rg/encrypt-tunnel/PGPSC?token=62c9553ddf6a3b4cdf3b9bfcc5fec5602627ce7672316ebb36b237ffb04fef60&hmacv=366a18a3-ccaf-4d08-b1d4-9d0a982de285
+[2026-10-13 12:18:15] [CONSOLE] [log] %c[RGCS]%c YX secure channel established. [sid:366a18a3-ccaf-4d08-b1d4-9d0a982de285] font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:18:15] [CONSOLE] [log] %c YX SECURITY CODE %c 🦋  🍋  🦈  🍒  background:#0d3320;color:#5fffa0;font-weight:bold;padding:3px 8px;border-radius:3px font-size:22px;letter-spacing:6px;line-height:2
+[2026-10-13 12:18:15] [CONSOLE] [log] %c[RGCS]%c YX re-handshake complete. font-weight:bold;padding:2px 6px;border-radius:3px;background:#0d3320;color:#5fffa0; 
+[2026-10-13 12:18:44] [CONSOLE] [error] [LBS-F] visibility hidden=false
+[2026-10-13 12:18:44] [CONSOLE] [log] %c[RGCS]%c RTDL handshake unresolved. [0x31] font-weight:bold;padding:2px 6px;border-radius:3px;background:#3d0a0a;color:#ff6b6b; 
+[2026-10-13 12:18:48] [CONSOLE] [error] [LBS-F] beforeunload status=[Opening content]
+[2026-10-13 12:18:48] [CONSOLE] [error] [LBS-F] visibility hidden=true
+[2026-10-13 12:18:48] [CONSOLE] [log] %c[RGCS]%c RTDL handshake unresolved. [0x31] font-weight:bold;padding:2px 6px;border-radius:3px;background:#3d0a0a;color:#ff6b6b; 
+[2026-10-13 12:18:48] [WS_ERROR] Error on target F99F416692AE71D76DCD9EF1FB825F95: [object ErrorEvent]
+[2026-10-13 12:18:48] [TAB_CLOSED] Target closed or disconnected: https://app.getmadium.xyz/?lootlabs=credited (ID: F99F416692AE71D76DCD9EF1FB825F95)
