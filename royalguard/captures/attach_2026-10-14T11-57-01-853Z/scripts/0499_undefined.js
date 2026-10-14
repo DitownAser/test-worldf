@@ -1,1 +1,0 @@
-import{Gm as e,dm as t,qd as n}from"./BZ_Vvja7.js";function r(r){return e(()=>t([`kz`])&&!!n(r)?.isDebtor)}export{r as t};

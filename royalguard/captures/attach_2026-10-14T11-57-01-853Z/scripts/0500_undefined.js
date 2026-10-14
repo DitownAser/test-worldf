@@ -1,1 +1,0 @@
-import{Km as e,Ym as t,hh as n,th as r}from"./BZ_Vvja7.js";var i=[`data-color`,`data-size`],a=r({__name:`WlLoaderMini`,props:{color:{default:``},size:{default:`normal`}},setup(r){return(a,o)=>(n(),t(`div`,{class:`local-loader-mini`,"data-color":r.color,"data-size":r.size},[...o[0]||=[e(`div`,null,null,-1),e(`div`,null,null,-1),e(`div`,null,null,-1)]],8,i))}});export{a as t};

@@ -72,6 +72,8 @@ const HIJACK_SRC = String.raw`
   // лимит binding-сообщений: при плотном RTDL-трафике не переполнять CDP-буфер
   let sentCount = 0;
   const SENT_LIMIT = 3000;
+  // максимум записей в памяти страницы (страховочный хвост для __HIJACK_DUMP__)
+  const MAX_LOG = 2000;
   const b64 = (buf) => {
     try {
       const u8 = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
@@ -102,6 +104,9 @@ const HIJACK_SRC = String.raw`
   const rec = (obj) => {
     obj.t = now();
     LOG.push(obj);
+    // обрезаем хвост, иначе __HIJACK_DUMP__ сериализует мегабайты в одну
+    // CDP-строку — вкладка падала на длинных RTDL-сессиях
+    if (LOG.length > MAX_LOG) LOG.splice(0, LOG.length - MAX_LOG);
     send(obj);
     try { console.log('[HIJACK]', JSON.stringify(obj)); } catch (e) {}
   };
@@ -109,7 +114,12 @@ const HIJACK_SRC = String.raw`
   // ---------- анти-анти-отладка: маскировка обёрток под нативные ------------
   const fakeNative = new WeakMap();
   function disguise(fn, nativeFn) {
-    fakeNative.set(fn, Function.prototype.toString.call(nativeFn));
+    // guard: если nativeFn уже обёртка или undefined — не падаем на toString
+    try {
+      fakeNative.set(fn, Function.prototype.toString.call(nativeFn));
+    } catch (e) {
+      try { fakeNative.set(fn, 'function ' + (fn.name || '') + '() { [native code] }'); } catch (e2) {}
+    }
     return fn;
   }
   const origToString = Function.prototype.toString;
@@ -189,8 +199,8 @@ const HIJACK_SRC = String.raw`
     const bits = await origDerive(alg, baseKey, length);
     // ECDH(X25519)-секрет = общий секрет RTDL-туннеля "YX". Ловим здесь.
     rec({
-      op: 'deriveBits', alg: { name: alg.name, curve: alg.curve },
-      baseKeyTag: keyTags.get(baseKey) || 'untagged',
+      op: 'deriveBits', alg: safeAlg(alg),
+      baseKeyTag: keyTags.get(baseKey) || 'untagged', length,
       secretB64: b64(bits), secretHexPrefix: hex(new Uint8Array(bits)),
     });
     return bits;
@@ -359,6 +369,9 @@ const HIJACK_SRC = String.raw`
   }
 
   // ---------- 4. Visibility/фокус — Royal Guard следит за этим (RTDL) -------
+  // Ловим события, но НИКОГДА не подменяем document.hidden / visibilityState:
+  // сайт сверяет их с нативными геттерами и с реальными visibilitychange,
+  // любая ложь = мгновенный флаг античита. Только честная регистрация.
   ['visibilitychange', 'focus', 'blur', 'pagehide'].forEach((ev) => {
     try {
       document.addEventListener(ev, () => rec({ op: 'visibility', event: ev, state: document.visibilityState, focused: document.hasFocus() }), true);
@@ -366,7 +379,7 @@ const HIJACK_SRC = String.raw`
   });
 
   // ---------- 5. Выгрузка собранного (использует раннер из Секции B) --------
-  window.__HIJACK_DUMP__ = () => JSON.stringify(LOG, null, 1);
+  window.__HIJACK_DUMP__ = () => JSON.stringify(LOG);
   window.__HIJACK_WASMS__ = () => (window.__WASM_DUMPS__ || []).map(w => ({ where: w.where, size: w.bytes.length }));
   window.__HIJACK_SAVEWASM__ = (i) => {
     const w = (window.__WASM_DUMPS__ || [])[i];
@@ -455,8 +468,11 @@ async function attachToTarget(targetInfo) {
   // ---- трафик: запросы ----
   const reqMap = new Map(); // requestId -> {id,url,type}
   await Network.enable().catch((e) => { log('Network.enable не удался:', e.message); });
-  Network.requestWillBeSent(({ requestId, request, method, url, type, postData, initiator }) => {
+  Network.requestWillBeSent(({ requestId, request, method, type, postData, initiator }) => {
     const id = ++reqCounter;
+    // БАГ ИСПРАВЛЕН: у события CDP requestWillBeSent нет корневого поля url —
+    // адрес только в request.url (старый код деструктурировал `{ url }` и писал undefined)
+    const url = (request && request.url) || '';
     reqMap.set(requestId, { id, url, type });
     write(tStream, { dir: 'req', id, ts: stamp(), method, url, type,
       headers: request.headers, postData: (postData || '').slice(0, 4000),

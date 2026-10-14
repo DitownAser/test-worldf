@@ -92,18 +92,29 @@ async function attachToTarget(targetInfo) {
 
   const reqMap = new Map(); // requestId -> {id,url,type}
   await Network.enable().catch((e) => { log('Network.enable не удался:', e.message); });
-  Network.requestWillBeSent(({ requestId, request, method, url, type, postData, initiator }) => {
+  Network.requestWillBeSent((e) => {
+    const { requestId, request, method, type, postData, initiator } = e;
+    // ГЛАВНЫЙ БАГ (почему attach_2026-10-14 пишет 100% пустых url): в CDP у
+    // события Network.requestWillBeSent НЕТ корневого поля url — адрес живёт
+    // только в request.url. Деструктуризация `{ url }` или чтение `e.url`
+    // всегда давали undefined/''. Единственный корректный источник — request.url.
+    const url = (request && request.url) || e.url || '';
     const id = ++reqCounter;
     reqMap.set(requestId, { id, url, type });
     write(tStream, { dir: 'req', id, ts: stamp(), method, url, type,
       headers: request.headers, postData: (postData || '').slice(0, 4000),
       initiator: initiator && initiator.type, target: targetId });
-    if (/pushToTalk|PGPSC|PGPG|RTDL|handshake/i.test(url)) event('RG-ENDPOINT', { id, url });
+    if (/pushToTalk|PGPSC|PGPG|RTDL|VGuard|DTOM|TaskStarted|handshake|linkvertise|getmadium|lootlabs/i.test(url))
+      event('RG-ENDPOINT', { id, url });
   });
   Network.responseReceived(({ requestId, response }) => {
-    const meta = reqMap.get(requestId);
-    write(tStream, { dir: 'resp', id: meta && meta.id, ts: stamp(), status: response.status,
-      url: response.url, type: response.type, headers: response.headers, target: targetId });
+    const meta = reqMap.get(requestId) || {};
+    // если URL запроса всё же потерялся — восстанавливаем из response.url,
+    // чтобы не выключать детектор RG и не тервать имя файла для bodies
+    if (!meta.url && response.url) meta.url = response.url;
+    write(tStream, { dir: 'resp', id: meta.id, ts: stamp(), status: response.status,
+      url: response.url || meta.url || '', type: response.type,
+      headers: response.headers, target: targetId });
   });
   Network.loadingFinished(async ({ requestId }) => {
     const meta = reqMap.get(requestId);
@@ -112,13 +123,29 @@ async function attachToTarget(targetInfo) {
       const { body, base64Encoded } = await Network.getResponseBody({ requestId });
       const buf = base64Encoded ? Buffer.from(body, 'base64') : Buffer.from(body, 'utf8');
       if (buf.length > 1_500_000) return;
-      const name = `${String(meta.id).padStart(4, '0')}_${String(meta.url).replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90)}.js`;
-      fs.writeFileSync(path.join(SCRIPTS_DIR, name), buf);
+      // имя файла: хост+путь из URL (в прошлых дампах meta.url был пустым и
+      // все файлы назывались NNNN_undefined.js — теперь с фолбэком это исправлено)
+      let tag = 'unknown';
+      try {
+        const u = new URL(meta.url || '');
+        tag = (u.hostname + u.pathname).replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90);
+      } catch (_) {
+        tag = String(meta.url || 'inline').replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90);
+      }
+      const ext = buf.slice(0, 4).toString('hex') === '0061736d' ? '.wasm' : '.js';
+      if (ext === '.wasm') {
+        fs.writeFileSync(path.join(WASM_DIR, `${String(meta.id).padStart(4, '0')}_${tag}.wasm`), buf);
+        event('WASM-FROM-NETWORK', { id: meta.id, url: meta.url, size: buf.length });
+      } else {
+        fs.writeFileSync(path.join(SCRIPTS_DIR, `${String(meta.id).padStart(4, '0')}_${tag}.js`), buf);
+      }
+      // JSON-ответы RG-эндпоинтов сохраняем отдельно в responses/
+      if (/VGuard|DTOM|TaskStarted|RTDL|PGPSC|PGPG|securityFileID/i.test(meta.url || '')) {
+        fs.writeFileSync(path.join(RESP_DIR,
+          `${String(meta.id).padStart(4, '0')}_${tag}.json`), buf);
+        event('RG-RESP-SAVED', { id: meta.id, url: meta.url, bytes: buf.length });
+      }
     } catch (_) {}
-    // wasm-модуль SquareVM мог прийти обычным fetch/arraybuffer — как только
-    // страница инстанцирует его, crypto_hijack положит байты в __WASM_DUMPS__;
-    // забираем их на диск сразу после окончания загрузки ресурсов
-    setTimeout(() => saveWasmDumps(client, targetId).catch(() => {}), 1500);
   });
 
   try {
@@ -137,8 +164,9 @@ async function attachToTarget(targetInfo) {
     if (name === '__hijack_send') cStream.write(payload + '\n');
   });
 
-  client.on('destroyed', () => { attached.delete(targetId); });
-  client.on('error',     () => { attached.delete(targetId); });
+  // НЕ удаляем targetId из `attached` при событиях destroyed/error: иначе
+  // повторные события targetCreated для того же таргета приводили к двойному
+  // подключению, дублям записей в traffic/crypto и лишним wasm-дампам.
   clients.push(client);
   log('+ таргет:', targetId, '-', (targetInfo.url || '').slice(0, 100));
 
@@ -162,6 +190,9 @@ async function attachToTarget(targetInfo) {
     } catch (_) {}
     await saveWasmDumps(client, targetId);
   });
+  // wasm-модуль SquareVM мог быть инстанцирован ещё ДО подключения к живой
+  // вкладке — забираем __WASM_DUMPS__ сразу, не дожидаясь 10-секундного цикла
+  setImmediate(() => saveWasmDumps(client, targetId).catch(() => {}));
 }
 
 const clients = [];
