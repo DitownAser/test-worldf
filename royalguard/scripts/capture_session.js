@@ -16,13 +16,17 @@
 //   node capture_session.js <URL> [сек]    # сек — длительность записи (90)
 //   node capture_session.js https://kys.linkvertise.lol/<TID> 120
 //
-// Требования: установленный Google Chrome / Chromium. Путь можно задать через
-//   переменную окружения CHROME_BIN. Профиль — временный (не трогаем основной).
+// Требования: установленный Google Chrome / Chromium (Linux/macOS). Путь можно
+//   задать через переменную окружения CHROME_BIN. Если Chrome не найден по
+//   типичным путям, скрипт сам ищет бинарник в PATH (google-chrome-stable,
+//   google-chrome, chromium-browser, chromium, brave-browser, microsoft-edge
+//   и т.д.). Профиль — временный (не трогаем основной).
 // ============================================================================
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const os = require('os');
+const { spawn, execSync } = require('child_process');
 
 let CDP;
 try { CDP = require('chrome-remote-interface'); }
@@ -51,13 +55,58 @@ const log = (...a) => console.log('[capture]', ...a);
 
 function findChrome() {
   if (process.env.CHROME_BIN) return process.env.CHROME_BIN;
+
+  // 1. Типичные пути Linux / macOS
   const candidates = [
-    '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable',
-    '/usr/bin/chromium', '/usr/bin/chromium-browser',
+    '/usr/bin/google-chrome-stable',   // официальный deb-пакет Google
+    '/usr/bin/google-chrome',
+    '/opt/google/chrome/chrome',       // прямой путь внутри deb-пакета
+    '/usr/bin/google-chrome-beta',
+    '/usr/bin/google-chrome-unstable',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chrome',
+    '/snap/bin/chromium',              // snap
+    '/var/lib/flatpak/exports/bin/org.chromium.Chromium',
+    '/usr/bin/brave-browser',
+    '/usr/bin/brave-browser-stable',
+    '/usr/bin/microsoft-edge',
+    '/usr/bin/microsoft-edge-stable',
+    '/usr/lib/chromium/chromium',
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+    path.join(os.homedir(), '.config/brave/software/brave-browser'),
   ];
   for (const c of candidates) if (fs.existsSync(c)) return c;
-  throw new Error('Chrome не найден. Задайте путь через CHROME_BIN=<...>');
+
+  // 2. Ищем исполняемое имя в PATH (покрывает нестандартные установки)
+  const names = ['google-chrome-stable', 'google-chrome', 'chromium-browser',
+                 'chromium', 'chrome', 'brave-browser', 'microsoft-edge'];
+  let whichOut = '';
+  try { whichOut = execSync('which -a ' + names.join(' ') + ' 2>/dev/null || true').toString(); } catch (_) {}
+  for (const line of whichOut.split('\n')) {
+    const p = line.trim();
+    if (p && fs.existsSync(p)) return p;
+  }
+
+  // 3. Быстрый обход /usr/bin, /usr/local/bin, /opt на *.app/chrome-подобные бинарники
+  const dirs = ['/usr/bin', '/usr/local/bin', '/opt/google/chrome', '/usr/lib/chromium'];
+  for (const d of dirs) {
+    let entries = [];
+    try { entries = fs.readdirSync(d); } catch (_) { continue; }
+    const hit = entries.find(e => /^(google-chrome|chromium|chrome|brave|microsoft-edge)/i.test(e));
+    if (hit) {
+      const full = path.join(d, hit);
+      try { fs.accessSync(full, fs.constants.X_OK); return full; } catch (_) {}
+    }
+  }
+
+  throw new Error(
+    'Chrome не найден. Задайте путь явно:  CHROME_BIN=/путь/к/chrome node capture_session.js <URL>\n' +
+    'Поддерживаются: google-chrome-stable, google-chrome, chromium, chromium-browser, brave, edge.'
+  );
 }
 
 (async () => {
@@ -71,9 +120,20 @@ function findChrome() {
     `--user-data-dir=${profileDir}`,
     '--no-first-run', '--no-default-browser-check',
     '--disable-blink-features=AutomationControlled',
+    // headless=false: нам нужен реальный фокус/видимость вкладки — RTDL
+    // отслеживает visibilitychange и шлёт события скрытия окна
     '--new-window', 'about:blank',
-  ], { stdio: 'ignore' });
+  ], { stdio: ['ignore', 'ignore', 'pipe'] });
+  // stderr Chrome (например "DevTools listening on ..." или ошибки sandbox на Linux)
+  browserProc.stderr.on('data', d => {
+    const s = String(d).trim();
+    if (s) log('chrome:', s.slice(0, 200));
+  });
+  browserProc.on('exit', (code) => {
+    console.error(`[capture] Браузер завершился сам (код ${code}). Если это Linux и ошибка sandbox — перезапустите с флагом суффиксом --no-sandbox или проверьте, что профиль-дир доступен на запись.`);
+  });
   process.on('exit', () => { try { browserProc.kill('SIGKILL'); } catch (_) {} });
+  process.on('SIGINT', () => { try { browserProc.kill('SIGKILL'); } catch (_) {} process.exit(130); });
 
   // ждём подъёма DevTools-эндпоинта
   const waitUp = async (tries = 40) => {
@@ -110,19 +170,19 @@ function findChrome() {
   };
 
   let reqCounter = 0;
-  const reqMap = new Map();
+  const reqMap = new Map();      // requestId -> id (для сохранения исходников)
 
   await Network.enable();
-  Network.requestWillBeSent(({ request, method, url, timestamp, type, postData, initiator }) => {
+  Network.requestWillBeSent(({ requestId, request, method, url, type, postData, initiator }) => {
     const id = ++reqCounter;
-    reqMap.set(timestamp + url, id);
+    reqMap.set(requestId, id);
     write(tStream, { dir: 'req', id, ts: stamp(), method, url, type,
       headers: request.headers, postData: (postData || '').slice(0, 4000),
       initiator: initiator && initiator.type });
     if (/pushToTalk|PGPSC|PGPG|RTDL|handshake/i.test(url)) event('RG-ENDPOINT', { id, url });
   });
-  Network.responseReceived(({ response, url, type }) => {
-    write(tStream, { dir: 'resp', ts: stamp(), status: response.status, url,
+  Network.responseReceived(({ requestId, response, url, type }) => {
+    write(tStream, { dir: 'resp', id: reqMap.get(requestId), ts: stamp(), status: response.status, url,
       type, headers: response.headers });
   });
   Network.loadingFinished(({ requestId }) => {

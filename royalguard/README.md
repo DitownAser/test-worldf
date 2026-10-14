@@ -85,7 +85,9 @@ node capture_session.js "https://kys.linkvertise.lol/<TID>?..." 120
 ```
 
 Скрипт сам:
-- запустит Chrome с временным профилем (путь: env `CHROME_BIN`, если не стандартный);
+- запустит Chrome с временным профилем. На Linux автопоиск покрывает
+  `google-chrome-stable`, `google-chrome`, `/opt/google/chrome/chrome`, chromium,
+  snap/flatpak, brave, edge; если у вас нестандартный путь — `CHROME_BIN=/путь node capture_session.js ...`;
 - внедрит `crypto_hijack.js` ДО загрузки страницы;
 - откроет URL и 120 с пишет всё в `royalguard/captures/live_<дата>/`:
   `traffic.jsonl`, `events.log`, `crypto.jsonl` (ключи/plaintext RTDL), `scripts/` (исходники).
