@@ -1,1 +1,0 @@
-import{Ym as e,hh as t,ho as n,vh as r}from"./BZ_Vvja7.js";var i={};function a(n,i){return t(),e(`div`,null,[r(n.$slots,`default`)])}var o=n(i,[[`render`,a]]);export{o as t};

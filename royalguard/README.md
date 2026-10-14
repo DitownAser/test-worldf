@@ -20,6 +20,7 @@
 | 4. Инструменты перехвата | 2026-10-13…14 | `crypto_hijack.js` (перехват SubtleCrypto/WASM/fetch в рантайме), `hijack_attach.js`, `frida_dump.js`, и автономный `capture_session.js` (запустил — и всё пишется само). | `scripts/` |
 | 5. Bypass-эксперименты | ранее | Userjs-скрипты обхода анти-блока v1/v2. | `bypass/` |
 | 6. Структурирование | 2026-10-14 | Всё разложено по папкам (этот README — точка входа). | — |
+| 7. Новые attach-дампы + разбор | 2026-10-14 | Пришли `captures/attach_2026-10-14*`. Выяснено: в них цепочки Royal Guard нет (записаны YouTube/ad-tech вкладки). Найден и исправлен баг `capture_attach.js` (пустой `url` в CDP-событиях → файлы `NNNN_undefined.js`, молчавший фильтр RG-ENDPOINT). 435 скриптов переименованы по восстановленным URL. | `reports/ATTACH_2026-10-14_FINDINGS.md`, патч `scripts/capture_attach.js` |
 
 ## Ключевые выводы (кратко)
 
@@ -57,11 +58,14 @@ royalguard/
 │   ├── session_a_getmadium/    файлы 0001–0012: приложение Madium (Next.js)
 │   ├── session_b_kys/          файлы 0013–0026: Royal Guard (вкл. 0024 — inline-ВМ)
 │   └── iframe_lootlabs/        11 файлов бандлов LootLabs iframe
-├── captures/               ← живой CDP-дамп сессии 2026-10-13
-│   ├── logs/{events.log, traffic.jsonl}
+├── captures/               ← живые CDP-дампы сессий
+│   ├── logs/{events.log, traffic.jsonl}   дамп 2026-10-13 (цепочка RG подтверждена)
 │   ├── responses/            JSON-ответы API Madium
 │   ├── page_scripts_1/       снимок страницы (Next.js Flight)
-│   └── manifest.json         манифест дампа
+│   ├── manifest.json         манифест дампа
+│   ├── attach_2026-10-14T11-57-01-853Z/  attach-дамп 2026-10-14 (RG-цепочки НЕТ —
+│   │                        разбор: reports/ATTACH_2026-10-14_FINDINGS.md)
+│   └── attach_2026-10-14T11-04-57-541Z/  пустая запись (без таргетов)
 │   (live_<дата>/            ← сюда пишет capture_session.js новые дампы)
 ├── scripts/                ← инструменты записи/перехвата
 │   ├── capture_session.js        АВТОНОМНЫЙ: сам стартует Chrome, пишет трафик+логи+крипто

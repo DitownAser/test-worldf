@@ -92,18 +92,25 @@ async function attachToTarget(targetInfo) {
 
   const reqMap = new Map(); // requestId -> {id,url,type}
   await Network.enable().catch((e) => { log('Network.enable не удался:', e.message); });
-  Network.requestWillBeSent(({ requestId, request, method, url, type, postData, initiator }) => {
+  // Фолбэк: если в событии url пустой (старые/новые версии CDP дают его только
+  // в request.url) — берём оттуда; иначе это же событие теряет весь смысл
+  const getUrl = (e, request) => e.url || (request && request.url) || '';
+  Network.requestWillBeSent((e) => {
+    const { requestId, request, method, type, postData, initiator } = e;
+    const url = getUrl(e, request);
     const id = ++reqCounter;
     reqMap.set(requestId, { id, url, type });
     write(tStream, { dir: 'req', id, ts: stamp(), method, url, type,
       headers: request.headers, postData: (postData || '').slice(0, 4000),
       initiator: initiator && initiator.type, target: targetId });
-    if (/pushToTalk|PGPSC|PGPG|RTDL|handshake/i.test(url)) event('RG-ENDPOINT', { id, url });
+    if (/pushToTalk|PGPSC|PGPG|RTDL|VGuard|DTOM|TaskStarted|handshake|linkvertise|getmadium|lootlabs/i.test(url))
+      event('RG-ENDPOINT', { id, url });
   });
   Network.responseReceived(({ requestId, response }) => {
-    const meta = reqMap.get(requestId);
-    write(tStream, { dir: 'resp', id: meta && meta.id, ts: stamp(), status: response.status,
-      url: response.url, type: response.type, headers: response.headers, target: targetId });
+    const meta = reqMap.get(requestId) || {};
+    write(tStream, { dir: 'resp', id: meta.id, ts: stamp(), status: response.status,
+      url: response.url || meta.url || '', method: undefined, type: response.type,
+      headers: response.headers, target: targetId });
   });
   Network.loadingFinished(async ({ requestId }) => {
     const meta = reqMap.get(requestId);
@@ -112,8 +119,28 @@ async function attachToTarget(targetInfo) {
       const { body, base64Encoded } = await Network.getResponseBody({ requestId });
       const buf = base64Encoded ? Buffer.from(body, 'base64') : Buffer.from(body, 'utf8');
       if (buf.length > 1_500_000) return;
-      const name = `${String(meta.id).padStart(4, '0')}_${String(meta.url).replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90)}.js`;
-      fs.writeFileSync(path.join(SCRIPTS_DIR, name), buf);
+      // имя файла: хост+путь из URL (в прошлых дампах meta.url был пустым и
+      // все файлы назывались NNNN_undefined.js — теперь с фолбэком это исправлено)
+      let tag = 'unknown';
+      try {
+        const u = new URL(meta.url || '');
+        tag = (u.hostname + u.pathname).replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90);
+      } catch (_) {
+        tag = String(meta.url || 'inline').replace(/[^a-zA-Z0-9.-]+/g, '_').slice(-90);
+      }
+      const ext = buf.slice(0, 4).toString('hex') === '0061736d' ? '.wasm' : '.js';
+      if (ext === '.wasm') {
+        fs.writeFileSync(path.join(WASM_DIR, `${String(meta.id).padStart(4, '0')}_${tag}.wasm`), buf);
+        event('WASM-FROM-NETWORK', { id: meta.id, url: meta.url, size: buf.length });
+      } else {
+        fs.writeFileSync(path.join(SCRIPTS_DIR, `${String(meta.id).padStart(4, '0')}_${tag}.js`), buf);
+      }
+      // JSON-ответы RG-эндпоинтов сохраняем отдельно в responses/
+      if (/VGuard|DTOM|TaskStarted|RTDL|PGPSC|PGPG|securityFileID/i.test(meta.url || '')) {
+        fs.writeFileSync(path.join(RESP_DIR,
+          `${String(meta.id).padStart(4, '0')}_${tag}.json`), buf);
+        event('RG-RESP-SAVED', { id: meta.id, url: meta.url, bytes: buf.length });
+      }
     } catch (_) {}
     // wasm-модуль SquareVM мог прийти обычным fetch/arraybuffer — как только
     // страница инстанцирует его, crypto_hijack положит байты в __WASM_DUMPS__;
