@@ -1,1 +1,3 @@
-*.bin
+royalguard/captures/live_*/
+node_modules/
+__pycache__/

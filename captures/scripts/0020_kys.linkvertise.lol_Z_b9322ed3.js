@@ -1,3 +1,0 @@
-window.o1=location.href;(()=>{const logs=[];const add=(type,args)=>{logs.push(`[${type}] `+
-args.map(x=>{try{return typeof x==="string"?x:JSON.stringify(x,null,2);}catch{return String(x);}}).join(" "));};for(const type of["error","warn"]){const original=console[type];console[type]=(...args)=>{add(type.toUpperCase(),args);original.apply(console,args);};}
-window.addEventListener("error",e=>{add("ERROR",[e.message,`at ${e.filename}:${e.lineno}:${e.colno}`,e.error?.stack||""]);});window.addEventListener("unhandledrejection",e=>{add("UNHANDLED REJECTION",[e.reason?.stack||e.reason||""]);});window.copyConsoleErrors=async()=>{await navigator.clipboard.writeText(logs.join("\n\n"));console.log(`Copied ${logs.length} console errors/warnings.`);};})();
