@@ -1,2 +1,2 @@
-*.log
-royalguard/captures/
+node_modules/
+captures/
