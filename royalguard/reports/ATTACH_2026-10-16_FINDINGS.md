@@ -2,13 +2,17 @@
 
 Дата анализа: 2026-10-16. Продолжение `ATTACH_2026-10-14_FINDINGS.md`.
 
-> **ВАЖНОЕ УТОЧНЕНИЕ (после слов пользователя «я проходил полностью до конца»):**
-> Даже при полном прохождении цепочки до финального редиректа этот дамп
-> **не содержит ни одного запроса к RG-цепочке** (linkvertise / getmadium /
-> lootlabs / kys.). Проверено повторным grep по всем файлам дампа и по всем
-> трём дампам 14 октября — совпадений 0. Значит, запись велась не на той
-> вкладке/сессии либо RG-прокладка была открыта вне подключённого Chrome
-> (порт 9222). См. раздел «Почему RG не попала в дамп» ниже.
+> **УТОЧНЕНИЕ v2 (после глубокой проверки каждого файла дампа изнутри):**
+> Пользователь подтвердил, что проходил цепочку полностью до конца.
+> Посимвольная проверка ВСЕХ файлов дампа (traffic.jsonl 1536 записей,
+> crypto.jsonl 1652, events.log 697, hijack_structured.json 15, все 324
+> скрипта) показала: **RG-хостов в этом дампе нет, но они есть в другом
+> месте репозитория** — в папке `captures/logs/` лежит полный Royal-Guard
+> трафик сессии **2026-10-13 12:08–12:18 UTC** (app/auth.getmadium.xyz →
+> kys.linkvertise.lol: RTDL/SquareVM/VGuard/PGPSC/PGPG, links.lootlabs.gg,
+> cdn.trw.lat). То есть полное прохождение было записано ранее; дамп 10-16
+> — это отдельная adtech-ветка (aucey→hai8g→litenery→winline), шедшая
+> параллельно/вне CDP-сессии RG. См. разделы ниже.
 Инструмент записи: `scripts/royal_capture_all_in_one.js` (тот же crypto_hijack + CDP-раннер).
 
 ## Резюме одной строкой
@@ -71,6 +75,51 @@ URL в `traffic.jsonl` заполнены (баг пустого `url` из 10-1
 4. Из 324 сохранённых скриптов представляют интерес для переиспользования:
    `*_astro_detect.DC7Ee_Lb.js` (in-app/браузерные UA-детекты лендинга),
    `Adex.Ck9SET3F.js` (ad-exchange логика лендинга), `0282_d_chunk_kevlar...` (YouTube).
+
+## Глубокая проверка каждого файла дампа 10-16 (изнутри, не grep'ом по верхам)
+
+| Файл | Что проверено внутри | Результат |
+|---|---|---|
+| `traffic.jsonl` (1536 зап.) | разбор JSON построчно: 804 req / 732 resp; все 43 уникальных хоста вынесены в список; 16 Document-навигаций с таймстампами и target-ID | среди 43 хостов **нет ни одного** RG-домена; единственные Document-навигации: YouTube×2, hai8g×4, litenery×8, winline×2 |
+| `crypto.jsonl` (1652 зап.) | парсинг всех ops: `getterAccess` 1136, `sendBeacon` 386, `installed` 79, `visibility` 51; href по всем `installed` | реальных crypto-операций (`digest/sign/deriveBits/importKey/encrypt`) — **0**; getterAccess стеки указывают на youtube `player_es6 base.js` и FingerprintJS, не на ВМ |
+| `events.log` (697 строк) | типизация событий: 668 runtime:log (все `[HIJACK]`), 16 console:error (404 ytimg), SESSION-START/END | ни одного RG-ENDPOINT / WASM-SAVED; hijack установлен на 6 вкладках |
+| `hijack_structured.json` (15 эл.) | каждый элемент прочитан: installed×(ua/href), sendBeacon→`cdn.aucey.com/sync-metrics` (adex_init телеметрия) | только лендинг-телеметрия, крипто-ВМ отсутствует |
+| `scripts/` (324 файла) | инвентаризация по доменам + grep содержимого каждого файла на `linkvertise/getmadium/lootlabs/kys./RG_Token/VGuard/SquareVM` | 324 файла = aucey/_astro (~180), YouTube (~70), wyv.gg (~25), winline, fpjs, rtmark-пиксель; совпадений по RG-токенам в именах/URL — 0 (совпадения подстрок «captcha/vguard» внутри скриптов — ложные, от adtech-либ) |
+| таргеты (12 target-ID) | группировка трафика по вкладкам | RG-цепочка не появлялась НИ НА ОДНОЙ из 12 вкладок зафиксированного окна |
+
+Дополнительно: `RG_Token|RG_Socks|RG_Ant` — 0 вхождений во всех четырёх дампах 14–16 октября.
+
+## ГЛАВНАЯ НАХОДКА: полное прохождение RG записано в `captures/logs/` (сессия 2026-10-13)
+
+При переборе всех файлов внутри `captures/` обнаружилось, что папка `logs/`
+(и сопутствующие `manifest.json`, `page_scripts_1/`, `responses/`, а также
+`royalguard/js_dumps/*`) содержит ДРУГУЮ запись — старого скрипта
+`capture_session.js`, датированную **13.10.2026 12:08:21–12:18:48 UTC**.
+Это ровно то полное прохождение цепочки, которого не хватало:
+
+- 12:09:59 — attach к вкладке `app.getmadium.xyz/?lootlabs=credited` (target F99F…).
+- 12:10:31 — `POST auth.getmadium.xyz/getkey/lootlabs/start` → 200 JSON → редирект.
+- 12:10:32 — навигация главной рамки в `kys.linkvertise.lol/DTOM/009b16ef-…`; сохранены inline-скрипты страницы (0013/0014/0016).
+- 12:10:34 — POST → `?RG_Token=998cc989-…` (получение токена задачи).
+- 12:10:35 — `GET cdn.trw.lat/rgc/cdn/756a3eed….txt` (200 text/plain — конфиг/RGC-загрузка); консоль `[RGCS] Royal-Guard YX · Yates Exchange`.
+- 12:10:36 — `GET kys.linkvertise.lol/api/RTDL/v4/SquareVM?RG_Socks=14d19e23-…` → **200 text/event-stream** (SSE-стрим задач ВМ!) и `GET /VMc/VGuard_v1?TID=…&TAD=<base64>` (iframe VGuard).
+- Далее ~8 минут цикла: `/api/rg/v2/enigma/RTDL/pushToTalk` ×22, `/api/rg/encrypt-tunnel/PGPG` ×10, `/api/rg/encrypt-tunnel/PGPSC` ×10, `/vm/Z`, `/vm/q`, blob-скрипты ВМ; консоль показывает re-handshake и «YX SECURITY CODE 🐸🐬🦖🐬» (человекочитаемый код подтверждения).
+- 12:18:44–48 — `RTDL handshake unresolved [0x31]` ×2, перед закрытием вкладки ([LBS-F] visibility/beforeunload). Сессия обрывается WS_ERROR при закрытии таба — финальный reward-редирект (links.lootlabs.gg отдаёт 200 в 12:10:37) НЕ дописан в этот лог.
+- Артефакты: `js_dumps/session_a_getmadium/` (12 чанков Next.js Madium), `session_b_kys/` (inline-скрипты RG-страницы), `iframe_lootlabs/` (15 файлов, до 1.1 МБ), `page_scripts_1/files/origins/<hash>/_next/...`, `manifest.json` (sha256 на каждый скрипт).
+
+**Итог пересмотра:** «SquareVM не запускалась» верно ТОЛЬКО для дампа 10-16.
+Для прохождения 10-13 она запускалась полностью (SSE SquareVM, VGuard iframe,
+RTDL pushToTalk, PGP/PGPSC туннель) — это и есть основной материал исследования,
+он лежит в `captures/logs/` + `js_dumps/`, а не в `attach_*` папках.
+
+## Почему дамп 10-16 без RG, даже при «прошёл до конца»
+
+1. Запись 10-16 охватывает 09:32–09:39 UTC и 12 вкладок одного CDP-окна; в них
+   физически не было ни одного запроса к RG-доменам (см. таблицу выше) — значит
+   RG-звено того прохождения открывалось вне отлаживаемого окна (второй Chrome
+   без :9222 / popup нового процесса / приложение).
+2. Полное же прохождение с рабочей SquareVM уже задокументировано в логах 10-13 —
+   сравнивать нужно именно их с новыми попытками.
 
 ## Рекомендации по следующей записи
 
