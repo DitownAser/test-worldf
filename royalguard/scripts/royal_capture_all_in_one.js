@@ -28,21 +28,29 @@
 //          responses/      тела ответов по RG-эндпоинтам
 //          hijack_structured.json  полный структурированный дамп в конце
 //
-//  ── Шаг 1. Запусти браузер с debug-портом И выключенным фоновым троттлингом
-//      google-chrome-stable --remote-debugging-port=9222 \
-//          --disable-backgrounding-occluded-windows \
-//          --disable-renderer-backgrounding \
-//          --disable-background-timer-throttling
-//    ВАЖНО: Royal Guard следит за visibility вкладки (RTDL). Без флагов выше,
-//    если свернёшь окно — сайт уйдёт в "hidden" и handshake оборвётся.
-//    Для второго профиля добавь --user-data-dir=/tmp/p1.
+//  ── ЗАПУСК (Linux): просто
+//      node royal_capture_all_in_one.js
+//    Скрипт САМ:
+//      1) проверит, слушает ли кто-то debug-порт 9222 (проверка подключения);
+//      2) если порт свободен — АВТОМАТИЧЕСКИ запустит Chrome/Firefox с нужными
+//         флагами (--remote-debugging-port, анти-троттлинг, отдельный
+//         профиль royalguard-profile, чтобы не цепляться к уже открытому окну
+//         без порта) и подождёт готовности порта;
+//      3) подключится ко всем вкладкам и начнёт запись.
 //
-//  ── Шаг 2. npm i chrome-remote-interface && node royal_capture_all_in_one.js
-//      node royal_capture_all_in_one.js            # порт 9222
-//      node royal_capture_all_in_one.js 9333       # свой порт
-//      RECORD_SEC=600 node royal_capture_all_in_one.js   # автостоп через 10 мин
+//    Переменные окружения:
+//      BROWSER_BIN=/path/to/chrome   — явный путь к бинарю (иначе автопоиск)
+//      FIREFOX_BIN=...               — то же для Firefox
+//      CHROME_PROFILE=/tmp/rgp       — профиль (по умолчанию ~/.config/royalguard-profile)
+//      START_URL="https://auth.getmadium.xyz/"  — открыть стартовую страницу сразу
+//      NO_AUTO_LAUNCH=1              — не запускать браузер, только attach
+//      RECORD_SEC=600                — автостоп записи через 10 мин
+//      DEBUG_PORT / argv[2]          — номер порта (по умолчанию 9222)
 //
-//  ── Шаг 3. Кликай по сайту до конца «промежуточков». Стоп — Ctrl-C.
+//    ВАЖНО проRoyal Guard (RTDL следит за visibility вкладки): НЕ сворачивай
+//    окно во время прохождения — анти-троттлинг флаги включены автоматически,
+//    но свёрнутое/скрытое окно всё равно уходит в hidden. Держи вкладку RG
+//    активной на экране. Стоп записи — Ctrl-C (браузер останется живым).
 //
 //  Автоматическое «выполни заказ за меня» невозможнo: Linkvertise/LootLabs
 //  требуют человеческие проверки (реклама/капча/visibility). Этот инструмент
@@ -61,7 +69,7 @@ const path = require('path');
 // ###                                                                      ###
 // ############################################################################
 
-const HIJACK_SRC = String.raw`
+const HIJACK_SRC_RAW = String.raw`
 (function () {
   'use strict';
   if (window.__HIJACK_INSTALLED__) return;
@@ -71,9 +79,13 @@ const HIJACK_SRC = String.raw`
   const LOG = [];
   // лимит binding-сообщений: при плотном RTDL-трафике не переполнять CDP-буфер
   let sentCount = 0;
-  const SENT_LIMIT = 3000;
+  // ВАЖНО: лимит был 3000 — на сессии RG (pushToTalk каждые ~15с + геттеры
+  // crypto) он выбивался за минуты и ДАЛЬНЕЙШИЕ перехваты (в т.ч. реальные
+  // encrypt/decrypt RTDL) терялись. Поднят до 200000, переопределяется env
+  // HIJACK_SENT_LIMIT раннера.
+  const SENT_LIMIT = __SENT_LIMIT__;
   // максимум записей в памяти страницы (страховочный хвост для __HIJACK_DUMP__)
-  const MAX_LOG = 2000;
+  const MAX_LOG = __MAX_LOG__;
   const b64 = (buf) => {
     try {
       const u8 = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
@@ -395,6 +407,9 @@ const HIJACK_SRC = String.raw`
 })();
 `;
 
+// Подстановка лимитов из конфигурации раннера (env) — без eval шаблона.
+// (HIJACK_SRC собирается в Секции B, после чтения env-конфигурации)
+
 // ############################################################################
 // ###                                                                      ###
 // ###  СЕКЦИЯ B — CDP-РАННЕР (Node): attach ко всем вкладкам + запись      ###
@@ -413,6 +428,14 @@ const PORT = parseInt(process.argv[2] || process.env.DEBUG_PORT || '9222', 10);
 const AUTO_STOP_SEC = parseInt(process.env.RECORD_SEC || '0', 10); // 0 = до Ctrl-C
 const DUMP_INTERVAL_MS = parseInt(process.env.DUMP_INTERVAL_MS || '10000', 10);
 const MAX_BODY_BYTES = 1_500_000; // тела больше не сохраняем (защита от OOM)
+
+// Лимиты hijack-скрипта: раньше SENT_LIMIT=3000 выбивался за минуты на
+// сессии RG и перехваты терялись. Поднимаем по умолчанию до 200000.
+const HIJACK_SENT_LIMIT = parseInt(process.env.HIJACK_SENT_LIMIT || '200000', 10);
+const HIJACK_MAX_LOG = parseInt(process.env.HIJACK_MAX_LOG || '20000', 10);
+let HIJACK_SRC = HIJACK_SRC_RAW
+  .replace('__SENT_LIMIT__', String(HIJACK_SENT_LIMIT))
+  .replace('__MAX_LOG__', String(HIJACK_MAX_LOG));
 
 const OUT_DIR = path.join(__dirname, '..', 'captures',
   'attach_' + new Date().toISOString().replace(/[:.]/g, '-'));
@@ -434,13 +457,104 @@ const cStream = fs.createWriteStream(cryptoPath,  { flags: 'a' });
 const write = (s, o) => s.write(JSON.stringify(o) + '\n');
 const event = (msg, extra) => eStream.write(`${stamp()} ${msg}${extra ? ' ' + JSON.stringify(extra) : ''}\n`);
 
-const RG_RE = /pushToTalk|PGPSC|PGPG|RTDL|handshake|linkvertise|getmadium|lootlabs|royalguard/i;
+const RG_RE = /pushToTalk|PGPSC|PGPG|RTDL|VGuard|DTOM|TaskStarted|handshake|linkvertise|getmadium|lootlabs|royalguard|SquareVM|\/vm\//i;
+
+// ── АВТОЗАПУСК БРАУЗЕРА (Linux) + ПРОВЕРКА ПОДКЛЮЧЕНИЯ ──────────────────────
+// Проблема прошлых сессий: прохождение делалось в обычном Chrome (без
+// --remote-debugging-port), а capture_attach подключался к другому окну —
+// поэтому RG-трафик не попадал в дамп. Теперь скрипт сам поднимает браузер
+// с портом, если порт никем не слушается.
+const http = require('http');
+const { spawn } = require('child_process');
+
+const portListening = () => new Promise((resolve) => {
+  const req = http.get({ host: '127.0.0.1', port: PORT, path: '/json/version', timeout: 1500 }, (res) => {
+    let d = ''; res.on('data', c => d += c); res.on('end', () => resolve(d));
+  });
+  req.on('error', () => resolve(null));
+  req.on('timeout', () => { req.destroy(); resolve(null); });
+});
+
+function findBrowser() {
+  if (process.env.BROWSER_BIN) return process.env.BROWSER_BIN;
+  const fsx = require('fs');
+  const cands = [
+    'google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser',
+    'microsoft-edge', 'brave-browser', 'opera', 'vivalda', 'firefox', 'firefox-esr',
+  ];
+  for (const b of cands) {
+    try {
+      const p = require('child_process').execSync(`command -v ${b} 2>/dev/null`, { encoding: 'utf8' }).trim();
+      if (p && fsx.existsSync(p)) return p;
+    } catch (_) {}
+  }
+  // типичные пути, если PATH урезан
+  for (const p of ['/usr/bin/google-chrome', '/usr/bin/chromium', '/snap/bin/chromium',
+                   '/opt/google/chrome/chrome', '/usr/lib/firefox/firefox', '/usr/bin/firefox']) {
+    if (fsx.existsSync(p)) return p;
+  }
+  return null;
+}
+
+let browserProc = null;
+async function ensureBrowser() {
+  const v = await portListening();
+  if (v) {
+    log(`✔ Порт ${PORT} уже слушается — подключаюсь к существующему браузеру`);
+    try { log('  ', JSON.parse(v).Browser || ''); } catch (_) {}
+    return true;
+  }
+  if (process.env.NO_AUTO_LAUNCH === '1') {
+    console.error(`Порт ${PORT} не слушается, NO_AUTO_LAUNCH=1 — выхожу.\n` +
+      `Запусти браузер вручную с --remote-debugging-port=${PORT}`);
+    return false;
+  }
+  const bin = findBrowser();
+  if (!bin) {
+    console.error(
+      `Порт ${PORT} не слушается и браузер для автозапуска не найден.\n` +
+      `Укажи путь явно: BROWSER_BIN=/path/to/chrome node royal_capture_all_in_one.js\n` +
+      `Или запусти вручную:\n` +
+      `  google-chrome-stable --remote-debugging-port=${PORT} \\\n` +
+      `      --disable-backgrounding-occluded-windows --disable-renderer-backgrounding \\\n` +
+      `      --disable-background-timer-throttling`);
+    return false;
+  }
+  const isFirefox = /firefox/i.test(bin);
+  const profile = process.env.CHROME_PROFILE ||
+    (isFirefox ? '~/.mozilla/royalguard-profile' : '~/.config/royalguard-profile');
+  const args = isFirefox
+    ? ['-remote-debugging-port=' + PORT, '-profile', profile.replace('~', process.env.HOME)]
+    : ['--remote-debugging-port=' + PORT,
+       '--user-data-dir=' + profile.replace('~', process.env.HOME),
+       '--disable-backgrounding-occluded-windows',
+       '--disable-renderer-backgrounding',
+       '--disable-background-timer-throttling',
+       '--new-window'];
+  if (process.env.START_URL) args.push(isFirefox ? process.env.START_URL : '--new-window=' + process.env.START_URL);
+  log('Порт', PORT, 'свободен → автозапуск:', bin, args.join(' ').replace(/--user-data-dir=\S+/, '--user-data-dir=<профиль>'));
+  event('BROWSER-AUTO-LAUNCH', { bin, firefox: isFirefox, args: args.map(a => a.replace(profile, '<профиль>')) });
+  browserProc = spawn(bin, args, { detached: true, stdio: 'ignore' });
+  browserProc.on('error', (e) => { log('не удалось запустить браузер:', e.message); });
+  browserProc.unref();
+  // ждём готовности порта до 30 сек
+  for (let i = 0; i < 60; i++) {
+    await new Promise(r => setTimeout(r, 500));
+    const vv = await portListening();
+    if (vv) { log(`✔ Браузер поднялся на порту ${PORT}`); return true; }
+  }
+  console.error(`Браузер запущен, но порт ${PORT} так и не ответил за 30с.\n` +
+    `Если уже открыт Chrome без debug-порта — он перехватит запуск и откроет окно БЕЗ порта.\n` +
+    `Закрой ВСЕ окна Chrome и повтори, или задай CHROME_PROFILE=/tmp/rgp-new.`);
+  return false;
+}
 
 let reqCounter = 0;
 const attached = new Set();      // targetId, к которым уже подключились
 const clients  = [];             // живые CDP-клиенты
 const dumpers  = [];             // периодические сборщики дампов
 const savedWasm = new Set();     // targetId#idx — не сохранять один wasm дважды
+const allUrls = new Set();       // последние URL для live-детектора RG
 
 // --- подключение к одному таргету ---------------------------------------------
 async function attachToTarget(targetInfo) {
@@ -474,6 +588,7 @@ async function attachToTarget(targetInfo) {
     // адрес только в request.url (старый код деструктурировал `{ url }` и писал undefined)
     const url = (request && request.url) || '';
     reqMap.set(requestId, { id, url, type });
+    allUrls.add(url); if (allUrls.size > 500) allUrls.delete(allUrls.values().next().value);
     write(tStream, { dir: 'req', id, ts: stamp(), method, url, type,
       headers: request.headers, postData: (postData || '').slice(0, 4000),
       initiator: initiator && initiator.type, target: targetId });
@@ -583,17 +698,15 @@ async function saveWasmDumps(client, targetId) {
 
 // --- главный цикл ----------------------------------------------------------------
 (async () => {
-  // проверка, что браузер вообще слушает debug-порт
+  // ШАГ 0: проверка подключения к debug-порту + автозапуск браузера (Linux),
+  // если порт свободен. Раньше при незапущенном/неправильно запущенном Chrome
+  // скрипт просто умирал, и прохождение шло в другом окне — дамп был пустой.
+  if (!(await ensureBrowser())) process.exit(1);
+
   let tabs;
   try { tabs = await CDP.List({ port: PORT }); }
   catch (e) {
-    console.error(
-      `Не могу подключиться к Chrome на порту ${PORT}.\n` +
-      `Запусти браузер с флагами, например:\n\n` +
-      `  google-chrome-stable --remote-debugging-port=${PORT} \\\n` +
-      `      --disable-backgrounding-occluded-windows --disable-renderer-backgrounding \\\n` +
-      `      --disable-background-timer-throttling\n\n` +
-      `и уже в нём открывай нужный сайт (Royal Guard / linkvertise-промежуточки).`);
+    console.error(`Порт ${PORT} отвечил, но CDP.List не удался:`, e.message);
     process.exit(1);
   }
 
@@ -601,7 +714,23 @@ async function saveWasmDumps(client, targetId) {
   for (const t of tabs) if (t.type === 'page') await attachToTarget(t);
 
   // и автоматически отслеживаем НОВЫЕ вкладки, открываемые по ходу «промежуточков»
-  const browser = await CDP({ port: PORT });
+  let browser;
+  try { browser = await CDP({ port: PORT }); }
+  catch (e) {
+    // Chrome без единой вкладки («No inspectable targets») — ждём, пока
+    // пользователь откроет вкладку, затем подключаемся через Target discovery
+    log('Предупреждение:', String(e.message).slice(0, 120), '— жду открытия вкладки…');
+    const waitTab = async () => {
+      for (let i = 0; i < 600; i++) {
+        await new Promise(r => setTimeout(r, 1000));
+        try { return await CDP({ port: PORT }); } catch (_) {}
+      }
+      console.error('Так и не появилась ни одна вкладка — выхожу.'); process.exit(1);
+    };
+    browser = await waitTab();
+    const fresh = await CDP.List({ port: PORT });
+    for (const t of fresh) if (t.type === 'page') await attachToTarget(t);
+  }
   await browser.Target.setDiscoverTargets({ discover: true });
   browser.Target.on('targetCreated', async ({ targetInfo }) => {
     if (targetInfo.type === 'page') await attachToTarget(targetInfo);
@@ -611,6 +740,16 @@ async function saveWasmDumps(client, targetId) {
   log(`Пишу всё в: ${OUT_DIR}`);
   log(`Подключено вкладок: ${attached.size}. Кликай по сайту. Останов — Ctrl-C.` +
       (AUTO_STOP_SEC ? ` (автостоп через ${AUTO_STOP_SEC}с)` : ''));
+
+  // LIVE-КОНТРОЛЬ: как только в трафике появится RG-эндпоинт — крупное
+  // сообщение в терминал. Если за прохождение ни одной строки RG-LIVE не
+  // появилось, значит клик был НЕ в этом браузере (см. прошлые дампы).
+  const seenRG = new Set();
+  setInterval(() => {
+    for (const u of allUrls) {
+      if (RG_RE.test(u) && !seenRG.has(u)) { seenRG.add(u); console.log('\x1b[42m\x1b[30m ✔ RG-LIVE \x1b[0m захвачен эндпоинт:', u.slice(0, 140)); }
+    }
+  }, 2000);
 
   const iv = setInterval(() => dumpers.forEach(f => f().catch(() => {})), DUMP_INTERVAL_MS);
 
@@ -635,6 +774,16 @@ async function saveWasmDumps(client, targetId) {
     for (const c of clients) { try { await c.close(); } catch (_) {} }
     try { await browser.close(); } catch (_) {}
     log(`Готово. Запросов: ${reqCounter}. Дамп в: ${OUT_DIR}`);
+    // ИТОГОВЫЙ КОНТРОЛЬ: был ли RG в этой сессии вообще
+    if (seenRG.size === 0) {
+      console.warn('\x1b[43m\x1b[30m ⚠ ВНИМАНИЕ \x1b[0m за сессию НЕ перехвачено ни одного RG-эндпоинта ' +
+        '(linkvertise/getmadium/lootlabs/VGuard/RTDL/...). Скорее всего прохождение шло ' +
+        'в ДРУГОМ окне браузера. Проверь, что кликаешь именно в этом окне.');
+      event('RG-NOT-CAPTURED', { note: 'ни один RG-эндпоинт не был перехвачен за сессию' });
+    } else {
+      console.log('\x1b[42m\x1b[30m ✔ RG-эндпоинтов за сессию: ' + seenRG.size + ' \x1b[0m');
+      for (const u of seenRG) console.log('   •', u.slice(0, 140));
+    }
     process.exit(0);
   }
   process.on('SIGINT',  () => stop('ctrl-c'));
