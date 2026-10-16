@@ -1,0 +1,2 @@
+2026-10-14T13:50:15.082Z SESSION-START {"mode":"attach","port":9222,"targets":0}
+2026-10-14T13:50:25.930Z SESSION-END {"requests":0,"sig":"ctrl-c"}
