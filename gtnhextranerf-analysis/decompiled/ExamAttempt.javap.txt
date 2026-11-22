@@ -1,0 +1,167 @@
+Compiled from "ExamAttempt.java"
+public final class pl.kuba6000.gtnhextranerf.progression.exam.ExamAttempt {
+  private final java.util.UUID owner;
+
+  private final pl.kuba6000.gtnhextranerf.progression.exam.ExamDefinition definition;
+
+  private final java.lang.Runnable awardCertificate;
+
+  private pl.kuba6000.gtnhextranerf.progression.exam.ExamAttempt$Result completed;
+
+  public pl.kuba6000.gtnhextranerf.progression.exam.ExamAttempt(java.util.UUID, pl.kuba6000.gtnhextranerf.progression.exam.ExamDefinition, java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: invokestatic  #30                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+       9: checkcast     #32                 // class java/util/UUID
+      12: putfield      #34                 // Field owner:Ljava/util/UUID;
+      15: aload_0
+      16: aload_2
+      17: invokestatic  #30                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      20: checkcast     #36                 // class pl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition
+      23: putfield      #38                 // Field definition:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition;
+      26: aload_0
+      27: aload_3
+      28: invokestatic  #30                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      31: checkcast     #40                 // class java/lang/Runnable
+      34: putfield      #42                 // Field awardCertificate:Ljava/lang/Runnable;
+      37: return
+
+  public pl.kuba6000.gtnhextranerf.progression.exam.ExamAttempt$Result submit(java.util.UUID, int[]);
+    Code:
+       0: aload_0
+       1: getfield      #38                 // Field definition:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition;
+       4: invokevirtual #50                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition.questions:()Ljava/util/List;
+       7: invokeinterface #56,  1           // InterfaceMethod java/util/List.size:()I
+      12: istore_3
+      13: aload_0
+      14: getfield      #34                 // Field owner:Ljava/util/UUID;
+      17: aload_1
+      18: invokevirtual #60                 // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+      21: ifne          37
+      24: new           #7                  // class pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result
+      27: dup
+      28: getstatic     #64                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.INVALID:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+      31: iconst_0
+      32: iload_3
+      33: invokespecial #67                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result."<init>":(Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;II)V
+      36: areturn
+      37: aload_0
+      38: getfield      #69                 // Field completed:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result;
+      41: ifnull        49
+      44: aload_0
+      45: getfield      #69                 // Field completed:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result;
+      48: areturn
+      49: aload_0
+      50: getfield      #38                 // Field definition:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition;
+      53: invokevirtual #73                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition.enabled:()Z
+      56: ifne          72
+      59: new           #7                  // class pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result
+      62: dup
+      63: getstatic     #76                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.UNAVAILABLE:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+      66: iconst_0
+      67: iload_3
+      68: invokespecial #67                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result."<init>":(Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;II)V
+      71: areturn
+      72: aload_2
+      73: ifnull        82
+      76: aload_2
+      77: arraylength
+      78: iload_3
+      79: if_icmpeq     95
+      82: new           #7                  // class pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result
+      85: dup
+      86: getstatic     #64                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.INVALID:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+      89: iconst_0
+      90: iload_3
+      91: invokespecial #67                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result."<init>":(Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;II)V
+      94: areturn
+      95: aload_2
+      96: astore        4
+      98: aload         4
+     100: arraylength
+     101: istore        5
+     103: iconst_0
+     104: istore        6
+     106: iload         6
+     108: iload         5
+     110: if_icmpge     151
+     113: aload         4
+     115: iload         6
+     117: iaload
+     118: istore        7
+     120: iload         7
+     122: iflt          132
+     125: iload         7
+     127: bipush        15
+     129: if_icmple     145
+     132: new           #7                  // class pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result
+     135: dup
+     136: getstatic     #64                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.INVALID:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+     139: iconst_0
+     140: iload_3
+     141: invokespecial #67                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result."<init>":(Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;II)V
+     144: areturn
+     145: iinc          6, 1
+     148: goto          106
+     151: aload_2
+     152: astore        4
+     154: aload         4
+     156: arraylength
+     157: istore        5
+     159: iconst_0
+     160: istore        6
+     162: iload         6
+     164: iload         5
+     166: if_icmpge     204
+     169: aload         4
+     171: iload         6
+     173: iaload
+     174: istore        7
+     176: iload         7
+     178: invokestatic  #84                 // Method java/lang/Integer.bitCount:(I)I
+     181: iconst_1
+     182: if_icmpeq     198
+     185: new           #7                  // class pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result
+     188: dup
+     189: getstatic     #87                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.INCOMPLETE:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+     192: iconst_0
+     193: iload_3
+     194: invokespecial #67                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result."<init>":(Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;II)V
+     197: areturn
+     198: iinc          6, 1
+     201: goto          162
+     204: aload_0
+     205: getfield      #38                 // Field definition:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition;
+     208: aload_2
+     209: invokevirtual #91                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition.score:([I)I
+     212: istore        4
+     214: aload_0
+     215: new           #7                  // class pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result
+     218: dup
+     219: iload         4
+     221: aload_0
+     222: getfield      #38                 // Field definition:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition;
+     225: invokevirtual #94                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamDefinition.requiredCorrect:()I
+     228: if_icmplt     237
+     231: getstatic     #97                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.PASSED:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+     234: goto          240
+     237: getstatic     #100                // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.FAILED:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+     240: iload         4
+     242: iload_3
+     243: invokespecial #67                 // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result."<init>":(Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;II)V
+     246: putfield      #69                 // Field completed:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result;
+     249: aload_0
+     250: getfield      #69                 // Field completed:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result;
+     253: invokevirtual #104                // Method pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result.status:()Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+     256: getstatic     #97                 // Field pl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status.PASSED:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Status;
+     259: if_acmpne     271
+     262: aload_0
+     263: getfield      #42                 // Field awardCertificate:Ljava/lang/Runnable;
+     266: invokeinterface #107,  1          // InterfaceMethod java/lang/Runnable.run:()V
+     271: aload_0
+     272: getfield      #69                 // Field completed:Lpl/kuba6000/gtnhextranerf/progression/exam/ExamAttempt$Result;
+     275: areturn
+}

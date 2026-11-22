@@ -1,2 +1,2 @@
-node_modules/
-captures/
+*.class
+gtnhextranerf-analysis/jar_contents/

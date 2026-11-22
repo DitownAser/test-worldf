@@ -1,0 +1,54 @@
+Compiled from "MixinProgressionTickGate.java"
+public abstract class pl.kuba6000.gtnhextranerf.mixins.late.MixinProgressionTickGate {
+  private boolean gtnhextranerf$wasCertificationLocked;
+
+  public pl.kuba6000.gtnhextranerf.mixins.late.MixinProgressionTickGate();
+    Code:
+       0: aload_0
+       1: invokespecial #17                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  private void gtnhextranerf$gate(gregtech.api.metatileentity.MetaTileEntity, gregtech.api.interfaces.tileentity.IGregTechTileEntity, long, com.llamalad7.mixinextras.injector.wrapoperation.Operation<java.lang.Void>);
+    Code:
+       0: aload_2
+       1: invokeinterface #39,  1           // InterfaceMethod gregtech/api/interfaces/tileentity/IGregTechTileEntity.isServerSide:()Z
+       6: ifeq          29
+       9: aload_1
+      10: invokestatic  #45                 // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.isLocked:(Lgregtech/api/metatileentity/MetaTileEntity;)Z
+      13: ifeq          29
+      16: aload_0
+      17: iconst_1
+      18: putfield      #47                 // Field gtnhextranerf$wasCertificationLocked:Z
+      21: aload_2
+      22: iconst_0
+      23: invokeinterface #51,  2           // InterfaceMethod gregtech/api/interfaces/tileentity/IGregTechTileEntity.setActive:(Z)V
+      28: return
+      29: aload_0
+      30: getfield      #47                 // Field gtnhextranerf$wasCertificationLocked:Z
+      33: ifeq          48
+      36: aload_0
+      37: iconst_0
+      38: putfield      #47                 // Field gtnhextranerf$wasCertificationLocked:Z
+      41: aload_0
+      42: checkcast     #53                 // class gregtech/api/metatileentity/BaseMetaTileEntity
+      45: invokevirtual #56                 // Method gregtech/api/metatileentity/BaseMetaTileEntity.func_70296_d:()V
+      48: aload         5
+      50: iconst_3
+      51: anewarray     #4                  // class java/lang/Object
+      54: dup
+      55: iconst_0
+      56: aload_1
+      57: aastore
+      58: dup
+      59: iconst_1
+      60: aload_2
+      61: aastore
+      62: dup
+      63: iconst_2
+      64: lload_3
+      65: invokestatic  #62                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      68: aastore
+      69: invokeinterface #68,  2           // InterfaceMethod com/llamalad7/mixinextras/injector/wrapoperation/Operation.call:([Ljava/lang/Object;)Ljava/lang/Object;
+      74: pop
+      75: return
+}

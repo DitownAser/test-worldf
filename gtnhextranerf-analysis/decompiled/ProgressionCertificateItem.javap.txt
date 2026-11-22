@@ -1,0 +1,151 @@
+Compiled from "ProgressionCertificateItem.java"
+public final class pl.kuba6000.gtnhextranerf.progression.ProgressionCertificateItem extends net.minecraft.item.Item {
+  private final pl.kuba6000.gtnhextranerf.progression.ProgressionTier tier;
+
+  pl.kuba6000.gtnhextranerf.progression.ProgressionCertificateItem(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_0
+       1: invokespecial #12                 // Method net/minecraft/item/Item."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #14                 // Field tier:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+       9: aload_0
+      10: new           #16                 // class java/lang/StringBuilder
+      13: dup
+      14: invokespecial #17                 // Method java/lang/StringBuilder."<init>":()V
+      17: ldc           #19                 // String gtnhextranerf.
+      19: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      22: aload_0
+      23: invokevirtual #27                 // Method registryName:()Ljava/lang/String;
+      26: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      29: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      32: invokevirtual #34                 // Method func_77655_b:(Ljava/lang/String;)Lnet/minecraft/item/Item;
+      35: pop
+      36: aload_0
+      37: new           #16                 // class java/lang/StringBuilder
+      40: dup
+      41: invokespecial #17                 // Method java/lang/StringBuilder."<init>":()V
+      44: ldc           #36                 // String gtnhextranerf:
+      46: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: aload_1
+      50: invokevirtual #41                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.certificateTexture:()Ljava/lang/String;
+      53: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      59: invokevirtual #44                 // Method func_111206_d:(Ljava/lang/String;)Lnet/minecraft/item/Item;
+      62: pop
+      63: aload_0
+      64: getstatic     #50                 // Field net/minecraft/creativetab/CreativeTabs.field_78026_f:Lnet/minecraft/creativetab/CreativeTabs;
+      67: invokevirtual #54                 // Method func_77637_a:(Lnet/minecraft/creativetab/CreativeTabs;)Lnet/minecraft/item/Item;
+      70: pop
+      71: aload_0
+      72: iconst_1
+      73: invokevirtual #58                 // Method func_77625_d:(I)Lnet/minecraft/item/Item;
+      76: pop
+      77: return
+
+  public java.lang.String registryName();
+    Code:
+       0: new           #16                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #17                 // Method java/lang/StringBuilder."<init>":()V
+       7: aload_0
+       8: getfield      #14                 // Field tier:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      11: invokevirtual #63                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+      14: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      17: ldc           #65                 // String _certificate
+      19: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      22: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      25: areturn
+
+  public net.minecraft.item.ItemStack func_77659_a(net.minecraft.item.ItemStack, net.minecraft.world.World, net.minecraft.entity.player.EntityPlayer);
+    Code:
+       0: aload_2
+       1: getfield      #73                 // Field net/minecraft/world/World.field_72995_K:Z
+       4: ifne          33
+       7: aload_3
+       8: invokevirtual #79                 // Method net/minecraft/entity/player/EntityPlayer.func_70694_bm:()Lnet/minecraft/item/ItemStack;
+      11: aload_1
+      12: if_acmpne     33
+      15: aload_1
+      16: getfield      #85                 // Field net/minecraft/item/ItemStack.field_77994_a:I
+      19: ifle          33
+      22: aload_1
+      23: invokestatic  #91                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionCertificates.tierOf:(Lnet/minecraft/item/ItemStack;)Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      26: aload_0
+      27: getfield      #14                 // Field tier:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      30: if_acmpeq     35
+      33: aload_1
+      34: areturn
+      35: aload_2
+      36: aload_0
+      37: getfield      #14                 // Field tier:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      40: aload_1
+      41: invokestatic  #95                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionCertificates.issuedEpoch:(Lnet/minecraft/item/ItemStack;)J
+      44: invokestatic  #101                // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.isCurrentCertificate:(Lnet/minecraft/world/World;Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;J)Z
+      47: ifne          76
+      50: aload_3
+      51: new           #103                // class net/minecraft/util/ChatComponentTranslation
+      54: dup
+      55: ldc           #105                // String gtnhextranerf.progression.expired_certificate
+      57: iconst_1
+      58: anewarray     #107                // class java/lang/Object
+      61: dup
+      62: iconst_0
+      63: aload_1
+      64: invokevirtual #110                // Method net/minecraft/item/ItemStack.func_82833_r:()Ljava/lang/String;
+      67: aastore
+      68: invokespecial #113                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+      71: invokevirtual #117                // Method net/minecraft/entity/player/EntityPlayer.func_145747_a:(Lnet/minecraft/util/IChatComponent;)V
+      74: aload_1
+      75: areturn
+      76: aload_2
+      77: aload_0
+      78: getfield      #14                 // Field tier:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      81: invokestatic  #121                // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.certify:(Lnet/minecraft/world/World;Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Z
+      84: istore        4
+      86: iload         4
+      88: ifeq          111
+      91: aload_3
+      92: getfield      #125                // Field net/minecraft/entity/player/EntityPlayer.field_71075_bZ:Lnet/minecraft/entity/player/PlayerCapabilities;
+      95: getfield      #130                // Field net/minecraft/entity/player/PlayerCapabilities.field_75098_d:Z
+      98: ifne          111
+     101: aload_1
+     102: dup
+     103: getfield      #85                 // Field net/minecraft/item/ItemStack.field_77994_a:I
+     106: iconst_1
+     107: isub
+     108: putfield      #85                 // Field net/minecraft/item/ItemStack.field_77994_a:I
+     111: aload_3
+     112: new           #103                // class net/minecraft/util/ChatComponentTranslation
+     115: dup
+     116: iload         4
+     118: ifeq          126
+     121: ldc           #132                // String gtnhextranerf.progression.certified
+     123: goto          128
+     126: ldc           #134                // String gtnhextranerf.progression.already_certified
+     128: iconst_1
+     129: anewarray     #107                // class java/lang/Object
+     132: dup
+     133: iconst_0
+     134: aload_1
+     135: invokevirtual #110                // Method net/minecraft/item/ItemStack.func_82833_r:()Ljava/lang/String;
+     138: aastore
+     139: invokespecial #113                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+     142: invokevirtual #117                // Method net/minecraft/entity/player/EntityPlayer.func_145747_a:(Lnet/minecraft/util/IChatComponent;)V
+     145: aload_1
+     146: areturn
+
+  public void func_77624_a(net.minecraft.item.ItemStack, net.minecraft.entity.player.EntityPlayer, java.util.List<java.lang.String>, boolean);
+    Code:
+       0: aload_3
+       1: ldc           #152                // String gtnhextranerf.progression.use
+       3: invokestatic  #158                // Method net/minecraft/util/StatCollector.func_74838_a:(Ljava/lang/String;)Ljava/lang/String;
+       6: invokeinterface #164,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      11: pop
+      12: aload_3
+      13: ldc           #166                // String gtnhextranerf.progression.global
+      15: invokestatic  #158                // Method net/minecraft/util/StatCollector.func_74838_a:(Ljava/lang/String;)Ljava/lang/String;
+      18: invokeinterface #164,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      23: pop
+      24: return
+}
