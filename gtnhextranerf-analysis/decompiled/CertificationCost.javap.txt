@@ -1,0 +1,386 @@
+Compiled from "CertificationCost.java"
+public final class pl.kuba6000.gtnhextranerf.progression.CertificationCost {
+  private pl.kuba6000.gtnhextranerf.progression.CertificationCost();
+    Code:
+       0: aload_0
+       1: invokespecial #16                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static net.minecraft.item.ItemStack material(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: getstatic     #24                 // Field pl/kuba6000/gtnhextranerf/progression/CertificationCost$1.$SwitchMap$pl$kuba6000$gtnhextranerf$progression$ProgressionTier:[I
+       3: aload_0
+       4: invokevirtual #30                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.ordinal:()I
+       7: iaload
+       8: tableswitch   { // 1 to 15
+                     1: 84
+                     2: 95
+                     3: 106
+                     4: 117
+                     5: 128
+                     6: 139
+                     7: 150
+                     8: 161
+                     9: 175
+                    10: 186
+                    11: 197
+                    12: 208
+                    13: 219
+                    14: 230
+                    15: 241
+               default: 252
+          }
+      84: getstatic     #36                 // Field gregtech/api/enums/OrePrefixes.ingot:Lgregtech/api/enums/OrePrefixes;
+      87: getstatic     #42                 // Field gregtech/api/enums/Materials.Bronze:Lgregtech/api/enums/Materials;
+      90: lconst_1
+      91: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+      94: areturn
+      95: getstatic     #51                 // Field gregtech/api/enums/OrePrefixes.cableGt01:Lgregtech/api/enums/OrePrefixes;
+      98: getstatic     #54                 // Field gregtech/api/enums/Materials.Tin:Lgregtech/api/enums/Materials;
+     101: lconst_1
+     102: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     105: areturn
+     106: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     109: getstatic     #60                 // Field gregtech/api/enums/Materials.Steel:Lgregtech/api/enums/Materials;
+     112: lconst_1
+     113: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     116: areturn
+     117: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     120: getstatic     #63                 // Field gregtech/api/enums/Materials.Aluminium:Lgregtech/api/enums/Materials;
+     123: lconst_1
+     124: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     127: areturn
+     128: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     131: getstatic     #66                 // Field gregtech/api/enums/Materials.StainlessSteel:Lgregtech/api/enums/Materials;
+     134: lconst_1
+     135: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     138: areturn
+     139: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     142: getstatic     #69                 // Field gregtech/api/enums/Materials.Titanium:Lgregtech/api/enums/Materials;
+     145: lconst_1
+     146: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     149: areturn
+     150: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     153: getstatic     #72                 // Field gregtech/api/enums/Materials.TungstenSteel:Lgregtech/api/enums/Materials;
+     156: lconst_1
+     157: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     160: areturn
+     161: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     164: getstatic     #78                 // Field bartworks/system/material/WerkstoffLoader.RhodiumPlatedPalladium:Lbartworks/system/material/Werkstoff;
+     167: invokevirtual #84                 // Method bartworks/system/material/Werkstoff.getGTMaterial:()Lgregtech/api/enums/Materials;
+     170: lconst_1
+     171: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     174: areturn
+     175: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     178: getstatic     #87                 // Field gregtech/api/enums/Materials.Iridium:Lgregtech/api/enums/Materials;
+     181: lconst_1
+     182: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     185: areturn
+     186: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     189: getstatic     #90                 // Field gregtech/api/enums/Materials.Osmium:Lgregtech/api/enums/Materials;
+     192: lconst_1
+     193: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     196: areturn
+     197: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     200: getstatic     #93                 // Field gregtech/api/enums/Materials.Neutronium:Lgregtech/api/enums/Materials;
+     203: lconst_1
+     204: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     207: areturn
+     208: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     211: getstatic     #96                 // Field gregtech/api/enums/Materials.Infinity:Lgregtech/api/enums/Materials;
+     214: lconst_1
+     215: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     218: areturn
+     219: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     222: getstatic     #99                 // Field gregtech/api/enums/Materials.TranscendentMetal:Lgregtech/api/enums/Materials;
+     225: lconst_1
+     226: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     229: areturn
+     230: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     233: getstatic     #102                // Field gregtech/api/enums/Materials.SpaceTime:Lgregtech/api/enums/Materials;
+     236: lconst_1
+     237: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     240: areturn
+     241: getstatic     #57                 // Field gregtech/api/enums/OrePrefixes.block:Lgregtech/api/enums/OrePrefixes;
+     244: getstatic     #105                // Field gregtech/api/enums/Materials.MHDCSM:Lgregtech/api/enums/Materials;
+     247: lconst_1
+     248: invokestatic  #48                 // Method gregtech/api/util/GTOreDictUnificator.get:(Lgregtech/api/enums/OrePrefixes;Ljava/lang/Object;J)Lnet/minecraft/item/ItemStack;
+     251: areturn
+     252: new           #107                // class java/lang/IllegalArgumentException
+     255: dup
+     256: new           #109                // class java/lang/StringBuilder
+     259: dup
+     260: invokespecial #110                // Method java/lang/StringBuilder."<init>":()V
+     263: ldc           #112                // String Missing certification fee:
+     265: invokevirtual #116                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     268: aload_0
+     269: invokevirtual #119                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     272: invokevirtual #123                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     275: invokespecial #126                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     278: athrow
+
+  public static int amount(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: getstatic     #24                 // Field pl/kuba6000/gtnhextranerf/progression/CertificationCost$1.$SwitchMap$pl$kuba6000$gtnhextranerf$progression$ProgressionTier:[I
+       3: aload_0
+       4: invokevirtual #30                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.ordinal:()I
+       7: iaload
+       8: tableswitch   { // 1 to 15
+                     1: 84
+                     2: 88
+                     3: 92
+                     4: 100
+                     5: 100
+                     6: 100
+                     7: 96
+                     8: 100
+                     9: 100
+                    10: 100
+                    11: 100
+                    12: 100
+                    13: 100
+                    14: 100
+                    15: 100
+               default: 104
+          }
+      84: sipush        1000
+      87: ireturn
+      88: sipush        1000
+      91: ireturn
+      92: sipush        556
+      95: ireturn
+      96: sipush        670
+      99: ireturn
+     100: sipush        1112
+     103: ireturn
+     104: new           #107                // class java/lang/IllegalArgumentException
+     107: dup
+     108: new           #109                // class java/lang/StringBuilder
+     111: dup
+     112: invokespecial #110                // Method java/lang/StringBuilder."<init>":()V
+     115: ldc           #112                // String Missing certification fee:
+     117: invokevirtual #116                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     120: aload_0
+     121: invokevirtual #119                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     124: invokevirtual #123                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     127: invokespecial #126                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     130: athrow
+
+  public static boolean take(net.minecraft.entity.player.EntityPlayerMP, pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_0
+       1: getfield      #138                // Field net/minecraft/entity/player/EntityPlayerMP.field_71071_by:Lnet/minecraft/entity/player/InventoryPlayer;
+       4: getfield      #144                // Field net/minecraft/entity/player/InventoryPlayer.field_70462_a:[Lnet/minecraft/item/ItemStack;
+       7: aload_1
+       8: invokestatic  #146                // Method material:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Lnet/minecraft/item/ItemStack;
+      11: aload_1
+      12: invokestatic  #148                // Method amount:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)I
+      15: invokestatic  #152                // Method consume:([Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;I)Z
+      18: ifne          23
+      21: iconst_0
+      22: ireturn
+      23: aload_0
+      24: getfield      #138                // Field net/minecraft/entity/player/EntityPlayerMP.field_71071_by:Lnet/minecraft/entity/player/InventoryPlayer;
+      27: invokevirtual #155                // Method net/minecraft/entity/player/InventoryPlayer.func_70296_d:()V
+      30: aload_0
+      31: getfield      #159                // Field net/minecraft/entity/player/EntityPlayerMP.field_71069_bz:Lnet/minecraft/inventory/Container;
+      34: invokevirtual #164                // Method net/minecraft/inventory/Container.func_75142_b:()V
+      37: aload_0
+      38: getfield      #167                // Field net/minecraft/entity/player/EntityPlayerMP.field_71070_bA:Lnet/minecraft/inventory/Container;
+      41: invokevirtual #164                // Method net/minecraft/inventory/Container.func_75142_b:()V
+      44: iconst_1
+      45: ireturn
+
+  public static void verify();
+    Code:
+       0: getstatic     #176                // Field pl/kuba6000/gtnhextranerf/audit/AuditScope.VERIFY_CERTIFICATION_COSTS:Lpl/kuba6000/gtnhextranerf/audit/AuditScope;
+       3: invokedynamic #195,  0            // InvokeDynamic #0:accept:()Ljava/util/function/Consumer;
+       8: invokestatic  #201                // Method pl/kuba6000/gtnhextranerf/audit/AuditManager.run:(Lpl/kuba6000/gtnhextranerf/audit/AuditScope;Ljava/util/function/Consumer;)V
+      11: return
+
+  public static boolean consume(net.minecraft.item.ItemStack[], net.minecraft.item.ItemStack, int);
+    Code:
+       0: aload_1
+       1: ifnull        8
+       4: iload_2
+       5: ifgt          10
+       8: iconst_0
+       9: ireturn
+      10: lconst_0
+      11: lstore_3
+      12: aload_0
+      13: astore        5
+      15: aload         5
+      17: arraylength
+      18: istore        6
+      20: iconst_0
+      21: istore        7
+      23: iload         7
+      25: iload         6
+      27: if_icmpge     74
+      30: aload         5
+      32: iload         7
+      34: aaload
+      35: astore        8
+      37: aload         8
+      39: ifnull        68
+      42: aload         8
+      44: getfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+      47: ifle          68
+      50: aload         8
+      52: aload_1
+      53: invokevirtual #212                // Method net/minecraft/item/ItemStack.func_77969_a:(Lnet/minecraft/item/ItemStack;)Z
+      56: ifeq          68
+      59: lload_3
+      60: aload         8
+      62: getfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+      65: i2l
+      66: ladd
+      67: lstore_3
+      68: iinc          7, 1
+      71: goto          23
+      74: lload_3
+      75: iload_2
+      76: i2l
+      77: lcmp
+      78: ifge          83
+      81: iconst_0
+      82: ireturn
+      83: iconst_0
+      84: istore        5
+      86: iload         5
+      88: aload_0
+      89: arraylength
+      90: if_icmpge     175
+      93: iload_2
+      94: ifle          175
+      97: aload_0
+      98: iload         5
+     100: aaload
+     101: astore        6
+     103: aload         6
+     105: ifnull        169
+     108: aload         6
+     110: getfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+     113: ifle          169
+     116: aload         6
+     118: aload_1
+     119: invokevirtual #212                // Method net/minecraft/item/ItemStack.func_77969_a:(Lnet/minecraft/item/ItemStack;)Z
+     122: ifne          128
+     125: goto          169
+     128: iload_2
+     129: aload         6
+     131: getfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+     134: invokestatic  #218                // Method java/lang/Math.min:(II)I
+     137: istore        7
+     139: aload         6
+     141: dup
+     142: getfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+     145: iload         7
+     147: isub
+     148: putfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+     151: iload_2
+     152: iload         7
+     154: isub
+     155: istore_2
+     156: aload         6
+     158: getfield      #208                // Field net/minecraft/item/ItemStack.field_77994_a:I
+     161: ifne          169
+     164: aload_0
+     165: iload         5
+     167: aconst_null
+     168: aastore
+     169: iinc          5, 1
+     172: goto          86
+     175: iconst_1
+     176: ireturn
+
+  private static void lambda$verify$0(pl.kuba6000.gtnhextranerf.audit.AuditHandle);
+    Code:
+       0: invokestatic  #229                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.values:()[Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+       3: astore_1
+       4: aload_1
+       5: arraylength
+       6: istore_2
+       7: iconst_0
+       8: istore_3
+       9: iload_3
+      10: iload_2
+      11: if_icmpge     188
+      14: aload_1
+      15: iload_3
+      16: aaload
+      17: astore        4
+      19: aload         4
+      21: invokestatic  #146                // Method material:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Lnet/minecraft/item/ItemStack;
+      24: astore        5
+      26: aload         5
+      28: ifnonnull     35
+      31: aconst_null
+      32: goto          46
+      35: getstatic     #237                // Field net/minecraft/item/Item.field_150901_e:Lnet/minecraft/util/RegistryNamespaced;
+      38: aload         5
+      40: invokevirtual #241                // Method net/minecraft/item/ItemStack.func_77973_b:()Lnet/minecraft/item/Item;
+      43: invokevirtual #247                // Method net/minecraft/util/RegistryNamespaced.func_148750_c:(Ljava/lang/Object;)Ljava/lang/String;
+      46: astore        6
+      48: aload         6
+      50: ifnonnull     81
+      53: new           #251                // class pl/kuba6000/gtnhextranerf/recipes/RecipeValidationException
+      56: dup
+      57: new           #109                // class java/lang/StringBuilder
+      60: dup
+      61: invokespecial #110                // Method java/lang/StringBuilder."<init>":()V
+      64: ldc           #253                // String Missing certification fee material:
+      66: invokevirtual #116                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      69: aload         4
+      71: invokevirtual #119                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      74: invokevirtual #123                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      77: invokespecial #254                // Method pl/kuba6000/gtnhextranerf/recipes/RecipeValidationException."<init>":(Ljava/lang/String;)V
+      80: athrow
+      81: aload         4
+      83: invokestatic  #148                // Method amount:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)I
+      86: ifle          105
+      89: aload         4
+      91: invokestatic  #148                // Method amount:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)I
+      94: bipush        36
+      96: aload         5
+      98: invokevirtual #257                // Method net/minecraft/item/ItemStack.func_77976_d:()I
+     101: imul
+     102: if_icmple     134
+     105: new           #259                // class java/lang/IllegalStateException
+     108: dup
+     109: new           #109                // class java/lang/StringBuilder
+     112: dup
+     113: invokespecial #110                // Method java/lang/StringBuilder."<init>":()V
+     116: ldc_w         #261                // String Invalid certification fee:
+     119: invokevirtual #116                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     122: aload         4
+     124: invokevirtual #119                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     127: invokevirtual #123                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     130: invokespecial #262                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     133: athrow
+     134: aload         4
+     136: getstatic     #265                // Field pl/kuba6000/gtnhextranerf/progression/ProgressionTier.STEAM:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+     139: if_acmpne     182
+     142: aload         6
+     144: ldc_w         #267                // String gregtech:
+     147: invokevirtual #271                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+     150: ifne          182
+     153: new           #259                // class java/lang/IllegalStateException
+     156: dup
+     157: new           #109                // class java/lang/StringBuilder
+     160: dup
+     161: invokespecial #110                // Method java/lang/StringBuilder."<init>":()V
+     164: ldc_w         #273                // String Steam fee must use GregTech Bronze ingots:
+     167: invokevirtual #116                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     170: aload         6
+     172: invokevirtual #116                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     175: invokevirtual #123                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     178: invokespecial #262                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     181: athrow
+     182: iinc          3, 1
+     185: goto          9
+     188: aload_0
+     189: invokevirtual #278                // Method pl/kuba6000/gtnhextranerf/audit/AuditHandle.success:()V
+     192: return
+}

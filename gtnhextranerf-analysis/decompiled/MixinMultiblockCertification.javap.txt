@@ -1,0 +1,21 @@
+Compiled from "MixinMultiblockCertification.java"
+public abstract class pl.kuba6000.gtnhextranerf.mixins.late.MixinMultiblockCertification {
+  public pl.kuba6000.gtnhextranerf.mixins.late.MixinMultiblockCertification();
+    Code:
+       0: aload_0
+       1: invokespecial #14                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  private void gtnhextranerf$pauseAfterStructureCheck(gregtech.api.interfaces.tileentity.IGregTechTileEntity, long, org.spongepowered.asm.mixin.injection.callback.CallbackInfo);
+    Code:
+       0: aload_0
+       1: checkcast     #32                 // class gregtech/api/metatileentity/implementations/MTEMultiBlockBase
+       4: invokestatic  #38                 // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.isLocked:(Lgregtech/api/metatileentity/MetaTileEntity;)Z
+       7: ifeq          22
+      10: aload_1
+      11: iconst_0
+      12: invokeinterface #44,  2           // InterfaceMethod gregtech/api/interfaces/tileentity/IGregTechTileEntity.setActive:(Z)V
+      17: aload         4
+      19: invokevirtual #49                 // Method org/spongepowered/asm/mixin/injection/callback/CallbackInfo.cancel:()V
+      22: return
+}

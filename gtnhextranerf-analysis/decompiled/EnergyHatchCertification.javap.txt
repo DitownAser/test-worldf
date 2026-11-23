@@ -1,0 +1,284 @@
+Compiled from "EnergyHatchCertification.java"
+public final class pl.kuba6000.gtnhextranerf.progression.EnergyHatchCertification {
+  public static final java.lang.String OPEN_COMMAND;
+
+  public pl.kuba6000.gtnhextranerf.progression.EnergyHatchCertification();
+    Code:
+       0: aload_0
+       1: invokespecial #44                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static boolean isEnergyHatch(gregtech.api.interfaces.metatileentity.IMetaTileEntity);
+    Code:
+       0: aload_0
+       1: instanceof    #50                 // class gregtech/api/metatileentity/implementations/MTEHatchEnergy
+       4: ifne          21
+       7: aload_0
+       8: instanceof    #52                 // class gregtech/api/metatileentity/implementations/MTEHatchDynamo
+      11: ifne          21
+      14: aload_0
+      15: instanceof    #54                 // class tectech/thing/metaTileEntity/hatch/MTEHatchEnergyMulti
+      18: ifeq          25
+      21: iconst_1
+      22: goto          26
+      25: iconst_0
+      26: ireturn
+
+  public static boolean isLocked(gregtech.api.interfaces.metatileentity.IMetaTileEntity);
+    Code:
+       0: aload_0
+       1: invokestatic  #59                 // Method isEnergyHatch:(Lgregtech/api/interfaces/metatileentity/IMetaTileEntity;)Z
+       4: ifeq          21
+       7: aload_0
+       8: checkcast     #61                 // class gregtech/api/metatileentity/MetaTileEntity
+      11: invokestatic  #66                 // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.isLocked:(Lgregtech/api/metatileentity/MetaTileEntity;)Z
+      14: ifeq          21
+      17: iconst_1
+      18: goto          22
+      21: iconst_0
+      22: ireturn
+
+  public void onPlaced(net.minecraftforge.event.world.BlockEvent$PlaceEvent);
+    Code:
+       0: aload_1
+       1: getfield      #76                 // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.world:Lnet/minecraft/world/World;
+       4: getfield      #82                 // Field net/minecraft/world/World.field_72995_K:Z
+       7: ifne          20
+      10: aload_1
+      11: getfield      #86                 // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.player:Lnet/minecraft/entity/player/EntityPlayer;
+      14: instanceof    #88                 // class net/minecraftforge/common/util/FakePlayer
+      17: ifeq          21
+      20: return
+      21: aload_1
+      22: invokedynamic #104,  0            // InvokeDynamic #0:run:(Lnet/minecraftforge/event/world/BlockEvent$PlaceEvent;)Ljava/lang/Runnable;
+      27: invokestatic  #110                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionServerTasks.enqueue:(Ljava/lang/Runnable;)V
+      30: return
+
+  public void onInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent);
+    Code:
+       0: aload_1
+       1: getfield      #115                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.world:Lnet/minecraft/world/World;
+       4: getfield      #82                 // Field net/minecraft/world/World.field_72995_K:Z
+       7: ifne          40
+      10: aload_1
+      11: getfield      #118                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.entityPlayer:Lnet/minecraft/entity/player/EntityPlayer;
+      14: instanceof    #88                 // class net/minecraftforge/common/util/FakePlayer
+      17: ifne          40
+      20: aload_1
+      21: getfield      #122                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.action:Lnet/minecraftforge/event/entity/player/PlayerInteractEvent$Action;
+      24: getstatic     #125                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent$Action.RIGHT_CLICK_BLOCK:Lnet/minecraftforge/event/entity/player/PlayerInteractEvent$Action;
+      27: if_acmpne     40
+      30: aload_1
+      31: getfield      #118                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.entityPlayer:Lnet/minecraft/entity/player/EntityPlayer;
+      34: invokevirtual #131                // Method net/minecraft/entity/player/EntityPlayer.func_70694_bm:()Lnet/minecraft/item/ItemStack;
+      37: ifnull        41
+      40: return
+      41: aload_1
+      42: invokedynamic #138,  0            // InvokeDynamic #1:run:(Lnet/minecraftforge/event/entity/player/PlayerInteractEvent;)Ljava/lang/Runnable;
+      47: invokestatic  #110                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionServerTasks.enqueue:(Ljava/lang/Runnable;)V
+      50: return
+
+  private static void warn(net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World, int, int, int);
+    Code:
+       0: aload_1
+       1: iload_2
+       2: iload_3
+       3: iload         4
+       5: invokevirtual #145                // Method net/minecraft/world/World.func_147438_o:(III)Lnet/minecraft/tileentity/TileEntity;
+       8: astore        5
+      10: aload         5
+      12: instanceof    #147                // class gregtech/api/metatileentity/BaseMetaTileEntity
+      15: ifne          19
+      18: return
+      19: aload         5
+      21: checkcast     #147                // class gregtech/api/metatileentity/BaseMetaTileEntity
+      24: invokevirtual #153                // Method gregtech/api/metatileentity/BaseMetaTileEntity.getMetaTileEntity:()Lgregtech/api/interfaces/metatileentity/IMetaTileEntity;
+      27: astore        6
+      29: aload         6
+      31: invokestatic  #59                 // Method isEnergyHatch:(Lgregtech/api/interfaces/metatileentity/IMetaTileEntity;)Z
+      34: ifne          38
+      37: return
+      38: aload         6
+      40: checkcast     #61                 // class gregtech/api/metatileentity/MetaTileEntity
+      43: invokestatic  #159                // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.missingTier:(Lgregtech/api/metatileentity/MetaTileEntity;)Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      46: astore        7
+      48: aload         7
+      50: ifnonnull     54
+      53: return
+      54: new           #163                // class net/minecraft/util/ChatComponentTranslation
+      57: dup
+      58: ldc           #165                // String gtnhextranerf.progression.hatch.disabled
+      60: iconst_2
+      61: anewarray     #4                  // class java/lang/Object
+      64: dup
+      65: iconst_0
+      66: aload         6
+      68: invokeinterface #169,  1          // InterfaceMethod gregtech/api/interfaces/metatileentity/IMetaTileEntity.getLocalName:()Ljava/lang/String;
+      73: aastore
+      74: dup
+      75: iconst_1
+      76: new           #163                // class net/minecraft/util/ChatComponentTranslation
+      79: dup
+      80: new           #171                // class java/lang/StringBuilder
+      83: dup
+      84: invokespecial #172                // Method java/lang/StringBuilder."<init>":()V
+      87: ldc           #174                // String item.gtnhextranerf.
+      89: invokevirtual #178                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      92: aload         7
+      94: invokevirtual #181                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+      97: invokevirtual #178                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     100: ldc           #183                // String _certificate.name
+     102: invokevirtual #178                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     105: invokevirtual #186                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     108: iconst_0
+     109: anewarray     #4                  // class java/lang/Object
+     112: invokespecial #189                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+     115: aastore
+     116: invokespecial #189                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+     119: astore        8
+     121: aload         8
+     123: invokevirtual #193                // Method net/minecraft/util/ChatComponentTranslation.func_150256_b:()Lnet/minecraft/util/ChatStyle;
+     126: getstatic     #199                // Field net/minecraft/util/EnumChatFormatting.RED:Lnet/minecraft/util/EnumChatFormatting;
+     129: invokevirtual #205                // Method net/minecraft/util/ChatStyle.func_150238_a:(Lnet/minecraft/util/EnumChatFormatting;)Lnet/minecraft/util/ChatStyle;
+     132: pop
+     133: new           #163                // class net/minecraft/util/ChatComponentTranslation
+     136: dup
+     137: ldc           #207                // String gtnhextranerf.progression.hatch.open
+     139: iconst_0
+     140: anewarray     #4                  // class java/lang/Object
+     143: invokespecial #189                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+     146: astore        9
+     148: aload         9
+     150: invokevirtual #193                // Method net/minecraft/util/ChatComponentTranslation.func_150256_b:()Lnet/minecraft/util/ChatStyle;
+     153: getstatic     #210                // Field net/minecraft/util/EnumChatFormatting.AQUA:Lnet/minecraft/util/EnumChatFormatting;
+     156: invokevirtual #205                // Method net/minecraft/util/ChatStyle.func_150238_a:(Lnet/minecraft/util/EnumChatFormatting;)Lnet/minecraft/util/ChatStyle;
+     159: iconst_1
+     160: invokestatic  #216                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     163: invokevirtual #220                // Method net/minecraft/util/ChatStyle.func_150228_d:(Ljava/lang/Boolean;)Lnet/minecraft/util/ChatStyle;
+     166: new           #19                 // class net/minecraft/event/ClickEvent
+     169: dup
+     170: getstatic     #224                // Field net/minecraft/event/ClickEvent$Action.RUN_COMMAND:Lnet/minecraft/event/ClickEvent$Action;
+     173: new           #171                // class java/lang/StringBuilder
+     176: dup
+     177: invokespecial #172                // Method java/lang/StringBuilder."<init>":()V
+     180: ldc           #226                // String /extranerf-certificate
+     182: invokevirtual #178                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     185: aload         7
+     187: invokevirtual #181                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+     190: invokevirtual #178                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     193: invokevirtual #186                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     196: invokespecial #229                // Method net/minecraft/event/ClickEvent."<init>":(Lnet/minecraft/event/ClickEvent$Action;Ljava/lang/String;)V
+     199: invokevirtual #233                // Method net/minecraft/util/ChatStyle.func_150241_a:(Lnet/minecraft/event/ClickEvent;)Lnet/minecraft/util/ChatStyle;
+     202: pop
+     203: aload_0
+     204: aload         8
+     206: ldc           #235                // String
+     208: invokevirtual #239                // Method net/minecraft/util/ChatComponentTranslation.func_150258_a:(Ljava/lang/String;)Lnet/minecraft/util/IChatComponent;
+     211: aload         9
+     213: invokeinterface #245,  2          // InterfaceMethod net/minecraft/util/IChatComponent.func_150257_a:(Lnet/minecraft/util/IChatComponent;)Lnet/minecraft/util/IChatComponent;
+     218: invokevirtual #249                // Method net/minecraft/entity/player/EntityPlayer.func_145747_a:(Lnet/minecraft/util/IChatComponent;)V
+     221: return
+
+  public static void verify();
+    Code:
+       0: getstatic     #267                // Field pl/kuba6000/gtnhextranerf/audit/AuditScope.VERIFY_ENERGY_HATCH_CERTIFICATION:Lpl/kuba6000/gtnhextranerf/audit/AuditScope;
+       3: invokedynamic #279,  0            // InvokeDynamic #2:accept:()Ljava/util/function/Consumer;
+       8: invokestatic  #284                // Method pl/kuba6000/gtnhextranerf/audit/AuditManager.run:(Lpl/kuba6000/gtnhextranerf/audit/AuditScope;Ljava/util/function/Consumer;)V
+      11: return
+
+  private static void lambda$verify$2(pl.kuba6000.gtnhextranerf.audit.AuditHandle);
+    Code:
+       0: ldc           #21                 // class pl/kuba6000/gtnhextranerf/progression/EnergyHatchCertification$PortHook
+       2: ldc           #147                // class gregtech/api/metatileentity/BaseMetaTileEntity
+       4: invokevirtual #290                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+       7: ifeq          53
+      10: ldc           #24                 // class pl/kuba6000/gtnhextranerf/progression/EnergyHatchCertification$BufferHook
+      12: ldc           #61                 // class gregtech/api/metatileentity/MetaTileEntity
+      14: invokevirtual #290                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      17: ifeq          53
+      20: ldc           #27                 // class pl/kuba6000/gtnhextranerf/progression/EnergyHatchCertification$WirelessInputHook
+      22: ldc_w         #292                // class gregtech/common/covers/CoverEnergyWireless
+      25: invokevirtual #290                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      28: ifeq          53
+      31: ldc           #27                 // class pl/kuba6000/gtnhextranerf/progression/EnergyHatchCertification$WirelessInputHook
+      33: ldc_w         #294                // class gregtech/api/metatileentity/implementations/MTEWirelessEnergy
+      36: invokevirtual #290                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      39: ifeq          53
+      42: ldc           #27                 // class pl/kuba6000/gtnhextranerf/progression/EnergyHatchCertification$WirelessInputHook
+      44: ldc_w         #296                // class tectech/thing/metaTileEntity/hatch/MTEHatchWirelessMulti
+      47: invokevirtual #290                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      50: ifne          64
+      53: new           #298                // class java/lang/IllegalStateException
+      56: dup
+      57: ldc_w         #300                // String Energy hatch certification hooks are missing
+      60: invokespecial #303                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      63: athrow
+      64: iconst_0
+      65: istore_1
+      66: getstatic     #309                // Field gregtech/api/GregTechAPI.METATILEENTITIES:[Lgregtech/api/interfaces/metatileentity/IMetaTileEntity;
+      69: astore_2
+      70: aload_2
+      71: arraylength
+      72: istore_3
+      73: iconst_0
+      74: istore        4
+      76: iload         4
+      78: iload_3
+      79: if_icmpge     105
+      82: aload_2
+      83: iload         4
+      85: aaload
+      86: astore        5
+      88: aload         5
+      90: invokestatic  #59                 // Method isEnergyHatch:(Lgregtech/api/interfaces/metatileentity/IMetaTileEntity;)Z
+      93: ifeq          99
+      96: iinc          1, 1
+      99: iinc          4, 1
+     102: goto          76
+     105: iload_1
+     106: ifne          120
+     109: new           #298                // class java/lang/IllegalStateException
+     112: dup
+     113: ldc_w         #314                // String No native energy or dynamo hatches registered
+     116: invokespecial #303                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     119: athrow
+     120: aload_0
+     121: invokevirtual #317                // Method pl/kuba6000/gtnhextranerf/audit/AuditHandle.success:()V
+     124: return
+
+  private static void lambda$onInteract$1(net.minecraftforge.event.entity.player.PlayerInteractEvent);
+    Code:
+       0: aload_0
+       1: invokevirtual #325                // Method net/minecraftforge/event/entity/player/PlayerInteractEvent.isCanceled:()Z
+       4: ifne          30
+       7: aload_0
+       8: getfield      #118                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.entityPlayer:Lnet/minecraft/entity/player/EntityPlayer;
+      11: aload_0
+      12: getfield      #115                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.world:Lnet/minecraft/world/World;
+      15: aload_0
+      16: getfield      #327                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.x:I
+      19: aload_0
+      20: getfield      #329                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.y:I
+      23: aload_0
+      24: getfield      #331                // Field net/minecraftforge/event/entity/player/PlayerInteractEvent.z:I
+      27: invokestatic  #333                // Method warn:(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;III)V
+      30: return
+
+  private static void lambda$onPlaced$0(net.minecraftforge.event.world.BlockEvent$PlaceEvent);
+    Code:
+       0: aload_0
+       1: invokevirtual #334                // Method net/minecraftforge/event/world/BlockEvent$PlaceEvent.isCanceled:()Z
+       4: ifne          30
+       7: aload_0
+       8: getfield      #86                 // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.player:Lnet/minecraft/entity/player/EntityPlayer;
+      11: aload_0
+      12: getfield      #76                 // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.world:Lnet/minecraft/world/World;
+      15: aload_0
+      16: getfield      #335                // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.x:I
+      19: aload_0
+      20: getfield      #336                // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.y:I
+      23: aload_0
+      24: getfield      #337                // Field net/minecraftforge/event/world/BlockEvent$PlaceEvent.z:I
+      27: invokestatic  #333                // Method warn:(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;III)V
+      30: return
+}

@@ -1,0 +1,364 @@
+Compiled from "ProgressionData.java"
+public final class pl.kuba6000.gtnhextranerf.progression.ProgressionData extends net.minecraft.world.WorldSavedData {
+  public static final java.lang.String NAME;
+
+  private int unlockedMask;
+
+  private final java.util.Map<pl.kuba6000.gtnhextranerf.progression.ProgressionTier, java.lang.Long> certificateEpochs;
+
+  private boolean telemetryBlocked;
+
+  public pl.kuba6000.gtnhextranerf.progression.ProgressionData();
+    Code:
+       0: aload_0
+       1: ldc           #9                  // String gtnhextranerf_progression
+       3: invokespecial #21                 // Method "<init>":(Ljava/lang/String;)V
+       6: return
+
+  public pl.kuba6000.gtnhextranerf.progression.ProgressionData(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #24                 // Method net/minecraft/world/WorldSavedData."<init>":(Ljava/lang/String;)V
+       5: aload_0
+       6: new           #26                 // class java/util/EnumMap
+       9: dup
+      10: ldc           #28                 // class pl/kuba6000/gtnhextranerf/progression/ProgressionTier
+      12: invokespecial #31                 // Method java/util/EnumMap."<init>":(Ljava/lang/Class;)V
+      15: putfield      #33                 // Field certificateEpochs:Ljava/util/Map;
+      18: return
+
+  public boolean isUnlocked(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_0
+       1: getfield      #38                 // Field unlockedMask:I
+       4: aload_1
+       5: invokevirtual #42                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.bit:()I
+       8: iand
+       9: ifeq          16
+      12: iconst_1
+      13: goto          17
+      16: iconst_0
+      17: ireturn
+
+  public pl.kuba6000.gtnhextranerf.progression.ProgressionTier missingForMachine(int, boolean);
+    Code:
+       0: iload_1
+       1: iload_2
+       2: invokestatic  #49                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.forMachine:(IZ)Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+       5: astore_3
+       6: aload_3
+       7: ifnonnull     14
+      10: aconst_null
+      11: goto          19
+      14: aload_0
+      15: aload_3
+      16: invokevirtual #53                 // Method missing:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      19: areturn
+
+  public boolean isMissing(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_1
+       1: invokevirtual #60                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.requiredMask:()I
+       4: istore_2
+       5: aload_0
+       6: getfield      #38                 // Field unlockedMask:I
+       9: iload_2
+      10: iand
+      11: iload_2
+      12: if_icmpeq     19
+      15: iconst_1
+      16: goto          20
+      19: iconst_0
+      20: ireturn
+
+  public pl.kuba6000.gtnhextranerf.progression.ProgressionTier missing(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_1
+       1: invokevirtual #60                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.requiredMask:()I
+       4: aload_0
+       5: getfield      #38                 // Field unlockedMask:I
+       8: iconst_m1
+       9: ixor
+      10: iand
+      11: istore_2
+      12: iload_2
+      13: ifne          18
+      16: aconst_null
+      17: areturn
+      18: iload_2
+      19: getstatic     #64                 // Field pl/kuba6000/gtnhextranerf/progression/ProgressionTier.STEAM:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      22: invokevirtual #42                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.bit:()I
+      25: iand
+      26: ifeq          33
+      29: getstatic     #64                 // Field pl/kuba6000/gtnhextranerf/progression/ProgressionTier.STEAM:Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      32: areturn
+      33: iload_2
+      34: invokestatic  #70                 // Method java/lang/Integer.numberOfTrailingZeros:(I)I
+      37: invokestatic  #74                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.atIndex:(I)Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      40: areturn
+
+  public boolean unlock(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_1
+       1: invokestatic  #81                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+       4: checkcast     #28                 // class pl/kuba6000/gtnhextranerf/progression/ProgressionTier
+       7: invokevirtual #42                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.bit:()I
+      10: istore_2
+      11: aload_0
+      12: getfield      #38                 // Field unlockedMask:I
+      15: iload_2
+      16: iand
+      17: ifeq          22
+      20: iconst_0
+      21: ireturn
+      22: aload_0
+      23: dup
+      24: getfield      #38                 // Field unlockedMask:I
+      27: iload_2
+      28: ior
+      29: putfield      #38                 // Field unlockedMask:I
+      32: aload_0
+      33: invokevirtual #84                 // Method func_76185_a:()V
+      36: iconst_1
+      37: ireturn
+
+  public boolean revoke(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_1
+       1: invokestatic  #81                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+       4: checkcast     #28                 // class pl/kuba6000/gtnhextranerf/progression/ProgressionTier
+       7: invokevirtual #42                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.bit:()I
+      10: istore_2
+      11: aload_0
+      12: getfield      #38                 // Field unlockedMask:I
+      15: iload_2
+      16: iand
+      17: ifne          22
+      20: iconst_0
+      21: ireturn
+      22: aload_0
+      23: dup
+      24: getfield      #38                 // Field unlockedMask:I
+      27: iload_2
+      28: iconst_m1
+      29: ixor
+      30: iand
+      31: putfield      #38                 // Field unlockedMask:I
+      34: aload_0
+      35: getfield      #33                 // Field certificateEpochs:Ljava/util/Map;
+      38: aload_1
+      39: aload_0
+      40: aload_1
+      41: invokevirtual #89                 // Method certificateEpoch:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)J
+      44: lconst_1
+      45: ladd
+      46: invokestatic  #95                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      49: invokeinterface #101,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      54: pop
+      55: aload_0
+      56: invokevirtual #84                 // Method func_76185_a:()V
+      59: iconst_1
+      60: ireturn
+
+  public boolean isTelemetryBlocked();
+    Code:
+       0: aload_0
+       1: getfield      #105                // Field telemetryBlocked:Z
+       4: ireturn
+
+  public boolean blockTelemetry();
+    Code:
+       0: aload_0
+       1: getfield      #105                // Field telemetryBlocked:Z
+       4: ifeq          9
+       7: iconst_0
+       8: ireturn
+       9: aload_0
+      10: iconst_1
+      11: putfield      #105                // Field telemetryBlocked:Z
+      14: aload_0
+      15: invokevirtual #84                 // Method func_76185_a:()V
+      18: iconst_1
+      19: ireturn
+
+  public long certificateEpoch(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_0
+       1: getfield      #33                 // Field certificateEpochs:Ljava/util/Map;
+       4: aload_1
+       5: invokestatic  #81                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: lconst_0
+       9: invokestatic  #95                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      12: invokeinterface #109,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      17: checkcast     #91                 // class java/lang/Long
+      20: invokevirtual #113                // Method java/lang/Long.longValue:()J
+      23: lreturn
+
+  public boolean isCurrentCertificate(pl.kuba6000.gtnhextranerf.progression.ProgressionTier, long);
+    Code:
+       0: lload_2
+       1: aload_0
+       2: aload_1
+       3: invokevirtual #89                 // Method certificateEpoch:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)J
+       6: lcmp
+       7: ifne          14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
+
+  public void func_76184_a(net.minecraft.nbt.NBTTagCompound);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: putfield      #38                 // Field unlockedMask:I
+       5: aload_0
+       6: aload_1
+       7: ldc           #120                // String telemetryBlocked
+       9: invokevirtual #126                // Method net/minecraft/nbt/NBTTagCompound.func_74767_n:(Ljava/lang/String;)Z
+      12: putfield      #105                // Field telemetryBlocked:Z
+      15: aload_0
+      16: getfield      #33                 // Field certificateEpochs:Ljava/util/Map;
+      19: invokeinterface #129,  1          // InterfaceMethod java/util/Map.clear:()V
+      24: aload_1
+      25: ldc           #131                // String certifiedTiers
+      27: invokevirtual #135                // Method net/minecraft/nbt/NBTTagCompound.func_74775_l:(Ljava/lang/String;)Lnet/minecraft/nbt/NBTTagCompound;
+      30: astore_2
+      31: invokestatic  #139                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.values:()[Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      34: astore_3
+      35: aload_3
+      36: arraylength
+      37: istore        4
+      39: iconst_0
+      40: istore        5
+      42: iload         5
+      44: iload         4
+      46: if_icmpge     87
+      49: aload_3
+      50: iload         5
+      52: aaload
+      53: astore        6
+      55: aload_2
+      56: aload         6
+      58: invokevirtual #145                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+      61: invokevirtual #126                // Method net/minecraft/nbt/NBTTagCompound.func_74767_n:(Ljava/lang/String;)Z
+      64: ifeq          81
+      67: aload_0
+      68: dup
+      69: getfield      #38                 // Field unlockedMask:I
+      72: aload         6
+      74: invokevirtual #42                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.bit:()I
+      77: ior
+      78: putfield      #38                 // Field unlockedMask:I
+      81: iinc          5, 1
+      84: goto          42
+      87: aload_1
+      88: ldc           #146                // String certificateEpochs
+      90: invokevirtual #135                // Method net/minecraft/nbt/NBTTagCompound.func_74775_l:(Ljava/lang/String;)Lnet/minecraft/nbt/NBTTagCompound;
+      93: astore_3
+      94: invokestatic  #139                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.values:()[Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      97: astore        4
+      99: aload         4
+     101: arraylength
+     102: istore        5
+     104: iconst_0
+     105: istore        6
+     107: iload         6
+     109: iload         5
+     111: if_icmpge     155
+     114: aload         4
+     116: iload         6
+     118: aaload
+     119: astore        7
+     121: aload_0
+     122: getfield      #33                 // Field certificateEpochs:Ljava/util/Map;
+     125: aload         7
+     127: lconst_0
+     128: aload_3
+     129: aload         7
+     131: invokevirtual #145                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+     134: invokevirtual #150                // Method net/minecraft/nbt/NBTTagCompound.func_74763_f:(Ljava/lang/String;)J
+     137: invokestatic  #156                // Method java/lang/Math.max:(JJ)J
+     140: invokestatic  #95                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+     143: invokeinterface #101,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     148: pop
+     149: iinc          6, 1
+     152: goto          107
+     155: return
+
+  public void func_76187_b(net.minecraft.nbt.NBTTagCompound);
+    Code:
+       0: new           #122                // class net/minecraft/nbt/NBTTagCompound
+       3: dup
+       4: invokespecial #163                // Method net/minecraft/nbt/NBTTagCompound."<init>":()V
+       7: astore_2
+       8: invokestatic  #139                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.values:()[Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      11: astore_3
+      12: aload_3
+      13: arraylength
+      14: istore        4
+      16: iconst_0
+      17: istore        5
+      19: iload         5
+      21: iload         4
+      23: if_icmpge     57
+      26: aload_3
+      27: iload         5
+      29: aaload
+      30: astore        6
+      32: aload_0
+      33: aload         6
+      35: invokevirtual #165                // Method isUnlocked:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Z
+      38: ifeq          51
+      41: aload_2
+      42: aload         6
+      44: invokevirtual #145                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+      47: iconst_1
+      48: invokevirtual #169                // Method net/minecraft/nbt/NBTTagCompound.func_74757_a:(Ljava/lang/String;Z)V
+      51: iinc          5, 1
+      54: goto          19
+      57: aload_1
+      58: ldc           #131                // String certifiedTiers
+      60: aload_2
+      61: invokevirtual #173                // Method net/minecraft/nbt/NBTTagCompound.func_74782_a:(Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;)V
+      64: new           #122                // class net/minecraft/nbt/NBTTagCompound
+      67: dup
+      68: invokespecial #163                // Method net/minecraft/nbt/NBTTagCompound."<init>":()V
+      71: astore_3
+      72: invokestatic  #139                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.values:()[Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      75: astore        4
+      77: aload         4
+      79: arraylength
+      80: istore        5
+      82: iconst_0
+      83: istore        6
+      85: iload         6
+      87: iload         5
+      89: if_icmpge     120
+      92: aload         4
+      94: iload         6
+      96: aaload
+      97: astore        7
+      99: aload_3
+     100: aload         7
+     102: invokevirtual #145                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+     105: aload_0
+     106: aload         7
+     108: invokevirtual #89                 // Method certificateEpoch:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)J
+     111: invokevirtual #177                // Method net/minecraft/nbt/NBTTagCompound.func_74772_a:(Ljava/lang/String;J)V
+     114: iinc          6, 1
+     117: goto          85
+     120: aload_1
+     121: ldc           #146                // String certificateEpochs
+     123: aload_3
+     124: invokevirtual #173                // Method net/minecraft/nbt/NBTTagCompound.func_74782_a:(Ljava/lang/String;Lnet/minecraft/nbt/NBTBase;)V
+     127: aload_0
+     128: getfield      #105                // Field telemetryBlocked:Z
+     131: ifeq          141
+     134: aload_1
+     135: ldc           #120                // String telemetryBlocked
+     137: iconst_1
+     138: invokevirtual #169                // Method net/minecraft/nbt/NBTTagCompound.func_74757_a:(Ljava/lang/String;Z)V
+     141: return
+}

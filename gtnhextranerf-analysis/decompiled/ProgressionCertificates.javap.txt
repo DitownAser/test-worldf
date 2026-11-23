@@ -1,0 +1,218 @@
+Compiled from "ProgressionCertificates.java"
+public final class pl.kuba6000.gtnhextranerf.progression.ProgressionCertificates {
+  private static final java.util.Map<pl.kuba6000.gtnhextranerf.progression.ProgressionTier, pl.kuba6000.gtnhextranerf.progression.ProgressionCertificateItem> ITEMS;
+
+  private static boolean registered;
+
+  private static final java.lang.String ISSUED_EPOCH;
+
+  private pl.kuba6000.gtnhextranerf.progression.ProgressionCertificates();
+    Code:
+       0: aload_0
+       1: invokespecial #28                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void register();
+    Code:
+       0: getstatic     #33                 // Field registered:Z
+       3: ifeq          16
+       6: new           #35                 // class java/lang/IllegalStateException
+       9: dup
+      10: ldc           #37                 // String Progression certificates already registered
+      12: invokespecial #40                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      15: athrow
+      16: getstatic     #42                 // Field ITEMS:Ljava/util/Map;
+      19: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+      24: invokeinterface #52,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      29: astore_0
+      30: aload_0
+      31: invokeinterface #58,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      36: ifeq          60
+      39: aload_0
+      40: invokeinterface #62,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      45: checkcast     #64                 // class pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem
+      48: astore_1
+      49: aload_1
+      50: aload_1
+      51: invokevirtual #68                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem.registryName:()Ljava/lang/String;
+      54: invokestatic  #74                 // Method cpw/mods/fml/common/registry/GameRegistry.registerItem:(Lnet/minecraft/item/Item;Ljava/lang/String;)V
+      57: goto          30
+      60: iconst_1
+      61: putstatic     #33                 // Field registered:Z
+      64: return
+
+  public static java.util.Collection<pl.kuba6000.gtnhextranerf.progression.ProgressionCertificateItem> items();
+    Code:
+       0: getstatic     #42                 // Field ITEMS:Ljava/util/Map;
+       3: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+       8: invokestatic  #84                 // Method java/util/Collections.unmodifiableCollection:(Ljava/util/Collection;)Ljava/util/Collection;
+      11: areturn
+
+  public static net.minecraft.item.ItemStack stack(pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: new           #88                 // class net/minecraft/item/ItemStack
+       3: dup
+       4: getstatic     #42                 // Field ITEMS:Ljava/util/Map;
+       7: aload_0
+       8: invokestatic  #94                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      11: invokeinterface #97,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      16: checkcast     #99                 // class net/minecraft/item/Item
+      19: iconst_1
+      20: invokespecial #102                // Method net/minecraft/item/ItemStack."<init>":(Lnet/minecraft/item/Item;I)V
+      23: areturn
+
+  public static net.minecraft.item.ItemStack issue(net.minecraft.world.World, pl.kuba6000.gtnhextranerf.progression.ProgressionTier);
+    Code:
+       0: aload_1
+       1: invokestatic  #108                // Method stack:(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Lnet/minecraft/item/ItemStack;
+       4: astore_2
+       5: new           #110                // class net/minecraft/nbt/NBTTagCompound
+       8: dup
+       9: invokespecial #111                // Method net/minecraft/nbt/NBTTagCompound."<init>":()V
+      12: astore_3
+      13: aload_3
+      14: ldc           #24                 // String gtnhextranerf_certificate_epoch
+      16: aload_0
+      17: aload_1
+      18: invokestatic  #117                // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.certificateEpoch:(Lnet/minecraft/world/World;Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)J
+      21: invokevirtual #121                // Method net/minecraft/nbt/NBTTagCompound.func_74772_a:(Ljava/lang/String;J)V
+      24: aload_2
+      25: aload_3
+      26: invokevirtual #125                // Method net/minecraft/item/ItemStack.func_77982_d:(Lnet/minecraft/nbt/NBTTagCompound;)V
+      29: aload_2
+      30: areturn
+
+  public static long issuedEpoch(net.minecraft.item.ItemStack);
+    Code:
+       0: aload_0
+       1: invokevirtual #136                // Method net/minecraft/item/ItemStack.func_77942_o:()Z
+       4: ifeq          19
+       7: aload_0
+       8: invokevirtual #140                // Method net/minecraft/item/ItemStack.func_77978_p:()Lnet/minecraft/nbt/NBTTagCompound;
+      11: ldc           #24                 // String gtnhextranerf_certificate_epoch
+      13: invokevirtual #144                // Method net/minecraft/nbt/NBTTagCompound.func_74763_f:(Ljava/lang/String;)J
+      16: goto          20
+      19: lconst_0
+      20: lreturn
+
+  public static pl.kuba6000.gtnhextranerf.progression.ProgressionTier tierOf(net.minecraft.item.ItemStack);
+    Code:
+       0: aload_0
+       1: ifnull        11
+       4: aload_0
+       5: invokevirtual #150                // Method net/minecraft/item/ItemStack.func_77960_j:()I
+       8: ifeq          13
+      11: aconst_null
+      12: areturn
+      13: getstatic     #42                 // Field ITEMS:Ljava/util/Map;
+      16: invokeinterface #154,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      21: invokeinterface #157,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      26: astore_1
+      27: aload_1
+      28: invokeinterface #58,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      33: ifeq          72
+      36: aload_1
+      37: invokeinterface #62,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #7                  // class java/util/Map$Entry
+      45: astore_2
+      46: aload_0
+      47: invokevirtual #161                // Method net/minecraft/item/ItemStack.func_77973_b:()Lnet/minecraft/item/Item;
+      50: aload_2
+      51: invokeinterface #164,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      56: if_acmpne     69
+      59: aload_2
+      60: invokeinterface #167,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      65: checkcast     #169                // class pl/kuba6000/gtnhextranerf/progression/ProgressionTier
+      68: areturn
+      69: goto          27
+      72: aconst_null
+      73: areturn
+
+  public static void verify();
+    Code:
+       0: getstatic     #179                // Field pl/kuba6000/gtnhextranerf/audit/AuditScope.VERIFY_PROGRESSION_CERTIFICATES:Lpl/kuba6000/gtnhextranerf/audit/AuditScope;
+       3: invokedynamic #198,  0            // InvokeDynamic #0:accept:()Ljava/util/function/Consumer;
+       8: invokestatic  #204                // Method pl/kuba6000/gtnhextranerf/audit/AuditManager.run:(Lpl/kuba6000/gtnhextranerf/audit/AuditScope;Ljava/util/function/Consumer;)V
+      11: return
+
+  private static void lambda$verify$0(pl.kuba6000.gtnhextranerf.audit.AuditHandle);
+    Code:
+       0: getstatic     #33                 // Field registered:Z
+       3: ifeq          16
+       6: ldc           #206                // class pl/kuba6000/gtnhextranerf/progression/ProgressionMachine
+       8: ldc           #208                // class gregtech/api/metatileentity/implementations/MTEBasicMachine
+      10: invokevirtual #214                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      13: ifne          26
+      16: new           #35                 // class java/lang/IllegalStateException
+      19: dup
+      20: ldc           #216                // String Progression items or machine hooks are missing
+      22: invokespecial #40                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      25: athrow
+      26: getstatic     #42                 // Field ITEMS:Ljava/util/Map;
+      29: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+      34: invokeinterface #52,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      39: astore_1
+      40: aload_1
+      41: invokeinterface #58,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      46: ifeq          105
+      49: aload_1
+      50: invokeinterface #62,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      55: checkcast     #64                 // class pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem
+      58: astore_2
+      59: ldc           #218                // String gtnhextranerf
+      61: aload_2
+      62: invokevirtual #68                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem.registryName:()Ljava/lang/String;
+      65: invokestatic  #222                // Method cpw/mods/fml/common/registry/GameRegistry.findItem:(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/item/Item;
+      68: aload_2
+      69: if_acmpeq     102
+      72: new           #35                 // class java/lang/IllegalStateException
+      75: dup
+      76: new           #224                // class java/lang/StringBuilder
+      79: dup
+      80: invokespecial #225                // Method java/lang/StringBuilder."<init>":()V
+      83: ldc           #227                // String Missing certificate:
+      85: invokevirtual #231                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      88: aload_2
+      89: invokevirtual #68                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem.registryName:()Ljava/lang/String;
+      92: invokevirtual #231                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      95: invokevirtual #234                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      98: invokespecial #40                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     101: athrow
+     102: goto          40
+     105: aload_0
+     106: invokevirtual #239                // Method pl/kuba6000/gtnhextranerf/audit/AuditHandle.success:()V
+     109: return
+
+  static {};
+    Code:
+       0: new           #244                // class java/util/EnumMap
+       3: dup
+       4: ldc           #169                // class pl/kuba6000/gtnhextranerf/progression/ProgressionTier
+       6: invokespecial #247                // Method java/util/EnumMap."<init>":(Ljava/lang/Class;)V
+       9: putstatic     #42                 // Field ITEMS:Ljava/util/Map;
+      12: invokestatic  #250                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.values:()[Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;
+      15: astore_0
+      16: aload_0
+      17: arraylength
+      18: istore_1
+      19: iconst_0
+      20: istore_2
+      21: iload_2
+      22: iload_1
+      23: if_icmpge     54
+      26: aload_0
+      27: iload_2
+      28: aaload
+      29: astore_3
+      30: getstatic     #42                 // Field ITEMS:Ljava/util/Map;
+      33: aload_3
+      34: new           #64                 // class pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem
+      37: dup
+      38: aload_3
+      39: invokespecial #255                // Method pl/kuba6000/gtnhextranerf/progression/ProgressionCertificateItem."<init>":(Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)V
+      42: invokeinterface #259,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      47: pop
+      48: iinc          2, 1
+      51: goto          21
+      54: return
+}

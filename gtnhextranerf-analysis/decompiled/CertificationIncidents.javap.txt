@@ -1,0 +1,125 @@
+Compiled from "CertificationIncidents.java"
+final class pl.kuba6000.gtnhextranerf.progression.CertificationIncidents {
+  private pl.kuba6000.gtnhextranerf.progression.CertificationIncidents();
+    Code:
+       0: aload_0
+       1: invokespecial #14                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  static void record(net.minecraft.world.World, pl.kuba6000.gtnhextranerf.progression.ProgressionTier, java.lang.String, int, int, int);
+    Code:
+       0: aload_0
+       1: ifnull        11
+       4: aload_0
+       5: getfield      #24                 // Field net/minecraft/world/World.field_72995_K:Z
+       8: ifeq          12
+      11: return
+      12: aload_0
+      13: aload_1
+      14: aload_2
+      15: iload_3
+      16: iload         4
+      18: iload         5
+      20: invokedynamic #40,  0             // InvokeDynamic #0:run:(Lnet/minecraft/world/World;Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;Ljava/lang/String;III)Ljava/lang/Runnable;
+      25: invokestatic  #46                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionServerTasks.enqueue:(Ljava/lang/Runnable;)V
+      28: return
+
+  private static void lambda$record$0(net.minecraft.world.World, pl.kuba6000.gtnhextranerf.progression.ProgressionTier, java.lang.String, int, int, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #62                 // Method pl/kuba6000/gtnhextranerf/progression/MachineProgression.revoke:(Lnet/minecraft/world/World;Lpl/kuba6000/gtnhextranerf/progression/ProgressionTier;)Z
+       5: ifne          9
+       8: return
+       9: getstatic     #68                 // Field pl/kuba6000/gtnhextranerf/GTNHExtraNerf.LOG:Lorg/apache/logging/log4j/Logger;
+      12: ldc           #70                 // String {} certification revoked after {} in dimension {} at {},{},{}
+      14: bipush        6
+      16: anewarray     #4                  // class java/lang/Object
+      19: dup
+      20: iconst_0
+      21: aload_1
+      22: invokevirtual #76                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+      25: aastore
+      26: dup
+      27: iconst_1
+      28: aload_2
+      29: aastore
+      30: dup
+      31: iconst_2
+      32: aload_0
+      33: getfield      #80                 // Field net/minecraft/world/World.field_73011_w:Lnet/minecraft/world/WorldProvider;
+      36: getfield      #85                 // Field net/minecraft/world/WorldProvider.field_76574_g:I
+      39: invokestatic  #91                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      42: aastore
+      43: dup
+      44: iconst_3
+      45: iload_3
+      46: invokestatic  #91                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      49: aastore
+      50: dup
+      51: iconst_4
+      52: iload         4
+      54: invokestatic  #91                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      57: aastore
+      58: dup
+      59: iconst_5
+      60: iload         5
+      62: invokestatic  #91                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      65: aastore
+      66: invokeinterface #97,  3           // InterfaceMethod org/apache/logging/log4j/Logger.warn:(Ljava/lang/String;[Ljava/lang/Object;)V
+      71: new           #99                 // class net/minecraft/util/ChatComponentTranslation
+      74: dup
+      75: new           #101                // class java/lang/StringBuilder
+      78: dup
+      79: invokespecial #102                // Method java/lang/StringBuilder."<init>":()V
+      82: ldc           #104                // String gtnhextranerf.progression.
+      84: invokevirtual #108                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: aload_1
+      88: invokevirtual #76                 // Method pl/kuba6000/gtnhextranerf/progression/ProgressionTier.id:()Ljava/lang/String;
+      91: invokevirtual #108                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: ldc           #110                // String .revoked
+      96: invokevirtual #108                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: invokevirtual #113                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     102: iconst_1
+     103: anewarray     #4                  // class java/lang/Object
+     106: dup
+     107: iconst_0
+     108: new           #99                 // class net/minecraft/util/ChatComponentTranslation
+     111: dup
+     112: new           #101                // class java/lang/StringBuilder
+     115: dup
+     116: invokespecial #102                // Method java/lang/StringBuilder."<init>":()V
+     119: ldc           #115                // String gtnhextranerf.progression.incident.
+     121: invokevirtual #108                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     124: aload_2
+     125: invokevirtual #108                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     128: invokevirtual #113                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     131: iconst_0
+     132: anewarray     #4                  // class java/lang/Object
+     135: invokespecial #117                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+     138: aastore
+     139: invokespecial #117                // Method net/minecraft/util/ChatComponentTranslation."<init>":(Ljava/lang/String;[Ljava/lang/Object;)V
+     142: astore        6
+     144: invokestatic  #123                // Method net/minecraft/server/MinecraftServer.func_71276_C:()Lnet/minecraft/server/MinecraftServer;
+     147: astore        7
+     149: aload         7
+     151: ifnull        204
+     154: aload         7
+     156: invokevirtual #127                // Method net/minecraft/server/MinecraftServer.func_71203_ab:()Lnet/minecraft/server/management/ServerConfigurationManager;
+     159: getfield      #133                // Field net/minecraft/server/management/ServerConfigurationManager.field_72404_b:Ljava/util/List;
+     162: invokeinterface #139,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     167: astore        8
+     169: aload         8
+     171: invokeinterface #145,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     176: ifeq          204
+     179: aload         8
+     181: invokeinterface #149,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     186: astore        9
+     188: aload         9
+     190: checkcast     #151                // class net/minecraft/entity/player/EntityPlayerMP
+     193: aload         6
+     195: invokevirtual #155                // Method net/minecraft/util/ChatComponentTranslation.func_150259_f:()Lnet/minecraft/util/ChatComponentTranslation;
+     198: invokevirtual #159                // Method net/minecraft/entity/player/EntityPlayerMP.func_145747_a:(Lnet/minecraft/util/IChatComponent;)V
+     201: goto          169
+     204: return
+}
