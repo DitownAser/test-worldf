@@ -1,0 +1,40 @@
+name: Move Release File to Repo (LFS)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Тег релиза (например, v1.0)'
+        required: true
+      filename:
+        description: 'Точное имя файла в релизе (например, archive.zip)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  move-to-lfs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Download file from Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download "${{ github.event.inputs.tag }}" -p "${{ github.event.inputs.filename }}"
+
+      - name: Track with Git LFS and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@://github.com"
+          git lfs install
+          git lfs track "${{ github.event.inputs.filename }}"
+          git add .gitattributes "${{ github.event.inputs.filename }}"
+          git commit -m "Add ${{ github.event.inputs.filename }} via Git LFS"
+          git
+          push
