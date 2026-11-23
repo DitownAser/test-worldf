@@ -7,7 +7,7 @@ on:
         description: 'Тег релиза (например, v1.0)'
         required: true
       filename:
-        description: 'Точное имя файла в релизе (например, archive.zip)'
+        description: 'Точное имя файла в релизе (например, FreestyleBattle-1.0.0-alpha.jar)'
         required: true
 
 permissions:
@@ -36,5 +36,4 @@ jobs:
           git lfs track "${{ github.event.inputs.filename }}"
           git add .gitattributes "${{ github.event.inputs.filename }}"
           git commit -m "Add ${{ github.event.inputs.filename }} via Git LFS"
-          git
-          push
+          git push origin main
